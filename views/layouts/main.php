@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= isset($title) ? $title . ' - ' . SITE_NAME : SITE_NAME ?></title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?= BASE_URL ?>assets/img/favicon.ico">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="<?= BASE_URL ?>assets/css/style.css" rel="stylesheet">
+    
+    <?php if (isset($extra_css)): ?>
+        <?= $extra_css ?>
+    <?php endif; ?>
+</head>
+<body>
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <h4 class="mb-0"><?= SITE_NAME ?></h4>
+            </div>
+            
+            <div class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    
+                    <?php if (checkPermission('ver_usuarios')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>usuarios">
+                            <i class="fas fa-users"></i>
+                            Usuarios
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (checkPermission('ver_mascotas')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>mascotas">
+                            <i class="fas fa-paw"></i>
+                            Mascotas
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (checkPermission('ver_dispositivos')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>dispositivos">
+                            <i class="fas fa-microchip"></i>
+                            Dispositivos
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (checkPermission('ver_alertas')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>alertas">
+                            <i class="fas fa-bell"></i>
+                            Alertas
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (checkPermission('ver_monitor')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>monitor">
+                            <i class="fas fa-desktop"></i>
+                            Monitor en Vivo
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (checkPermission('ver_configuracion')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= BASE_URL ?>configuracion">
+                            <i class="fas fa-cog"></i>
+                            Configuración
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <nav class="topbar">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-link d-md-none" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="dropdown">
+                            <button class="btn btn-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i>
+                                <?= $_SESSION['user_name'] ?>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="<?= BASE_URL ?>perfil">
+                                        <i class="fas fa-user-cog"></i>
+                                        Mi Perfil
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="<?= BASE_URL ?>auth/logout.php">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Cerrar Sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Page Content -->
+            <div class="container-fluid">
+                <?php if (isset($title)): ?>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 mb-0 text-gray-800"><?= $title ?></h1>
+                    <?php if (isset($header_buttons)): ?>
+                        <?= $header_buttons ?>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+                
+                <?= $content ?>
+            </div>
+        </div>
+    <?php else: ?>
+        <!-- Auth Content -->
+        <?= $content ?>
+    <?php endif; ?>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="<?= BASE_URL ?>assets/js/main.js"></script>
+    
+    <?php if (isset($extra_js)): ?>
+        <?= $extra_js ?>
+    <?php endif; ?>
+    
+    <script>
+        // Toggle Sidebar
+        document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+    </script>
+</body>
+</html> 

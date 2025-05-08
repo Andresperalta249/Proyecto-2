@@ -1,0 +1,10 @@
+[2025-05-07 22:48:58] Intento de acceso a registerAction
+[2025-05-07 22:49:10] Intento de acceso a registerAction
+[2025-05-07 22:49:10] POST recibido en registerAction. Datos: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
+[2025-05-07 22:49:10] Resultado de validateRequest: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
+[2025-05-07 22:51:36] Intento de acceso a registerAction
+[2025-05-07 22:51:53] Intento de acceso a registerAction
+[2025-05-07 22:51:53] POST recibido en registerAction. Datos: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
+[2025-05-07 22:51:53] Resultado de validateRequest: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
+[2025-05-07 22:51:53] Intentando crear usuario: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","password":"$2y$12$zWqtQ5PZLiSgXkHDdZqZK.mpet2aDNe9cijXQlzZw9JnE52TH2rYO","telefono":"3184969893","direccion":"Calle 49 # 50 -193","rol_id":3,"estado":"activo","creado_en":"2025-05-07 22:51:53"}
+[2025-05-07 22:51:53] Usuario creado exitosamente.
