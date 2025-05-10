@@ -1,10 +1,260 @@
-[2025-05-07 22:48:58] Intento de acceso a registerAction
-[2025-05-07 22:49:10] Intento de acceso a registerAction
-[2025-05-07 22:49:10] POST recibido en registerAction. Datos: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
-[2025-05-07 22:49:10] Resultado de validateRequest: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
-[2025-05-07 22:51:36] Intento de acceso a registerAction
-[2025-05-07 22:51:53] Intento de acceso a registerAction
-[2025-05-07 22:51:53] POST recibido en registerAction. Datos: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
-[2025-05-07 22:51:53] Resultado de validateRequest: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","telefono":"3184969893","direccion":"Calle 49 # 50 -193","password":"Gabi2022*","confirm_password":"Gabi2022*"}
-[2025-05-07 22:51:53] Intentando crear usuario: {"nombre":"Andres Peralta","email":"andresperalta249@gmail.com","password":"$2y$12$zWqtQ5PZLiSgXkHDdZqZK.mpet2aDNe9cijXQlzZw9JnE52TH2rYO","telefono":"3184969893","direccion":"Calle 49 # 50 -193","rol_id":3,"estado":"activo","creado_en":"2025-05-07 22:51:53"}
-[2025-05-07 22:51:53] Usuario creado exitosamente.
+[10-May-2025 09:13:58 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:13:58
+[10-May-2025 01:13:58 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:13:58 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:13:58 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:13:58 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:13:58 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:13:58 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:15:11 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:15:11
+[10-May-2025 01:15:11 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:15:11 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:15:11 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:15:11 America/Mexico_City] Ruta solicitada: /mascotas/edit/8
+[10-May-2025 01:15:11 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:15:11 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:15:11 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method User::getUsuariosActivos() in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:110
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 110
+[10-May-2025 09:15:13 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:15:13
+[10-May-2025 01:15:13 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:15:13 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:15:13 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:15:13 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:15:13 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:15:13 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:21:07 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:21:07
+[10-May-2025 01:21:07 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:21:07 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:21:07 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:21:07 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:21:07 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:21:07 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:21:16 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:21:16
+[10-May-2025 01:21:16 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:21:16 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:21:16 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:21:16 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:21:16 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:21:16 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:21:16 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method User::getUsuariosActivos() in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:348
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editarModalAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 348
+[10-May-2025 09:23:46 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:23:46
+[10-May-2025 01:23:46 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:23:46 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:23:46 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:23:46 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:23:46 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:23:46 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:23:49 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:23:49
+[10-May-2025 01:23:49 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:23:49 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:23:49 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:23:49 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:23:49 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:23:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:23:49 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method User::getUsuariosActivos() in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:348
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editarModalAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 348
+[10-May-2025 09:23:53 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:23:53
+[10-May-2025 01:23:53 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:23:53 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:23:53 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:23:53 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:23:53 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:23:53 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:23:53 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method User::getUsuariosActivos() in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:348
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editarModalAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 348
+[10-May-2025 09:29:10 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:29:10
+[10-May-2025 01:29:10 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:29:10 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:29:10 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:29:10 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:29:10 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:29:10 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:29:10 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method User::getUsuariosActivos() in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:348
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editarModalAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 348
+[10-May-2025 09:29:13 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:29:13
+[10-May-2025 01:29:13 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:29:13 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:29:13 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:29:13 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:29:13 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:29:13 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:29:15 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:29:15
+[10-May-2025 01:29:15 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:29:15 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:29:15 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:29:15 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:29:15 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:29:15 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:29:15 America/Mexico_City] PHP Fatal error:  Uncaught Error: Call to undefined method User::getUsuariosActivos() in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:348
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editarModalAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 348
+[10-May-2025 09:30:31 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:30:31
+[10-May-2025 01:30:31 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:30:31 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:30:31 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:30:31 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:30:31 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:30:31 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:35:19 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:35:19
+[10-May-2025 01:35:19 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:35:19 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:35:19 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:35:19 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:35:19 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:35:19 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:35:21 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:35:21
+[10-May-2025 01:35:21 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:35:21 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:35:21 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:35:21 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:35:21 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:35:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:35:33 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:35:33
+[10-May-2025 01:35:33 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:35:33 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:35:33 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:35:33 America/Mexico_City] Ruta solicitada: /mascotas/edit/8
+[10-May-2025 01:35:33 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:35:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:35:33 America/Mexico_City] PHP Fatal error:  Uncaught Error: Undefined constant "BASE_URL" in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:99
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 99
+[10-May-2025 09:35:36 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:35:36
+[10-May-2025 01:35:36 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:35:36 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:35:36 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:35:36 America/Mexico_City] Ruta solicitada: /mascotas/edit/8
+[10-May-2025 01:35:36 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:35:36 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:35:36 America/Mexico_City] PHP Fatal error:  Uncaught Error: Undefined constant "BASE_URL" in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:99
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 99
+[10-May-2025 09:35:36 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:35:36
+[10-May-2025 01:35:36 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:35:36 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:35:36 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:35:36 America/Mexico_City] Ruta solicitada: /mascotas/edit/8
+[10-May-2025 01:35:36 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:35:36 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:35:36 America/Mexico_City] PHP Fatal error:  Uncaught Error: Undefined constant "BASE_URL" in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:99
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 99
+[10-May-2025 09:35:49 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:35:49
+[10-May-2025 01:35:49 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:35:49 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:35:49 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:35:49 America/Mexico_City] Ruta solicitada: /mascotas/edit/8
+[10-May-2025 01:35:49 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:35:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 01:35:49 America/Mexico_City] PHP Fatal error:  Uncaught Error: Undefined constant "BASE_URL" in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php:99
+Stack trace:
+#0 C:\xampp\htdocs\proyecto-2\index.php(92): MascotasController->editAction('8')
+#1 {main}
+  thrown in C:\xampp\htdocs\proyecto-2\controllers\MascotasController.php on line 99
+[10-May-2025 09:39:50 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:39:50
+[10-May-2025 01:39:50 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:39:50 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:39:50 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:39:50 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:39:50 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:39:50 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:39:52 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:39:52
+[10-May-2025 01:39:52 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:39:52 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:39:52 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:39:52 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:39:52 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:39:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:39:59 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:39:59
+[10-May-2025 01:39:59 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:39:59 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:39:59 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:39:59 America/Mexico_City] Ruta solicitada: /mascotas/edit/8
+[10-May-2025 01:39:59 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:39:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:40:21 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:40:21
+[10-May-2025 01:40:21 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:40:21 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:40:21 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:40:21 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/8
+[10-May-2025 01:40:21 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:40:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:42:49 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:42:49
+[10-May-2025 01:42:49 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:42:49 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:42:49 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:42:49 America/Mexico_City] Ruta solicitada: /mascotas
+[10-May-2025 01:42:49 America/Mexico_City] Controlador: mascotas, Acción: index
+[10-May-2025 01:42:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:42:52 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:42:52
+[10-May-2025 01:42:52 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:42:52 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:42:52 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:42:52 America/Mexico_City] Ruta solicitada: /mascotas/editarModal/9
+[10-May-2025 01:42:52 America/Mexico_City] Controlador: mascotas, Acción: editarModal
+[10-May-2025 01:42:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:42:57 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:42:57
+[10-May-2025 01:42:57 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:42:57 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:42:57 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:42:57 America/Mexico_City] Ruta solicitada: /mascotas/edit/9
+[10-May-2025 01:42:57 America/Mexico_City] Controlador: mascotas, Acción: edit
+[10-May-2025 01:42:57 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:42:58 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:42:58
+[10-May-2025 01:42:58 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:42:58 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:42:58 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:42:58 America/Mexico_City] Ruta solicitada: /mascotas/tabla
+[10-May-2025 01:42:58 America/Mexico_City] Controlador: mascotas, Acción: tabla
+[10-May-2025 01:42:58 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:45:29 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:45:29
+[10-May-2025 01:45:29 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:45:29 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:45:29 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:45:29 America/Mexico_City] Ruta solicitada: /mascotas/guardar
+[10-May-2025 01:45:29 America/Mexico_City] Controlador: mascotas, Acción: guardar
+[10-May-2025 01:45:29 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:45:29 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:45:29
+[10-May-2025 01:45:29 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:45:29 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:45:29 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:45:29 America/Mexico_City] Ruta solicitada: /mascotas/tabla
+[10-May-2025 01:45:29 America/Mexico_City] Controlador: mascotas, Acción: tabla
+[10-May-2025 01:45:29 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:45:33 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:45:33
+[10-May-2025 01:45:33 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:45:33 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:45:33 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:45:33 America/Mexico_City] Ruta solicitada: /mascotas/delete/10
+[10-May-2025 01:45:33 America/Mexico_City] Controlador: mascotas, Acción: delete
+[10-May-2025 01:45:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[10-May-2025 09:45:33 Europe/Berlin] Aplicación iniciando - 2025-05-10 09:45:33
+[10-May-2025 01:45:33 America/Mexico_City] PHP Warning:  session_name(): Session name cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 52
+[10-May-2025 01:45:33 America/Mexico_City] PHP Warning:  session_set_cookie_params(): Session cookie parameters cannot be changed when a session is active in C:\xampp\htdocs\proyecto-2\config\config.php on line 53
+[10-May-2025 01:45:33 America/Mexico_City] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\xampp\htdocs\proyecto-2\config\config.php on line 60
+[10-May-2025 01:45:33 America/Mexico_City] Ruta solicitada: /mascotas/tabla
+[10-May-2025 01:45:33 America/Mexico_City] Controlador: mascotas, Acción: tabla
+[10-May-2025 01:45:33 America/Mexico_City] Conexión a la base de datos establecida correctamente

@@ -15,61 +15,79 @@ class AuthController extends Controller {
     }
     
     public function loginAction() {
+        // Si la petición es AJAX pero no es POST, devolver JSON de error
+        if (!isset($_SESSION['user_id']) && !($_SERVER['REQUEST_METHOD'] === 'POST') && !empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: AJAX no POST, devolviendo JSON error\n", FILE_APPEND);
+            $this->jsonResponse([
+                'success' => false,
+                'error' => 'Método no permitido o sesión expirada. Recarga la página e intenta de nuevo.'
+            ], 405);
+        }
         // Si ya está autenticado, redirigir al dashboard
         if (isset($_SESSION['user_id'])) {
-            redirect('dashboard');
+            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Sesión activa, redirigiendo a dashboard\n", FILE_APPEND);
+            redirect('/dashboard');
         }
         
         $loginError = '';
+        
+        // Solo procesar el formulario si es una solicitud POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: POST recibido\n", FILE_APPEND);
             $data = $this->validateRequest(['email', 'password']);
+            
             if ($data) {
                 $user = $this->userModel->findByEmail($data['email']);
-                if ($user && password_verify($data['password'], $user['password'])) {
-                    if ($user['estado'] === 'activo') {
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_name'] = $user['nombre'];
-                        $_SESSION['user_email'] = $user['email'];
-                        $_SESSION['user_role'] = $user['rol_id'];
-                        $permissions = $this->userModel->getUserPermissions($user['id']);
-                        $_SESSION['permissions'] = $permissions;
-                        // Redirigir si es POST tradicional
-                        if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-                            header('Location: ' . BASE_URL . 'dashboard');
-                            exit;
+                
+                if ($user) {
+                    if (password_verify($data['password'], $user['password'])) {
+                        if ($user['estado'] === 'activo') {
+                            $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['user_name'] = $user['nombre'];
+                            $_SESSION['user_email'] = $user['email'];
+                            $_SESSION['user_role'] = $user['rol_id'];
+                            $permissions = $this->userModel->getUserPermissions($user['id']);
+                            $_SESSION['permissions'] = $permissions;
+
+                            // Solo guardar el mensaje de sesión si NO es AJAX
+                            if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+                                $_SESSION['message'] = [
+                                    'type' => 'success',
+                                    'text' => '¡Bienvenido ' . $user['nombre'] . '!'
+                                ];
+                            }
+
+                            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+                                file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Respondiendo JSON de éxito AJAX\n", FILE_APPEND);
+                                $this->jsonResponse([
+                                    'success' => true,
+                                    'message' => '¡Bienvenido ' . $user['nombre'] . '!',
+                                    'redirect' => APP_URL . '/dashboard'
+                                ]);
+                            } else {
+                                file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Redirigiendo a dashboard (no AJAX)\n", FILE_APPEND);
+                                redirect('/dashboard');
+                            }
                         } else {
-                            $this->jsonResponse([
-                                'success' => true,
-                                'message' => 'Bienvenido ' . $user['nombre'],
-                                'redirect' => BASE_URL . 'dashboard'
-                            ]);
+                            $loginError = 'Tu cuenta está inactiva. Contacta al administrador.';
                         }
                     } else {
-                        $loginError = 'Tu cuenta está inactiva';
-                        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-                            $this->jsonResponse([
-                                'success' => false,
-                                'error' => $loginError
-                            ], 403);
-                        }
+                        $loginError = 'La contraseña ingresada es incorrecta.';
                     }
                 } else {
-                    $loginError = 'Credenciales incorrectas';
-                    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-                        $this->jsonResponse([
-                            'success' => false,
-                            'error' => $loginError
-                        ], 401);
-                    }
+                    $loginError = 'El correo ingresado no corresponde a ningún usuario registrado.';
                 }
             } else {
-                $loginError = 'Datos inválidos';
-                if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-                    $this->jsonResponse([
-                        'success' => false,
-                        'error' => $loginError
-                    ], 400);
-                }
+                $loginError = 'Por favor, completa todos los campos correctamente.';
+            }
+            
+            // Si hay error y es una solicitud AJAX
+            if ($loginError && !empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+                file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Respondiendo JSON de error AJAX: $loginError\n", FILE_APPEND);
+                $this->jsonResponse([
+                    'success' => false,
+                    'error' => $loginError
+                ], 400);
             }
         }
         
@@ -84,8 +102,7 @@ class AuthController extends Controller {
                             <h3 class="text-center font-weight-light my-4">Iniciar Sesión</h3>
                         </div>
                         <div class="card-body">
-                            <div id="login-message">' . (!empty($loginError) ? '<div class="alert alert-danger">' . htmlspecialchars($loginError) . '</div>' : '') . '</div>
-                            <form id="loginForm" method="POST" onsubmit="return handleFormSubmit(this, \'" . BASE_URL . "auth/login\')">
+                            <form id="loginForm" method="POST" action="' . APP_URL . '/auth/login">
                                 <div class="form-floating mb-3">
                                     <input class="form-control" id="email" name="email" type="email" placeholder="name@example.com" required />
                                     <label for="email">Correo electrónico</label>
@@ -95,21 +112,28 @@ class AuthController extends Controller {
                                     <label for="password">Contraseña</label>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                    <a class="small" href="' . BASE_URL . 'auth/forgot-password">¿Olvidaste tu contraseña?</a>
+                                    <a class="small" href="' . APP_URL . '/auth/forgot-password">¿Olvidaste tu contraseña?</a>
                                     <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
                                 </div>
                             </form>
                         </div>
                         <div class="card-footer text-center py-3">
                             <div class="small">
-                                <a href="' . BASE_URL . 'auth/register">¿Necesitas una cuenta? ¡Regístrate!</a>
+                                <a href="' . APP_URL . '/auth/register">¿Necesitas una cuenta? ¡Regístrate!</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        ';
+        <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            if (!e.submitter || e.submitter.type === "submit") {
+                e.preventDefault();
+                handleFormSubmit(this, "' . APP_URL . '/auth/login");
+            }
+        });
+        </script>';
         
         require_once 'views/layouts/main.php';
     }
@@ -166,7 +190,7 @@ class AuthController extends Controller {
                     $this->jsonResponse([
                         'success' => true,
                         'message' => 'Registro exitoso. Por favor, inicia sesión.',
-                        'redirect' => BASE_URL . 'auth/login'
+                        'redirect' => APP_URL . '/auth/login'
                     ]);
                 } else {
                     $errorMsg = '[' . date('Y-m-d H:i:s') . "] Error al crear usuario:\n";

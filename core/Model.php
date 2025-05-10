@@ -1,122 +1,98 @@
 <?php
+
 class Model {
     protected $db;
     protected $table;
-    protected $primaryKey = 'id';
-    public $lastError = null;
+    protected $lastError;
 
-    public function __construct($db) {
-        $this->db = $db;
+    public function __construct() {
+        try {
+            $this->db = Database::getInstance();
+        } catch (Exception $e) {
+            error_log("Error al inicializar Model: " . $e->getMessage());
+            throw $e;
+        }
     }
 
-    public function findAll($conditions = [], $orderBy = null) {
+    protected function query($sql, $params = []) {
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $this->lastError = $e->getMessage();
+            error_log("Error en la consulta SQL: " . $e->getMessage() . "\nSQL: " . $sql . "\nParams: " . print_r($params, true));
+            return false;
+        }
+    }
+
+    public function find($id) {
+        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
+        $result = $this->query($sql, [':id' => $id]);
+        return $result ? $result[0] : null;
+    }
+
+    public function findAll($conditions = []) {
         $sql = "SELECT * FROM {$this->table}";
         
         if (!empty($conditions)) {
-            $sql .= " WHERE " . implode(' AND ', array_map(function($key) {
-                return "$key = :$key";
-            }, array_keys($conditions)));
-        }
-
-        if ($orderBy) {
-            $sql .= " ORDER BY $orderBy";
-        }
-
-        $stmt = $this->db->prepare($sql);
-        
-        if (!empty($conditions)) {
+            $whereClauses = [];
             foreach ($conditions as $key => $value) {
-                $stmt->bindValue(":$key", $value);
+                $whereClauses[] = "$key = :$key";
             }
+            $sql .= " WHERE " . implode(' AND ', $whereClauses);
         }
-
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function findById($id) {
-        $sql = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $this->query($sql, $conditions);
     }
 
     public function create($data) {
-        $this->lastError = null;
-        $fields = array_keys($data);
-        $values = array_map(function($field) {
-            return ":$field";
-        }, $fields);
-
-        $sql = "INSERT INTO {$this->table} (" . implode(', ', $fields) . ") 
-                VALUES (" . implode(', ', $values) . ")";
-
+        $columns = implode(', ', array_keys($data));
+        $values = ':' . implode(', :', array_keys($data));
+        
+        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($values)";
+        
         try {
             $stmt = $this->db->prepare($sql);
-            foreach ($data as $key => $value) {
-                $stmt->bindValue(":$key", $value);
-            }
-            
-            if ($stmt->execute()) {
-                return $this->db->lastInsertId();
-            } else {
-                $error = $stmt->errorInfo();
-                $this->lastError = "Error SQL: " . $error[2] . " (Código: " . $error[1] . ")";
-                error_log("Error al crear registro en {$this->table}: " . $this->lastError);
-                return false;
-            }
+            $stmt->execute($data);
+            return $this->db->lastInsertId();
         } catch (PDOException $e) {
-            $this->lastError = $e->getMessage();
-            error_log("Excepción al crear registro en {$this->table}: " . $e->getMessage());
+            error_log("Error al crear registro: " . $e->getMessage());
             return false;
         }
     }
 
     public function update($id, $data) {
-        $fields = array_map(function($field) {
-            return "$field = :$field";
-        }, array_keys($data));
-
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " 
-                WHERE {$this->primaryKey} = :id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
-        
+        $setClauses = [];
         foreach ($data as $key => $value) {
-            $stmt->bindValue(":$key", $value);
+            $setClauses[] = "$key = :$key";
         }
-
-        return $stmt->execute();
+        
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE id = :id";
+        $data['id'] = $id;
+        
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute($data);
+        } catch (PDOException $e) {
+            error_log("Error al actualizar registro: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $id);
-        return $stmt->execute();
+        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        
+        try {
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        } catch (PDOException $e) {
+            error_log("Error al eliminar registro: " . $e->getMessage());
+            return false;
+        }
     }
 
-    public function count($conditions = []) {
-        $sql = "SELECT COUNT(*) as total FROM {$this->table}";
-        
-        if (!empty($conditions)) {
-            $sql .= " WHERE " . implode(' AND ', array_map(function($key) {
-                return "$key = :$key";
-            }, array_keys($conditions)));
-        }
-
-        $stmt = $this->db->prepare($sql);
-        
-        if (!empty($conditions)) {
-            foreach ($conditions as $key => $value) {
-                $stmt->bindValue(":$key", $value);
-            }
-        }
-
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    public function getLastError() {
+        return $this->lastError;
     }
-}
-?> 
+} 

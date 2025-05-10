@@ -81,15 +81,74 @@ body {
 /* Cards */
 .card {
     border: none;
-    border-radius: 0.35rem;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
-    margin-bottom: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: white;
 }
 
-.card-header {
-    background-color: white;
-    border-bottom: 1px solid #e3e6f0;
-    padding: 1rem 1.25rem;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card .card-body {
+    padding: 1.5rem;
+}
+
+.card .display-6 {
+    font-weight: 600;
+    font-size: 2.5rem;
+}
+
+.card .card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card small {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+/* Colores para las tarjetas de estadísticas */
+.card.stat-card {
+    color: #333;
+}
+
+.card.stat-card.bg-primary {
+    background-color: #4e73df !important;
+    color: white;
+}
+
+.card.stat-card.bg-success {
+    background-color: #1cc88a !important;
+    color: white;
+}
+
+.card.stat-card.bg-warning {
+    background-color: #f6c23e !important;
+    color: #333;
+}
+
+.card.stat-card.bg-info {
+    background-color: #36b9cc !important;
+    color: white;
+}
+
+/* Espaciado entre tarjetas */
+.row.g-4 {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+}
+
+/* Iconos en las tarjetas */
+.card-title i {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    opacity: 0.9;
 }
 
 /* Tablas */
@@ -172,6 +231,14 @@ body {
     
     .main-content.active {
         margin-left: var(--sidebar-width);
+    }
+    
+    .card .display-6 {
+        font-size: 2rem;
+    }
+    
+    .card .card-title {
+        font-size: 1rem;
     }
 }
 

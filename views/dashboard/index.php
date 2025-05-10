@@ -1,154 +1,185 @@
-<div class="container">
-    <h1 class="mb-4">Dashboard</h1>
+<?php
+// Asegurarse de que todas las variables necesarias estén definidas
+$stats = $stats ?? [
+    'mascotas' => 0,
+    'dispositivos' => 0,
+    'dispositivos_activos' => 0,
+    'alertas' => [
+        'total' => 0,
+        'no_leidas' => 0,
+        'alertas_altas' => 0
+    ]
+];
+$ultimasAlertas = $ultimasAlertas ?? [];
+$dispositivosActivos = $dispositivosActivos ?? [];
+$actividadReciente = $actividadReciente ?? [];
+?>
 
-    <!-- Estadísticas -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Mascotas</h5>
-                    <h2 class="mb-0"><?= $stats['mascotas'] ?></h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Dispositivos</h5>
-                    <h2 class="mb-0"><?= $stats['dispositivos'] ?></h2>
-                    <small><?= $stats['dispositivos_activos'] ?> activos</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Alertas</h5>
-                    <h2 class="mb-0"><?= $stats['alertas']['total'] ?></h2>
-                    <small><?= $stats['alertas']['no_leidas'] ?> no leídas</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <h5 class="card-title">Actividad</h5>
-                    <h2 class="mb-0"><?= count($actividadReciente) ?></h2>
-                    <small>últimas acciones</small>
+<!-- Estadísticas -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card bg-primary">
+            <div class="card-body d-flex flex-column align-items-start">
+                <div class="d-flex align-items-center w-100">
+                    <div>
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-paw me-2"></i>Mascotas
+                        </h5>
+                        <h2 class="mb-1 display-6"><?= $stats['mascotas'] ?></h2>
+                        <small>registradas</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <!-- Últimas Alertas -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Últimas Alertas</h5>
+    <div class="col-md-3">
+        <div class="card stat-card bg-success">
+            <div class="card-body d-flex flex-column align-items-start">
+                <div class="d-flex align-items-center w-100">
+                    <div>
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-microchip me-2"></i>Dispositivos
+                        </h5>
+                        <h2 class="mb-1 display-6"><?= $stats['dispositivos'] ?></h2>
+                        <small><?= $stats['dispositivos_activos'] ?> activos</small>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <?php if (empty($ultimasAlertas)): ?>
-                        <p class="text-muted">No hay alertas nuevas</p>
-                    <?php else: ?>
-                        <div class="list-group">
-                            <?php foreach ($ultimasAlertas as $alerta): ?>
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">
-                                        <span class="badge bg-<?= $alerta['tipo'] === 'error' ? 'danger' : ($alerta['tipo'] === 'advertencia' ? 'warning' : 'info') ?>">
-                                            <?= ucfirst($alerta['tipo']) ?>
-                                        </span>
-                                        <?= $alerta['mensaje'] ?>
-                                    </h6>
-                                    <small><?= date('d/m/Y H:i', strtotime($alerta['fecha'])) ?></small>
-                                </div>
-                                <small class="text-muted">
-                                    <?= $alerta['dispositivo_nombre'] ?? 'N/A' ?> - 
-                                    <?= $alerta['mascota_nombre'] ?? 'N/A' ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-warning">
+            <div class="card-body d-flex flex-column align-items-start">
+                <div class="d-flex align-items-center w-100">
+                    <div>
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-bell me-2"></i>Alertas
+                        </h5>
+                        <h2 class="mb-1 display-6"><?= $stats['alertas']['total'] ?></h2>
+                        <small><?= $stats['alertas']['no_leidas'] ?> no leídas</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bg-info">
+            <div class="card-body d-flex flex-column align-items-start">
+                <div class="d-flex align-items-center w-100">
+                    <div>
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-history me-2"></i>Actividad
+                        </h5>
+                        <h2 class="mb-1 display-6"><?= count($actividadReciente) ?></h2>
+                        <small>últimas acciones</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Últimas Alertas -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Últimas Alertas</h5>
+            </div>
+            <div class="card-body">
+                <?php if (empty($ultimasAlertas)): ?>
+                    <p class="text-muted">No hay alertas nuevas</p>
+                <?php else: ?>
+                    <div class="list-group">
+                        <?php foreach ($ultimasAlertas as $alerta): ?>
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1"><?= htmlspecialchars($alerta['titulo']) ?></h6>
+                                <small class="text-<?= $alerta['leida'] ? 'muted' : 'danger' ?>">
+                                    <?= $alerta['leida'] ? 'Leída' : 'No leída' ?>
                                 </small>
                             </div>
-                            <?php endforeach; ?>
+                            <p class="mb-1"><?= htmlspecialchars($alerta['mensaje']) ?></p>
+                            <small class="text-muted">
+                                <?= htmlspecialchars($alerta['mascota_nombre']) ?> - 
+                                <?= date('d/m/Y H:i', strtotime($alerta['fecha_creacion'])) ?>
+                            </small>
                         </div>
-                    <?php endif; ?>
-                </div>
-                <div class="card-footer">
-                    <a href="<?= BASE_URL ?>alertas" class="btn btn-primary btn-sm">Ver todas las alertas</a>
-                </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
-        </div>
-
-        <!-- Dispositivos Activos -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Dispositivos Activos</h5>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($dispositivosActivos)): ?>
-                        <p class="text-muted">No hay dispositivos activos</p>
-                    <?php else: ?>
-                        <div class="list-group">
-                            <?php foreach ($dispositivosActivos as $dispositivo): ?>
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1"><?= $dispositivo['nombre'] ?></h6>
-                                    <span class="badge bg-success">Activo</span>
-                                </div>
-                                <p class="mb-1">
-                                    <small class="text-muted">
-                                        <?= $dispositivo['tipo'] ?> - 
-                                        <?= $dispositivo['mascota_nombre'] ?? 'Sin mascota asignada' ?>
-                                    </small>
-                                </p>
-                                <a href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" class="btn btn-sm btn-info">
-                                    <i class="fas fa-chart-line"></i> Ver Monitor
-                                </a>
-                            </div>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                </div>
-                <div class="card-footer">
-                    <a href="<?= BASE_URL ?>dispositivos" class="btn btn-primary btn-sm">Ver todos los dispositivos</a>
-                </div>
+            <div class="card-footer">
+                <a href="<?= APP_URL ?>/alertas" class="btn btn-primary">Ver todas las alertas</a>
             </div>
         </div>
     </div>
 
-    <!-- Actividad Reciente -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Actividad Reciente</h5>
-                </div>
-                <div class="card-body">
-                    <?php if (empty($actividadReciente)): ?>
-                        <p class="text-muted">No hay actividad reciente</p>
-                    <?php else: ?>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Usuario</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($actividadReciente as $actividad): ?>
-                                    <tr>
-                                        <td><?= date('d/m/Y H:i:s', strtotime($actividad['fecha'])) ?></td>
-                                        <td><?= $actividad['usuario_nombre'] ?></td>
-                                        <td><?= $actividad['accion'] ?></td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+    <!-- Dispositivos Activos -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Dispositivos Activos</h5>
+            </div>
+            <div class="card-body">
+                <?php if (empty($dispositivosActivos)): ?>
+                    <p class="text-muted">No hay dispositivos activos</p>
+                <?php else: ?>
+                    <div class="list-group">
+                        <?php foreach ($dispositivosActivos as $dispositivo): ?>
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1"><?= htmlspecialchars($dispositivo['nombre']) ?></h6>
+                                <span class="badge bg-success">Activo</span>
+                            </div>
+                            <p class="mb-1">
+                                <small class="text-muted">
+                                    <?= htmlspecialchars($dispositivo['tipo']) ?> - 
+                                    <?= htmlspecialchars($dispositivo['mascota_nombre'] ?? 'Sin mascota asignada') ?>
+                                </small>
+                            </p>
+                            <a href="<?= APP_URL ?>/monitor/device/<?= $dispositivo['id'] ?>" class="btn btn-sm btn-info">
+                                <i class="fas fa-chart-line"></i> Ver Monitor
+                            </a>
                         </div>
-                    <?php endif; ?>
-                </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <div class="card-footer">
+                <a href="<?= APP_URL ?>/dispositivos" class="btn btn-primary">Ver todos los dispositivos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actividad Reciente -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Actividad Reciente</h5>
+            </div>
+            <div class="card-body">
+                <?php if (empty($actividadReciente)): ?>
+                    <p class="text-muted">No hay actividad reciente</p>
+                <?php else: ?>
+                    <div class="list-group">
+                        <?php foreach ($actividadReciente as $actividad): ?>
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1"><?= htmlspecialchars($actividad['descripcion']) ?></h6>
+                                <small class="text-muted">
+                                    <?= date('d/m/Y H:i', strtotime($actividad['fecha'])) ?>
+                                </small>
+                            </div>
+                            <small class="text-muted">
+                                <?= htmlspecialchars($actividad['tipo']) ?>
+                            </small>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -157,7 +188,7 @@
 <script>
 // Actualizar estadísticas cada 5 minutos
 setInterval(() => {
-    fetch('<?= BASE_URL ?>dashboard/getStats')
+    fetch('<?= APP_URL ?>/dashboard/getStats')
         .then(response => response.json())
         .then(data => {
             if (data.success) {

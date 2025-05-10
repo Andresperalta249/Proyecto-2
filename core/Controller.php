@@ -5,19 +5,48 @@ class Controller {
     protected $model;
 
     public function __construct() {
-        require_once 'config/database.php';
-        $database = new Database();
-        $this->db = $database->getConnection();
+        // Cargar la configuración primero
+        if (!defined('ROOT_PATH')) {
+            define('ROOT_PATH', dirname(__DIR__));
+        }
+        
+        // Cargar la configuración
+        if (!defined('DB_HOST')) {
+            require_once ROOT_PATH . '/config/config.php';
+        }
+        
+        // Cargar la clase Database
+        require_once ROOT_PATH . '/config/database.php';
+        
+        // Inicializar la base de datos
+        try {
+            $this->db = Database::getInstance();
+        } catch (Exception $e) {
+            error_log("Error al inicializar la base de datos: " . $e->getMessage());
+            throw new Exception("Error al inicializar la base de datos");
+        }
     }
 
     protected function loadModel($model) {
-        require_once 'models/' . $model . '.php';
-        return new $model($this->db);
+        $modelFile = ROOT_PATH . '/models/' . $model . '.php';
+        if (!file_exists($modelFile)) {
+            error_log("Modelo no encontrado: " . $modelFile);
+            throw new Exception("Modelo no encontrado: " . $model);
+        }
+        require_once $modelFile;
+        return new $model();
     }
 
     protected function render($view, $data = []) {
+        $viewFile = ROOT_PATH . '/views/' . $view . '.php';
+        if (!file_exists($viewFile)) {
+            error_log("Vista no encontrada: " . $viewFile);
+            throw new Exception("Vista no encontrada: " . $view);
+        }
         extract($data);
-        require_once 'views/' . $view . '.php';
+        ob_start();
+        require_once $viewFile;
+        return ob_get_clean();
     }
 
     protected function jsonResponse($data, $status = 200) {

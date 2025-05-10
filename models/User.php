@@ -4,10 +4,8 @@ class User extends Model {
     
     public function findByEmail($email) {
         $sql = "SELECT * FROM {$this->table} WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':email', $email);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->query($sql, [':email' => $email]);
+        return $result ? $result[0] : false;
     }
     
     public function getUserPermissions($userId) {
@@ -17,45 +15,32 @@ class User extends Model {
                 INNER JOIN usuarios u ON u.rol_id = rp.rol_id 
                 WHERE u.id = :user_id";
         
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':user_id', $userId);
-        $stmt->execute();
-        
-        return array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'codigo');
+        $result = $this->query($sql, [':user_id' => $userId]);
+        return array_column($result, 'codigo');
     }
     
     public function createPasswordReset($userId, $token, $expires) {
-        $sql = "INSERT INTO password_resets (user_id, token, expires) 
-                VALUES (:user_id, :token, :expires)";
-        
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':user_id', $userId);
-        $stmt->bindValue(':token', $token);
-        $stmt->bindValue(':expires', $expires);
-        
-        return $stmt->execute();
+        $data = [
+            'user_id' => $userId,
+            'token' => $token,
+            'expires' => $expires
+        ];
+        return $this->create($data);
     }
     
     public function getPasswordReset($token) {
         $sql = "SELECT * FROM password_resets WHERE token = :token";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':token', $token);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->query($sql, [':token' => $token]);
+        return $result ? $result[0] : false;
     }
     
     public function deletePasswordReset($token) {
         $sql = "DELETE FROM password_resets WHERE token = :token";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':token', $token);
-        return $stmt->execute();
+        return $this->query($sql, [':token' => $token]);
     }
     
     public function updateLastLogin($userId) {
-        $sql = "UPDATE {$this->table} SET ultimo_acceso = NOW() WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':id', $userId);
-        return $stmt->execute();
+        return $this->update($userId, ['ultimo_acceso' => date('Y-m-d H:i:s')]);
     }
     
     public function getUsersByRole($roleId) {
@@ -104,11 +89,7 @@ class User extends Model {
                 OR email LIKE :query 
                 OR telefono LIKE :query";
         
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':query', "%{$query}%");
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->query($sql, [':query' => "%{$query}%"]);
     }
     
     public function getUsersWithRole() {
@@ -117,10 +98,7 @@ class User extends Model {
                 INNER JOIN roles r ON u.rol_id = r.id 
                 ORDER BY u.nombre";
         
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->query($sql);
     }
     
     public function getUserStats() {
@@ -131,10 +109,8 @@ class User extends Model {
                     COUNT(DISTINCT rol_id) as total_roles
                 FROM {$this->table}";
         
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->query($sql);
+        return $result ? $result[0] : false;
     }
 }
 ?> 

@@ -32,8 +32,13 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    <input class="form-control" id="raza" name="raza" type="text" value="<?= $mascota['raza'] ?>" required />
-                                    <label for="raza">Raza</label>
+                                    <select class="form-control" id="tamano" name="tamano" required>
+                                        <option value="">Seleccione un tamaño</option>
+                                        <option value="Pequeño" <?= $mascota['tamano'] === 'Pequeño' ? 'selected' : '' ?>>Pequeño</option>
+                                        <option value="Mediano" <?= $mascota['tamano'] === 'Mediano' ? 'selected' : '' ?>>Mediano</option>
+                                        <option value="Grande" <?= $mascota['tamano'] === 'Grande' ? 'selected' : '' ?>>Grande</option>
+                                    </select>
+                                    <label for="tamano">Tamaño</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -46,10 +51,18 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
+                                    <input class="form-control" id="raza" name="raza" type="text" value="<?= $mascota['raza'] ?>" required />
+                                    <label for="raza">Raza</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
                                     <input class="form-control" id="peso" name="peso" type="number" step="0.1" value="<?= $mascota['peso'] ?>" />
                                     <label for="peso">Peso (kg)</label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <select class="form-control" id="sexo" name="sexo" required>
@@ -58,6 +71,12 @@
                                         <option value="Hembra" <?= $mascota['sexo'] === 'Hembra' ? 'selected' : '' ?>>Hembra</option>
                                     </select>
                                     <label for="sexo">Sexo</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" type="date" value="<?= $mascota['fecha_nacimiento'] ?>" required />
+                                    <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                                 </div>
                             </div>
                         </div>
@@ -78,6 +97,24 @@
                             <textarea class="form-control" id="descripcion" name="descripcion" style="height: 100px"><?= $mascota['descripcion'] ?></textarea>
                             <label for="descripcion">Descripción</label>
                         </div>
+                        <?php if (in_array('gestionar_mascotas', $_SESSION['permisos'] ?? [])): ?>
+                        <div class="mb-3">
+                            <label for="propietario_id" class="form-label">Propietario</label>
+                            <select class="form-select select2" id="propietario_id" name="propietario_id" required>
+                                <option value="">Seleccione un propietario</option>
+                                <?php foreach ($usuarios as $usuario): ?>
+                                    <option value="<?= $usuario['id'] ?>" <?= $mascota['propietario_id'] == $usuario['id'] ? 'selected' : '' ?>><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado" name="estado" required>
+                                <option value="activo" <?= $mascota['estado'] === 'activo' ? 'selected' : '' ?>>Activo</option>
+                                <option value="inactivo" <?= $mascota['estado'] === 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
+                            </select>
+                        </div>
+                        <?php endif; ?>
                         <div class="mt-4 mb-0">
                             <div class="d-grid">
                                 <button class="btn btn-primary btn-block" type="submit">Actualizar Mascota</button>
@@ -90,6 +127,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Validar tamaño y tipo de imagen
@@ -108,5 +147,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // Inicializar select2 para propietario
+    if (window.jQuery && $('.select2').length) {
+        $('.select2').select2({
+            width: '100%',
+            placeholder: 'Buscar propietario...',
+            allowClear: true
+        });
+    }
 });
 </script> 

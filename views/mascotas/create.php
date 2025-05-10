@@ -6,74 +6,53 @@
                     <h3 class="text-center font-weight-light my-4">Nueva Mascota</h3>
                 </div>
                 <div class="card-body">
-                    <form id="createMascotaForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>mascotas/create')" enctype="multipart/form-data">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="nombre" name="nombre" type="text" required />
-                                    <label for="nombre">Nombre de la Mascota</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <select class="form-control" id="especie" name="especie" required>
-                                        <option value="">Seleccione...</option>
-                                        <option value="Perro">Perro</option>
-                                        <option value="Gato">Gato</option>
-                                        <option value="Ave">Ave</option>
-                                        <option value="Roedor">Roedor</option>
-                                        <option value="Reptil">Reptil</option>
-                                        <option value="Otro">Otro</option>
-                                    </select>
-                                    <label for="especie">Especie</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="raza" name="raza" type="text" required />
-                                    <label for="raza">Raza</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" type="date" required />
-                                    <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="peso" name="peso" type="number" step="0.1" />
-                                    <label for="peso">Peso (kg)</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <select class="form-control" id="sexo" name="sexo" required>
-                                        <option value="">Seleccione...</option>
-                                        <option value="Macho">Macho</option>
-                                        <option value="Hembra">Hembra</option>
-                                    </select>
-                                    <label for="sexo">Sexo</label>
-                                </div>
-                            </div>
+                    <form id="formMascota">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
                         <div class="mb-3">
-                            <label for="imagen" class="form-label">Foto de la Mascota</label>
-                            <input class="form-control" type="file" id="imagen" name="imagen" accept="image/*">
-                            <small class="text-muted">Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB</small>
+                            <label for="especie" class="form-label">Especie</label>
+                            <select class="form-select" id="especie" name="especie" required>
+                                <option value="">Seleccione una especie</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                            </select>
                         </div>
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" id="descripcion" name="descripcion" style="height: 100px"></textarea>
-                            <label for="descripcion">Descripción</label>
+                        <div class="mb-3">
+                            <label for="tamano" class="form-label">Tamaño</label>
+                            <select class="form-select" id="tamano" name="tamano" required>
+                                <option value="">Seleccione un tamaño</option>
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano">Mediano</option>
+                                <option value="Grande">Grande</option>
+                            </select>
                         </div>
-                        <div class="mt-4 mb-0">
-                            <div class="d-grid">
-                                <button class="btn btn-primary btn-block" type="submit">Registrar Mascota</button>
-                            </div>
+                        <div class="mb-3">
+                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        </div>
+                        <?php if (in_array('gestionar_mascotas', $_SESSION['permisos'] ?? [])): ?>
+                        <div class="mb-3">
+                            <label for="propietario_id" class="form-label">Propietario</label>
+                            <select class="form-select select2" id="propietario_id" name="propietario_id" required>
+                                <option value="">Seleccione un propietario</option>
+                                <?php foreach ($usuarios as $usuario): ?>
+                                    <option value="<?= $usuario['id'] ?>"><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado" name="estado" required>
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -82,6 +61,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Validar tamaño y tipo de imagen
@@ -100,5 +81,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    // Inicializar select2 para propietario
+    if (window.jQuery && $('.select2').length) {
+        $('.select2').select2({
+            width: '100%',
+            placeholder: 'Buscar propietario...',
+            allowClear: true
+        });
+    }
 });
 </script> 

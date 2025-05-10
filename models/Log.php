@@ -2,24 +2,39 @@
 class Log extends Model {
     protected $table = 'logs';
 
+    public function __construct() {
+        parent::__construct();
+    }
+
     public function crearLog($usuarioId, $accion) {
         $data = [
             'usuario_id' => $usuarioId,
             'accion' => $accion,
-            'fecha' => date('Y-m-d H:i:s'),
-            'ip' => $_SERVER['REMOTE_ADDR']
+            'fecha' => date('Y-m-d H:i:s')
         ];
         return $this->create($data);
     }
 
-    public function getActividadReciente($usuarioId, $limite = 10) {
-        $sql = "SELECT l.*, u.nombre as usuario_nombre 
-                FROM {$this->table} l 
-                JOIN usuarios u ON l.usuario_id = u.id 
-                WHERE l.usuario_id = ? 
-                ORDER BY l.fecha DESC 
-                LIMIT ?";
-        return $this->query($sql, [$usuarioId, $limite]);
+    public function getActividadReciente($usuario_id, $limit = 10) {
+        try {
+            $sql = "SELECT l.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                    FROM {$this->table} l
+                    LEFT JOIN dispositivos d ON l.dispositivo_id = d.id
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    WHERE d.usuario_id = :usuario_id
+                    ORDER BY l.fecha DESC
+                    LIMIT :limit";
+            
+            $result = $this->query($sql, [
+                ':usuario_id' => $usuario_id,
+                ':limit' => $limit
+            ]);
+            
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getActividadReciente: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getActividadByFecha($usuarioId, $fechaInicio, $fechaFin) {
@@ -44,19 +59,115 @@ class Log extends Model {
 
     public function limpiarLogsAntiguos($dias = 30) {
         $sql = "DELETE FROM {$this->table} 
-                WHERE fecha < DATE_SUB(NOW(), INTERVAL ? DAY)";
-        return $this->query($sql, [$dias]);
+                WHERE fecha < DATE_SUB(NOW(), INTERVAL :dias DAY)";
+        
+        return $this->query($sql, [':dias' => $dias]);
     }
 
-    public function getEstadisticas($usuarioId) {
+    public function getEstadisticas($usuario_id) {
         $sql = "SELECT 
                     COUNT(*) as total,
-                    COUNT(DISTINCT DATE(fecha)) as dias_activos,
-                    COUNT(DISTINCT HOUR(fecha)) as horas_activas,
-                    MAX(fecha) as ultima_actividad
-                FROM {$this->table} 
-                WHERE usuario_id = ?";
-        return $this->query($sql, [$usuarioId])[0];
+                    COUNT(DISTINCT dispositivo_id) as dispositivos,
+                    COUNT(DISTINCT tipo) as tipos
+                FROM {$this->table} l
+                JOIN dispositivos d ON l.dispositivo_id = d.id
+                WHERE d.usuario_id = :usuario_id";
+        
+        $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+        return $result ? $result[0] : [
+            'total' => 0,
+            'dispositivos' => 0,
+            'tipos' => 0
+        ];
+    }
+
+    public function registrarActividad($dispositivo_id, $tipo, $mensaje, $datos = null) {
+        $sql = "INSERT INTO {$this->table} 
+                (dispositivo_id, tipo, mensaje, datos, fecha) 
+                VALUES (:dispositivo_id, :tipo, :mensaje, :datos, NOW())";
+        
+        return $this->query($sql, [
+            ':dispositivo_id' => $dispositivo_id,
+            ':tipo' => $tipo,
+            ':mensaje' => $mensaje,
+            ':datos' => $datos ? json_encode($datos) : null
+        ]);
+    }
+
+    public function getActividadPorDispositivo($dispositivo_id, $limit = 10) {
+        $sql = "SELECT l.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                FROM {$this->table} l
+                JOIN dispositivos d ON l.dispositivo_id = d.id
+                LEFT JOIN mascotas m ON d.mascota_id = m.id
+                WHERE l.dispositivo_id = :dispositivo_id
+                ORDER BY l.fecha DESC
+                LIMIT :limit";
+        
+        return $this->query($sql, [
+            ':dispositivo_id' => $dispositivo_id,
+            ':limit' => $limit
+        ]);
+    }
+
+    public function getActividadPorMascota($mascota_id, $limit = 10) {
+        $sql = "SELECT l.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                FROM {$this->table} l
+                JOIN dispositivos d ON l.dispositivo_id = d.id
+                JOIN mascotas m ON d.mascota_id = m.id
+                WHERE m.id = :mascota_id
+                ORDER BY l.fecha DESC
+                LIMIT :limit";
+        
+        return $this->query($sql, [
+            ':mascota_id' => $mascota_id,
+            ':limit' => $limit
+        ]);
+    }
+
+    public function getActividadPorTipo($usuario_id, $tipo, $limit = 10) {
+        $sql = "SELECT l.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                FROM {$this->table} l
+                JOIN dispositivos d ON l.dispositivo_id = d.id
+                LEFT JOIN mascotas m ON d.mascota_id = m.id
+                WHERE d.usuario_id = :usuario_id 
+                AND l.tipo = :tipo
+                ORDER BY l.fecha DESC
+                LIMIT :limit";
+        
+        return $this->query($sql, [
+            ':usuario_id' => $usuario_id,
+            ':tipo' => $tipo,
+            ':limit' => $limit
+        ]);
+    }
+
+    public function getActividadPorFecha($usuario_id, $fecha_inicio, $fecha_fin) {
+        $sql = "SELECT l.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                FROM {$this->table} l
+                JOIN dispositivos d ON l.dispositivo_id = d.id
+                LEFT JOIN mascotas m ON d.mascota_id = m.id
+                WHERE d.usuario_id = :usuario_id 
+                AND l.fecha BETWEEN :fecha_inicio AND :fecha_fin
+                ORDER BY l.fecha DESC";
+        
+        return $this->query($sql, [
+            ':usuario_id' => $usuario_id,
+            ':fecha_inicio' => $fecha_inicio,
+            ':fecha_fin' => $fecha_fin
+        ]);
+    }
+
+    public function getActividadPorTipoConEstadisticas($usuario_id) {
+        $sql = "SELECT 
+                    l.tipo,
+                    COUNT(*) as total,
+                    COUNT(DISTINCT l.dispositivo_id) as dispositivos
+                FROM {$this->table} l
+                JOIN dispositivos d ON l.dispositivo_id = d.id
+                WHERE d.usuario_id = :usuario_id
+                GROUP BY l.tipo";
+        
+        return $this->query($sql, [':usuario_id' => $usuario_id]);
     }
 }
 ?> 

@@ -14,18 +14,6 @@ const formatNumber = (number) => {
 };
 
 // Funciones de UI
-const showToast = (message, type = 'success') => {
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: type === 'danger' ? 'error' : type,
-        title: message,
-        showConfirmButton: false,
-        timer: 3500,
-        timerProgressBar: true
-    });
-};
-
 const showLoader = () => {
     const loader = document.createElement('div');
     loader.className = 'loader';
@@ -59,21 +47,22 @@ const handleFormSubmit = async (form, url, method = 'POST') => {
 
         const response = await fetch(url, {
             method: method,
-            body: formData
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            showToast(result.message || 'Operación exitosa');
+            showMessage('success', result.message || 'Operación exitosa');
             if (result.redirect) {
                 window.location.href = result.redirect;
             }
         } else {
-            showToast(result.error || 'Error en la operación', 'danger');
+            showMessage('error', result.error || 'Error en la operación');
         }
     } catch (error) {
-        showToast('Error en la conexión', 'danger');
+        showMessage('error', 'Error en la conexión');
     } finally {
         hideLoader();
     }
@@ -123,7 +112,7 @@ const requestNotificationPermission = async () => {
     try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-            showToast('Notificaciones activadas');
+            showMessage('success', 'Notificaciones activadas');
         }
     } catch (error) {
         console.error('Error al solicitar permisos de notificación:', error);

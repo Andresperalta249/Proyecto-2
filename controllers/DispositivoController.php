@@ -29,8 +29,8 @@ class DispositivoController extends Controller {
             redirect('auth/login');
         }
 
-        // Obtener mascotas del usuario para el select
-        $mascotas = $this->mascotaModel->getMascotasByUser($_SESSION['user_id']);
+        // Obtener solo mascotas del usuario que no tengan dispositivo asignado
+        $mascotas = $this->mascotaModel->getMascotasSinDispositivos($_SESSION['user_id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->validateRequest(['nombre', 'tipo', 'mascota_id', 'descripcion']);
@@ -66,14 +66,19 @@ class DispositivoController extends Controller {
             redirect('auth/login');
         }
 
-        // Verificar que el dispositivo pertenezca al usuario
         $dispositivo = $this->dispositivoModel->findById($id);
         if (!$dispositivo || $dispositivo['usuario_id'] != $_SESSION['user_id']) {
             redirect('dispositivos');
         }
 
-        // Obtener mascotas del usuario para el select
-        $mascotas = $this->mascotaModel->getMascotasByUser($_SESSION['user_id']);
+        // Obtener mascotas sin dispositivo + la mascota actualmente asignada
+        $mascotas = $this->mascotaModel->getMascotasSinDispositivos($_SESSION['user_id']);
+        if ($dispositivo['mascota_id']) {
+            $mascotaActual = $this->mascotaModel->findById($dispositivo['mascota_id']);
+            if ($mascotaActual) {
+                $mascotas[] = $mascotaActual;
+            }
+        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->validateRequest(['nombre', 'tipo', 'mascota_id', 'descripcion', 'estado']);
