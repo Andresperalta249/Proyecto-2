@@ -7,13 +7,19 @@ class Alerta extends Model {
     }
 
     public function getAlertasByUser($userId) {
-        $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre 
-                FROM {$this->table} a 
-                LEFT JOIN dispositivos d ON a.dispositivo_id = d.id 
-                LEFT JOIN mascotas m ON d.mascota_id = m.id 
-                WHERE a.usuario_id = ? 
-                ORDER BY a.fecha DESC";
-        return $this->query($sql, [$userId]);
+        try {
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre 
+                    FROM {$this->table} a 
+                    LEFT JOIN dispositivos d ON a.dispositivo_id = d.id 
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id 
+                    WHERE a.usuario_id = ? 
+                    ORDER BY a.fecha DESC";
+            $result = $this->query($sql, [$userId]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasByUser: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAlertasNoLeidas($usuario_id, $limit = 5) {
@@ -26,12 +32,10 @@ class Alerta extends Model {
                     AND a.leida = 0
                     ORDER BY a.fecha_creacion DESC
                     LIMIT :limit";
-            
             $result = $this->query($sql, [
                 ':usuario_id' => $usuario_id,
                 ':limit' => $limit
             ]);
-            
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getAlertasNoLeidas: " . $e->getMessage());
@@ -40,37 +44,63 @@ class Alerta extends Model {
     }
 
     public function marcarComoLeida($id) {
-        $sql = "UPDATE {$this->table} 
-                SET leida = 1, 
-                    fecha_lectura = NOW() 
-                WHERE id = :id";
-        return $this->query($sql, [':id' => $id]);
+        try {
+            $sql = "UPDATE {$this->table} 
+                    SET leida = 1, 
+                        fecha_lectura = NOW() 
+                    WHERE id = :id";
+            return $this->query($sql, [':id' => $id]);
+        } catch (Exception $e) {
+            error_log("Error en marcarComoLeida: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function marcarTodasComoLeidas($usuario_id) {
-        $sql = "UPDATE {$this->table} a
-                JOIN dispositivos d ON a.dispositivo_id = d.id
-                SET a.leida = 1,
-                    a.fecha_lectura = NOW()
-                WHERE d.usuario_id = :usuario_id 
-                AND a.leida = 0";
-        return $this->query($sql, [':usuario_id' => $usuario_id]);
+        try {
+            $sql = "UPDATE {$this->table} a
+                    JOIN dispositivos d ON a.dispositivo_id = d.id
+                    SET a.leida = 1,
+                        a.fecha_lectura = NOW()
+                    WHERE d.usuario_id = :usuario_id 
+                    AND a.leida = 0";
+            return $this->query($sql, [':usuario_id' => $usuario_id]);
+        } catch (Exception $e) {
+            error_log("Error en marcarTodasComoLeidas: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function crearAlerta($data) {
-        return $this->create($data);
+        try {
+            return $this->create($data);
+        } catch (Exception $e) {
+            error_log("Error en crearAlerta: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function getAlertasByDispositivo($dispositivoId) {
-        return $this->findAll(['dispositivo_id' => $dispositivoId]);
+        try {
+            return $this->findAll(['dispositivo_id' => $dispositivoId]) ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasByDispositivo: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAlertasByMascota($mascotaId) {
-        $sql = "SELECT a.* FROM {$this->table} a 
-                JOIN dispositivos d ON a.dispositivo_id = d.id 
-                WHERE d.mascota_id = ? 
-                ORDER BY a.fecha DESC";
-        return $this->query($sql, [$mascotaId]);
+        try {
+            $sql = "SELECT a.* FROM {$this->table} a 
+                    JOIN dispositivos d ON a.dispositivo_id = d.id 
+                    WHERE d.mascota_id = ? 
+                    ORDER BY a.fecha DESC";
+            $result = $this->query($sql, [$mascotaId]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasByMascota: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getEstadisticas($usuario_id) {
@@ -82,9 +112,7 @@ class Alerta extends Model {
                     FROM {$this->table} a
                     LEFT JOIN dispositivos d ON a.dispositivo_id = d.id
                     WHERE d.usuario_id = :usuario_id";
-            
             $result = $this->query($sql, [':usuario_id' => $usuario_id]);
-            
             if (!$result || !isset($result[0])) {
                 return [
                     'total' => 0,
@@ -92,8 +120,6 @@ class Alerta extends Model {
                     'alertas_altas' => 0
                 ];
             }
-
-            // Asegurarse de que los valores nulos se conviertan a 0
             return [
                 'total' => (int)($result[0]['total'] ?? 0),
                 'no_leidas' => (int)($result[0]['no_leidas'] ?? 0),
@@ -110,83 +136,108 @@ class Alerta extends Model {
     }
 
     public function getAlertasPorDispositivo($dispositivo_id, $limit = 10) {
-        $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
-                FROM {$this->table} a
-                JOIN dispositivos d ON a.dispositivo_id = d.id
-                LEFT JOIN mascotas m ON d.mascota_id = m.id
-                WHERE a.dispositivo_id = :dispositivo_id
-                ORDER BY a.fecha_creacion DESC
-                LIMIT :limit";
-        
-        return $this->query($sql, [
-            ':dispositivo_id' => $dispositivo_id,
-            ':limit' => $limit
-        ]);
+        try {
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                    FROM {$this->table} a
+                    JOIN dispositivos d ON a.dispositivo_id = d.id
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    WHERE a.dispositivo_id = :dispositivo_id
+                    ORDER BY a.fecha_creacion DESC
+                    LIMIT :limit";
+            $result = $this->query($sql, [
+                ':dispositivo_id' => $dispositivo_id,
+                ':limit' => $limit
+            ]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasPorDispositivo: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAlertasPorMascota($mascota_id, $limit = 10) {
-        $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
-                FROM {$this->table} a
-                JOIN dispositivos d ON a.dispositivo_id = d.id
-                JOIN mascotas m ON d.mascota_id = m.id
-                WHERE m.id = :mascota_id
-                ORDER BY a.fecha_creacion DESC
-                LIMIT :limit";
-        
-        return $this->query($sql, [
-            ':mascota_id' => $mascota_id,
-            ':limit' => $limit
-        ]);
+        try {
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                    FROM {$this->table} a
+                    JOIN dispositivos d ON a.dispositivo_id = d.id
+                    JOIN mascotas m ON d.mascota_id = m.id
+                    WHERE m.id = :mascota_id
+                    ORDER BY a.fecha_creacion DESC
+                    LIMIT :limit";
+            $result = $this->query($sql, [
+                ':mascota_id' => $mascota_id,
+                ':limit' => $limit
+            ]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasPorMascota: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAlertasPorTipo($usuario_id, $tipo, $limit = 10) {
-        $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
-                FROM {$this->table} a
-                JOIN dispositivos d ON a.dispositivo_id = d.id
-                LEFT JOIN mascotas m ON d.mascota_id = m.id
-                WHERE d.usuario_id = :usuario_id 
-                AND a.tipo = :tipo
-                ORDER BY a.fecha_creacion DESC
-                LIMIT :limit";
-        
-        return $this->query($sql, [
-            ':usuario_id' => $usuario_id,
-            ':tipo' => $tipo,
-            ':limit' => $limit
-        ]);
+        try {
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                    FROM {$this->table} a
+                    JOIN dispositivos d ON a.dispositivo_id = d.id
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    WHERE d.usuario_id = :usuario_id 
+                    AND a.tipo = :tipo
+                    ORDER BY a.fecha_creacion DESC
+                    LIMIT :limit";
+            $result = $this->query($sql, [
+                ':usuario_id' => $usuario_id,
+                ':tipo' => $tipo,
+                ':limit' => $limit
+            ]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasPorTipo: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAlertasPorPrioridad($usuario_id, $prioridad, $limit = 10) {
-        $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
-                FROM {$this->table} a
-                JOIN dispositivos d ON a.dispositivo_id = d.id
-                LEFT JOIN mascotas m ON d.mascota_id = m.id
-                WHERE d.usuario_id = :usuario_id 
-                AND a.prioridad = :prioridad
-                ORDER BY a.fecha_creacion DESC
-                LIMIT :limit";
-        
-        return $this->query($sql, [
-            ':usuario_id' => $usuario_id,
-            ':prioridad' => $prioridad,
-            ':limit' => $limit
-        ]);
+        try {
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                    FROM {$this->table} a
+                    JOIN dispositivos d ON a.dispositivo_id = d.id
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    WHERE d.usuario_id = :usuario_id 
+                    AND a.prioridad = :prioridad
+                    ORDER BY a.fecha_creacion DESC
+                    LIMIT :limit";
+            $result = $this->query($sql, [
+                ':usuario_id' => $usuario_id,
+                ':prioridad' => $prioridad,
+                ':limit' => $limit
+            ]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasPorPrioridad: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function getAlertasPorFecha($usuario_id, $fecha_inicio, $fecha_fin) {
-        $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
-                FROM {$this->table} a
-                JOIN dispositivos d ON a.dispositivo_id = d.id
-                LEFT JOIN mascotas m ON d.mascota_id = m.id
-                WHERE d.usuario_id = :usuario_id 
-                AND a.fecha_creacion BETWEEN :fecha_inicio AND :fecha_fin
-                ORDER BY a.fecha_creacion DESC";
-        
-        return $this->query($sql, [
-            ':usuario_id' => $usuario_id,
-            ':fecha_inicio' => $fecha_inicio,
-            ':fecha_fin' => $fecha_fin
-        ]);
+        try {
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre
+                    FROM {$this->table} a
+                    JOIN dispositivos d ON a.dispositivo_id = d.id
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    WHERE d.usuario_id = :usuario_id 
+                    AND a.fecha_creacion BETWEEN :fecha_inicio AND :fecha_fin
+                    ORDER BY a.fecha_creacion DESC";
+            $result = $this->query($sql, [
+                ':usuario_id' => $usuario_id,
+                ':fecha_inicio' => $fecha_inicio,
+                ':fecha_fin' => $fecha_fin
+            ]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getAlertasPorFecha: " . $e->getMessage());
+            return [];
+        }
     }
 }
 ?> 

@@ -12,13 +12,13 @@ class Mascota extends Model {
 
     public function createMascota($data) {
         // Solo permitir los campos válidos
-        $allowed = ['nombre', 'especie', 'tamano', 'fecha_nacimiento', 'usuario_id', 'propietario_id', 'estado'];
+        $allowed = ['nombre', 'especie', 'tamano', 'fecha_nacimiento', 'usuario_id', 'propietario_id', 'estado', 'genero'];
         $filtered = array_intersect_key($data, array_flip($allowed));
         return $this->create($filtered);
     }
 
     public function updateMascota($id, $data) {
-        $allowed = ['nombre', 'especie', 'tamano', 'fecha_nacimiento', 'propietario_id', 'estado'];
+        $allowed = ['nombre', 'especie', 'tamano', 'fecha_nacimiento', 'propietario_id', 'estado', 'genero'];
         $filtered = array_intersect_key($data, array_flip($allowed));
         return $this->update($id, $filtered);
     }
@@ -31,7 +31,6 @@ class Mascota extends Model {
         $sql = "SELECT 
                     COUNT(*) as total,
                     COUNT(DISTINCT especie) as especies,
-                    COUNT(DISTINCT raza) as razas,
                     AVG(TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE())) as edad_promedio
                 FROM {$this->table} 
                 WHERE usuario_id = :usuario_id";
@@ -39,7 +38,6 @@ class Mascota extends Model {
         return $result ? $result[0] : [
             'total' => 0,
             'especies' => 0,
-            'razas' => 0,
             'edad_promedio' => 0
         ];
     }

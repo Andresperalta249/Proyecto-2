@@ -48,38 +48,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="raza" name="raza" type="text" value="<?= $mascota['raza'] ?>" required />
-                                    <label for="raza">Raza</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="peso" name="peso" type="number" step="0.1" value="<?= $mascota['peso'] ?>" />
-                                    <label for="peso">Peso (kg)</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <select class="form-control" id="sexo" name="sexo" required>
-                                        <option value="">Seleccione...</option>
-                                        <option value="Macho" <?= $mascota['sexo'] === 'Macho' ? 'selected' : '' ?>>Macho</option>
-                                        <option value="Hembra" <?= $mascota['sexo'] === 'Hembra' ? 'selected' : '' ?>>Hembra</option>
-                                    </select>
-                                    <label for="sexo">Sexo</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" type="date" value="<?= $mascota['fecha_nacimiento'] ?>" required />
-                                    <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                                </div>
-                            </div>
-                        </div>
                         <div class="mb-3">
                             <label for="imagen" class="form-label">Foto de la Mascota</label>
                             <?php if ($mascota['imagen']): ?>

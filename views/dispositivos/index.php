@@ -1,48 +1,46 @@
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Mis Dispositivos</h1>
-        <a href="<?= BASE_URL ?>dispositivos/create" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nuevo Dispositivo
-        </a>
-    </div>
-
-    <div class="row">
-        <?php foreach ($dispositivos as $dispositivo): ?>
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <?= $dispositivo['nombre'] ?>
-                        <span class="badge bg-<?= $dispositivo['estado'] === 'activo' ? 'success' : 'danger' ?> float-end">
-                            <?= ucfirst($dispositivo['estado']) ?>
-                        </span>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">
-                        <strong>Tipo:</strong> <?= $dispositivo['tipo'] ?><br>
-                        <strong>ID:</strong> <?= $dispositivo['identificador'] ?><br>
-                        <strong>Mascota:</strong> <?= $dispositivo['mascota_nombre'] ?><br>
-                        <strong>Descripción:</strong> <?= $dispositivo['descripcion'] ?>
-                    </p>
-                    <div class="btn-group w-100">
-                        <a href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" class="btn btn-info">
-                            <i class="fas fa-chart-line"></i> Monitor
-                        </a>
-                        <a href="<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id'] ?>" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-                        <button class="btn btn-danger" onclick="deleteDispositivo(<?= $dispositivo['id'] ?>)">
-                            <i class="fas fa-trash"></i> Eliminar
-                        </button>
-                    </div>
-                </div>
-            </div>
+<?php
+$header_buttons = '<div class="d-flex gap-2"><a href="' . BASE_URL . 'dispositivos/create" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Dispositivo</a></div>';
+?>
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="tablaDispositivos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Identificador</th>
+                        <th>Mascota</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($dispositivos as $dispositivo): ?>
+                    <tr>
+                        <td><?= $dispositivo['id'] ?></td>
+                        <td><?= htmlspecialchars($dispositivo['nombre']) ?></td>
+                        <td><?= htmlspecialchars($dispositivo['tipo']) ?></td>
+                        <td><?= htmlspecialchars($dispositivo['identificador']) ?></td>
+                        <td><?= htmlspecialchars($dispositivo['mascota_nombre']) ?></td>
+                        <td>
+                            <span class="badge bg-<?= $dispositivo['estado'] === 'activo' ? 'success' : 'danger' ?>">
+                                <?= ucfirst($dispositivo['estado']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <a href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" class="btn btn-info btn-sm" title="Monitor"><i class="fas fa-chart-line"></i></a>
+                            <a href="<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id'] ?>" class="btn btn-primary btn-sm" title="Editar"><i class="fas fa-edit"></i></a>
+                            <button class="btn btn-danger btn-sm" onclick="deleteDispositivo(<?= $dispositivo['id'] ?>)" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
-        <?php endforeach; ?>
     </div>
 </div>
-
 <script>
 function deleteDispositivo(id) {
     if (confirm('¿Estás seguro de que deseas eliminar este dispositivo?')) {
@@ -55,17 +53,25 @@ function deleteDispositivo(id) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showToast(data.message);
+                alert(data.message);
                 setTimeout(() => {
                     window.location.reload();
                 }, 1500);
             } else {
-                showToast(data.error, 'danger');
+                alert(data.error);
             }
         })
         .catch(error => {
-            showToast('Error al eliminar el dispositivo', 'danger');
+            alert('Error al eliminar el dispositivo');
         });
     }
 }
+$(document).ready(function() {
+    $('#tablaDispositivos').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+        },
+        responsive: true
+    });
+});
 </script> 

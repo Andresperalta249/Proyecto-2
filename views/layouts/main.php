@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <?php if (isset($_SESSION['user_id'])): ?>
+    <?php if (isset($_SESSION['usuario_id'])): ?>
         <!-- Sidebar -->
         <nav class="sidebar">
             <div class="sidebar-brand">
@@ -71,16 +71,7 @@
                         </a>
                     </li>
                     
-                    <?php if (checkPermission('ver_usuarios')): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= APP_URL ?>/usuarios">
-                            <i class="fas fa-users"></i>
-                            Usuarios
-                        </a>
-                    </li>
-                    <?php endif; ?>
-                    
-                    <?php if (checkPermission('ver_mascotas')): ?>
+                    <?php if (verificarPermiso('gestionar_mascotas') || verificarPermiso('ver_mascotas')): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/mascotas">
                             <i class="fas fa-paw"></i>
@@ -89,7 +80,7 @@
                     </li>
                     <?php endif; ?>
                     
-                    <?php if (checkPermission('ver_dispositivos')): ?>
+                    <?php if (verificarPermiso('gestionar_dispositivos')): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/dispositivos">
                             <i class="fas fa-microchip"></i>
@@ -98,7 +89,7 @@
                     </li>
                     <?php endif; ?>
                     
-                    <?php if (checkPermission('ver_alertas')): ?>
+                    <?php if (verificarPermiso('ver_alertas')): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/alertas">
                             <i class="fas fa-bell"></i>
@@ -107,7 +98,7 @@
                     </li>
                     <?php endif; ?>
                     
-                    <?php if (checkPermission('ver_monitor')): ?>
+                    <?php if (verificarPermiso('ver_monitor')): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/monitor">
                             <i class="fas fa-desktop"></i>
@@ -116,7 +107,40 @@
                     </li>
                     <?php endif; ?>
                     
-                    <?php if (checkPermission('ver_configuracion')): ?>
+                    <?php if (
+                        verificarPermiso('ver_usuarios') ||
+                        verificarPermiso('crear_usuarios') ||
+                        verificarPermiso('editar_usuarios') ||
+                        verificarPermiso('eliminar_usuarios') ||
+                        verificarPermiso('cambiar_estado_usuarios')
+                    ): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= APP_URL ?>/usuarios">
+                            <i class="fas fa-users"></i>
+                            Usuarios
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (verificarPermiso('gestionar_roles')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= APP_URL ?>/roles">
+                            <i class="fas fa-user-tag"></i>
+                            Roles y Permisos
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (verificarPermiso('ver_reportes')): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= APP_URL ?>/reportes">
+                            <i class="fas fa-chart-bar"></i>
+                            Reportes
+                        </a>
+                    </li>
+                    <?php endif; ?>
+                    
+                    <?php if (verificarPermiso('ver_configuracion')): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/configuracion">
                             <i class="fas fa-cog"></i>

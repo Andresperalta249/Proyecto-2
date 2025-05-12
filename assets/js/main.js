@@ -126,7 +126,7 @@ const checkSession = () => {
     const now = Date.now();
     
     if (lastActivity && now - lastActivity > sessionTimeout) {
-        window.location.href = '/auth/logout.php';
+        window.location.href = '/proyecto-2/auth/logout';
     }
     
     localStorage.setItem('lastActivity', now);

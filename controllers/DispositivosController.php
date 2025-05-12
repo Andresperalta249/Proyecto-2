@@ -1,5 +1,5 @@
 <?php
-class DispositivoController extends Controller {
+class DispositivosController extends Controller {
     private $dispositivoModel;
     private $mascotaModel;
     private $logModel;
@@ -12,13 +12,10 @@ class DispositivoController extends Controller {
     }
 
     public function indexAction() {
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['usuario_id'])) {
             redirect('auth/login');
         }
-
-        // Obtener dispositivos del usuario con información de mascotas
-        $dispositivos = $this->dispositivoModel->getDispositivosWithMascotas($_SESSION['user_id']);
-
+        $dispositivos = $this->dispositivoModel->getDispositivosWithMascotas($_SESSION['usuario_id']);
         $title = 'Mis Dispositivos';
         $content = $this->render('dispositivos/index', ['dispositivos' => $dispositivos]);
         require_once 'views/layouts/main.php';

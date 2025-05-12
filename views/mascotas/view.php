@@ -17,17 +17,10 @@
                     <?php endif; ?>
                     
                     <h4><?= $mascota['nombre'] ?></h4>
-                    <p class="text-muted"><?= $mascota['especie'] ?> - <?= $mascota['raza'] ?></p>
+                    <p class="text-muted"><?= $mascota['especie'] ?></p>
                     
                     <div class="mt-4">
                         <p><strong>Edad:</strong> <?= calcularEdad($mascota['fecha_nacimiento']) ?></p>
-                        <p><strong>Sexo:</strong> <?= $mascota['sexo'] ?></p>
-                        <?php if ($mascota['peso']): ?>
-                            <p><strong>Peso:</strong> <?= $mascota['peso'] ?> kg</p>
-                        <?php endif; ?>
-                        <?php if ($mascota['descripcion']): ?>
-                            <p><strong>Descripción:</strong><br><?= $mascota['descripcion'] ?></p>
-                        <?php endif; ?>
                     </div>
                     
                     <div class="mt-4">

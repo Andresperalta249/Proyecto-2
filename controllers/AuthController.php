@@ -15,26 +15,26 @@ class AuthController extends Controller {
     }
     
     public function loginAction() {
-        // Si la petición es AJAX pero no es POST, devolver JSON de error
-        if (!isset($_SESSION['user_id']) && !($_SERVER['REQUEST_METHOD'] === 'POST') && !empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: AJAX no POST, devolviendo JSON error\n", FILE_APPEND);
+        // Si la petición es AJAX y ya está autenticado, responder con JSON de éxito
+        if (isset($_SESSION['user_id']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
             $this->jsonResponse([
-                'success' => false,
-                'error' => 'Método no permitido o sesión expirada. Recarga la página e intenta de nuevo.'
-            ], 405);
+                'success' => true,
+                'redirect' => APP_URL . '/dashboard'
+            ]);
         }
-        // Si ya está autenticado, redirigir al dashboard
+        // Si ya está autenticado y NO es AJAX, redirigir normalmente
         if (isset($_SESSION['user_id'])) {
-            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Sesión activa, redirigiendo a dashboard\n", FILE_APPEND);
             redirect('/dashboard');
         }
         
+        require_once __DIR__ . '/../includes/functions.php'; // Aseguramos que la función global esté disponible
         $loginError = '';
         
         // Solo procesar el formulario si es una solicitud POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: POST recibido\n", FILE_APPEND);
             $data = $this->validateRequest(['email', 'password']);
+            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Email recibido: '" . $data['email'] . "', Password recibido: '" . $data['password'] . "'\n", FILE_APPEND);
             
             if ($data) {
                 $user = $this->userModel->findByEmail($data['email']);
@@ -43,10 +43,11 @@ class AuthController extends Controller {
                     if (password_verify($data['password'], $user['password'])) {
                         if ($user['estado'] === 'activo') {
                             $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['usuario_id'] = $user['id'];
                             $_SESSION['user_name'] = $user['nombre'];
                             $_SESSION['user_email'] = $user['email'];
                             $_SESSION['user_role'] = $user['rol_id'];
-                            $permissions = $this->userModel->getUserPermissions($user['id']);
+                            $permissions = obtenerPermisosUsuario($user['id']);
                             $_SESSION['permissions'] = $permissions;
 
                             // Solo guardar el mensaje de sesión si NO es AJAX

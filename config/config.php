@@ -49,15 +49,17 @@ define('HASH_COST', 12); // Costo para password_hash
 define('TOKEN_EXPIRY', 3600); // 1 hora para tokens de recuperación
 
 // Iniciar sesión con configuración personalizada
-session_name(SESSION_NAME);
-session_set_cookie_params(
-    SESSION_LIFETIME,
-    SESSION_PATH,
-    SESSION_DOMAIN,
-    SESSION_SECURE,
-    SESSION_HTTP_ONLY
-);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_name(SESSION_NAME);
+    session_set_cookie_params(
+        SESSION_LIFETIME,
+        SESSION_PATH,
+        SESSION_DOMAIN,
+        SESSION_SECURE,
+        SESSION_HTTP_ONLY
+    );
+    session_start();
+}
 
 // Funciones de utilidad
 function redirect($path) {
