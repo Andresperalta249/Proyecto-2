@@ -1,39 +1,55 @@
 <?php if (empty($usuarios)): ?>
     <tr>
-        <td colspan="6" class="text-center text-muted py-4">No hay usuarios registrados.</td>
+        <td colspan="9" class="text-center text-muted py-4">No hay usuarios registrados.</td>
     </tr>
 <?php else: ?>
     <?php foreach ($usuarios as $usuario): ?>
         <tr>
-            <td class="text-center"><?= $usuario['id'] ?></td>
+            <td class="text-center id-azul"><?= $usuario['id'] ?></td>
             <td><?= htmlspecialchars($usuario['nombre']) ?></td>
             <td><?= htmlspecialchars($usuario['email']) ?></td>
             <td><?= htmlspecialchars($usuario['rol_nombre']) ?></td>
+            <td><?= htmlspecialchars($usuario['telefono'] ?? '-') ?></td>
+            <td><?= htmlspecialchars($usuario['direccion'] ?? '-') ?></td>
             <td class="text-center">
-                <div class="form-check form-switch">
-                    <input class="form-check-input cambiar-estado" type="checkbox"
+                <div class="form-check form-switch d-flex align-items-center mb-0">
+                    <input class="form-check-input cambiar-estado-usuario" type="checkbox"
                         data-id="<?= $usuario['id'] ?>"
                         data-estado="<?= $usuario['estado'] ?>"
                         <?= $usuario['estado'] === 'activo' ? 'checked' : '' ?>
-                        <?= !verificarPermiso('cambiar_estado_usuarios') ? 'disabled' : '' ?>>
-                    <label class="form-check-label">
+                        <?= !verificarPermiso('cambiar_estado_usuarios') ? 'disabled' : '' ?> >
+                    <label class="form-check-label ms-2">
                         <?= ucfirst($usuario['estado']) ?>
                     </label>
                 </div>
             </td>
             <td class="text-center">
+                <?= $usuario['ultimo_acceso'] ? date('d/m/Y H:i', strtotime($usuario['ultimo_acceso'])) : '<span class="text-muted">-</span>' ?>
+            </td>
+            <td class="text-center">
                 <?php if (verificarPermiso('editar_usuarios')): ?>
-                    <button type="button" class="btn btn-sm btn-info me-1 editar-usuario" data-id="<?= $usuario['id'] ?>" data-bs-toggle="tooltip" title="Editar">
+                    <button class="btn-accion btn-info editar-usuario" data-id="<?= $usuario['id'] ?>">
                         <i class="fas fa-edit"></i>
                     </button>
                 <?php endif; ?>
-                
                 <?php if (verificarPermiso('eliminar_usuarios')): ?>
-                    <button type="button" class="btn btn-sm btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>" data-bs-toggle="tooltip" title="Eliminar">
-                        <i class="fas fa-trash"></i>
+                    <button class="btn-accion btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>">
+                        <i class="fas fa-trash-alt"></i>
                     </button>
                 <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
-<?php endif; ?> 
+<?php endif; ?>
+
+<style>
+.btn-accion {
+    font-size: 1.1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    margin: 0 2px;
+}
+.table.bg-white {
+    background: #fff;
+}
+</style> 

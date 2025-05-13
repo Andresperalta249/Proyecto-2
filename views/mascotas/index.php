@@ -16,43 +16,40 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="http://localhost/proyecto-2/assets/css/app.css" rel="stylesheet">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <!-- <h1 class="h3 mb-0 text-gray-800">Mis Mascotas</h1> -->
-    </div>
-
-    <!-- Barra de búsqueda -->
-    <form id="formBuscarMascota" class="row g-2 mb-3">
-        <div class="col-md-4">
-            <input type="text" class="form-control" name="nombre" placeholder="Buscar por nombre...">
-        </div>
-        <div class="col-md-3">
-            <select class="form-select" name="especie">
-                <option value="">Todas las especies</option>
-                <option value="Perro">Perro</option>
-                <option value="Gato">Gato</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <select class="form-select" name="estado">
-                <option value="">Todos los estados</option>
-                <option value="Activo">Activo</option>
-                <option value="Inactivo">Inactivo</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-secondary w-100">
-                <i class="fas fa-search"></i> Buscar
-            </button>
-        </div>
-    </form>
-
+    <h1 class="mb-4">Mis Mascotas</h1>
     <!-- Tabla de mascotas -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <!-- Barra de búsqueda -->
+            <form id="formBuscarMascota" class="row g-2 mb-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="nombre" placeholder="Buscar por nombre...">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="especie">
+                        <option value="">Todas las especies</option>
+                        <option value="Perro">Perro</option>
+                        <option value="Gato">Gato</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="estado">
+                        <option value="">Todos los estados</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" id="tablaMascotas">
-                    <thead class="table-light">
+                <table class="tabla-app" id="tablaMascotas">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
@@ -68,7 +65,7 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
                     <tbody>
                         <?php foreach ($mascotas as $mascota): ?>
                         <tr>
-                            <td><?= $mascota['id'] ?></td>
+                            <td class="id-azul"><?= $mascota['id'] ?></td>
                             <td><?= htmlspecialchars($mascota['nombre']) ?></td>
                             <td><?= htmlspecialchars($mascota['especie']) ?></td>
                             <td><?= htmlspecialchars($mascota['tamano']) ?></td>
@@ -100,23 +97,24 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
                                 ?>
                             </td>
                             <td>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input cambiar-estado-mascota" type="checkbox"
+                                <div class="form-check form-switch d-flex align-items-center mb-0">
+                                    <input class="form-check-input cambiar-estado-mascota <?= $mascota['estado'] === 'inactivo' ? 'switch-inactivo' : '' ?>"
+                                        type="checkbox"
                                         data-id="<?= $mascota['id'] ?>"
-                                        <?= $mascota['estado'] === 'activo' ? 'checked' : '' ?>>
-                                    <label class="form-check-label">
+                                        <?= $mascota['estado'] === 'activo' ? 'checked' : '' ?> >
+                                    <label class="form-check-label ms-2">
                                         <?= ucfirst($mascota['estado']) ?>
                                     </label>
                                 </div>
                             </td>
                             <td>
                                 <?php if ($puedeEditar): ?>
-                                <button class="btn btn-sm btn-info me-1 btnEditarMascota" data-id="<?= $mascota['id'] ?>">
+                                <button class="btn-accion btn-info btnEditarMascota" data-id="<?= $mascota['id'] ?>">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <?php endif; ?>
                                 <?php if ($puedeEliminar): ?>
-                                <button class="btn btn-sm btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>">
+                                <button class="btn-accion btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                                 <?php endif; ?>
@@ -146,51 +144,12 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
 </div>
 
 <!-- Botón flotante para agregar mascota -->
-<style>
-.fab-mascota {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    z-index: 999;
-    background: #0d6efd;
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    padding: 0 20px 0 16px;
-    height: 56px;
-    min-width: 56px;
-    display: flex;
-    align-items: center;
-    font-size: 1.3em;
-    font-weight: 500;
-    transition: min-width 0.4s cubic-bezier(.4,0,.2,1), padding-right 0.4s cubic-bezier(.4,0,.2,1), border-radius 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
-    overflow: hidden;
-    cursor: pointer;
-}
-.fab-mascota .fab-text {
-    opacity: 0;
-    width: 0;
-    margin-left: 0;
-    transition: opacity 0.4s cubic-bezier(.4,0,.2,1), width 0.4s cubic-bezier(.4,0,.2,1), margin-left 0.4s cubic-bezier(.4,0,.2,1);
-    white-space: nowrap;
-}
-.fab-mascota:hover, .fab-mascota:focus {
-    min-width: 180px;
-    border-radius: 50px;
-    padding-right: 24px;
-}
-.fab-mascota:hover .fab-text, .fab-mascota:focus .fab-text {
-    opacity: 1;
-    width: auto;
-    margin-left: 12px;
-}
-</style>
-
-<button class="fab-mascota" id="btnNuevaMascotaFlotante">
+<?php if ($puedeCrear ?? true): ?>
+<button class="fab-crear" id="btnNuevaMascotaFlotante">
     <i class="fas fa-plus"></i>
     <span class="fab-text">Agregar Mascota</span>
 </button>
+<?php endif; ?>
 
 <script>
 // Asegurarse de que jQuery esté disponible antes de ejecutar cualquier código

@@ -106,4 +106,16 @@ class User extends Model {
         $sql = "SELECT * FROM usuarios WHERE estado = 'activo' AND rol_id = 3 ORDER BY nombre";
         return $this->query($sql);
     }
+
+    public function getMascotasPorUsuario($usuarioId) {
+        $sql = "SELECT id, nombre FROM mascotas WHERE propietario_id = :usuario_id";
+        return $this->query($sql, [':usuario_id' => $usuarioId]);
+    }
+
+    public function getDispositivosPorUsuario($usuarioId) {
+        $sql = "SELECT d.id, d.nombre FROM dispositivos d
+                INNER JOIN mascotas m ON d.mascota_id = m.id
+                WHERE m.propietario_id = :usuario_id";
+        return $this->query($sql, [':usuario_id' => $usuarioId]);
+    }
 } 
