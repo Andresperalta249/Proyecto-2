@@ -1046,3 +1046,59 @@
 [14-May-2025 00:18:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
 [14-May-2025 00:18:22 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
 [14-May-2025 00:18:22 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:24:32 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:24:32
+[14-May-2025 00:24:32 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:24:32 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:24:32 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:24:32 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:24:32 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:24:38 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:24:38
+[14-May-2025 00:24:38 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:24:38 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:24:38 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:24:38 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:24:38 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:24:40 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:24:40
+[14-May-2025 00:24:40 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:24:40 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:24:40 America/Mexico_City] SESSION: Array
+(
+    [user_id] => 1
+    [usuario_id] => 1
+    [user_name] => Super Administrador
+    [user_email] => superadmin@petcare.com
+    [user_role] => 1
+    [permissions] => Array
+        (
+            [0] => ver_usuarios
+            [1] => crear_usuarios
+            [2] => editar_usuarios
+            [3] => eliminar_usuarios
+            [4] => cambiar_estado_usuarios
+            [5] => ver_mascotas
+            [6] => crear_mascotas
+            [7] => editar_mascotas
+            [8] => eliminar_mascotas
+            [9] => cambiar_estado_mascotas
+            [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
+        )
+
+)
+
+[14-May-2025 00:24:40 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:24:42 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:24:42
+[14-May-2025 00:24:42 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:24:42 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:24:42 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:24:42 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:24:42 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL

@@ -17,6 +17,7 @@
     <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="<?= APP_URL ?>/assets/css/style.css" rel="stylesheet">
+    <link href="<?= APP_URL ?>/assets/css/app.css" rel="stylesheet">
     
     <?php if (isset($extra_css)): ?>
         <?= $extra_css ?>
