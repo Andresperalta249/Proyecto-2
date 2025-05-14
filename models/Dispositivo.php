@@ -257,5 +257,20 @@ class Dispositivo extends Model {
             return [];
         }
     }
+
+    public function getTodosDispositivosConMascotas() {
+        try {
+            $sql = "SELECT d.*, m.nombre as mascota_nombre, m.especie, m.raza, u.nombre as usuario_nombre, u.email as usuario_email
+                    FROM {$this->table} d
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    LEFT JOIN usuarios u ON d.usuario_id = u.id
+                    ORDER BY d.ultima_conexion DESC";
+            $result = $this->query($sql);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log('Error en getTodosDispositivosConMascotas: ' . $e->getMessage());
+            return [];
+        }
+    }
 }
 ?> 

@@ -93,9 +93,14 @@
                                     <button class="btn-accion btn-info editar-usuario" data-id="<?= $usuario['id'] ?>">
                                         <i class="fas fa-edit"></i>
                                     </button>
+                                    <?php
+                                    $rol = strtolower(trim($usuario['rol_nombre'] ?? ''));
+                                    if (!in_array($rol, ['administrador', 'superadministrador'])):
+                                    ?>
                                     <button class="btn-accion btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -108,48 +113,184 @@
 </div>
 
 <!-- Modal Usuario -->
-    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                    <h5 class="modal-title" id="modalUsuarioLabel">Nuevo Usuario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="modalUsuarioLabel">Editar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formUsuario" method="POST" action="/proyecto-2/usuarios/create">
+            <form id="formUsuario" method="POST" action="/proyecto-2/usuarios/update">
                 <div class="modal-body">
                     <input type="hidden" id="usuario_id" name="id">
+                    <!-- Pestañas arriba -->
+                    <ul class="nav nav-tabs nav-tabs-usuario mb-3" id="usuarioTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos" type="button" role="tab" aria-controls="datos" aria-selected="true">
+                                <i class="fas fa-user"></i> Datos
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab" aria-controls="password" aria-selected="false">
+                                <i class="fas fa-lock"></i> Cambiar Contraseña
+                            </button>
+                        </li>
+                    </ul>
+                    <style>
+                    .nav-tabs-usuario .nav-link {
+                        font-size: 1.08rem;
+                        padding: 0.7rem 1.5rem;
+                        color: #495057;
+                        border: 1px solid #dee2e6;
+                        border-bottom: none;
+                        background: #f8f9fa;
+                        margin-right: 2px;
+                        transition: background 0.2s, color 0.2s;
+                    }
+                    .nav-tabs-usuario .nav-link.active {
+                        background: #fff;
+                        color: #0d6efd;
+                        border-bottom: 2px solid #0d6efd;
+                        font-weight: 600;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+                    }
+                    .nav-tabs-usuario {
+                        border-bottom: 1px solid #dee2e6;
+                    }
+                    </style>
+                    <div class="tab-content" id="usuarioTabsContent">
+                        <div class="tab-pane fade show active" id="datos" role="tabpanel" aria-labelledby="datos-tab">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" required readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono">
+                            </div>
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion">
+                            </div>
+                            <div class="mb-3">
+                                <label for="rol_id" class="form-label">Rol</label>
+                                <select class="form-select" id="rol_id" name="rol_id" required>
+                                    <option value="">Seleccione un rol</option>
+                                    <?php if (!empty($roles)):
+                                        foreach ($roles as $rol): ?>
+                                            <option value="<?= $rol['id'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
+                                        <?php endforeach;
+                                    endif; ?>
+                                </select>
+                            </div>
+                            <!-- Campos de contraseña solo para nuevo usuario -->
+                            <div id="campos-password-nuevo" style="display:none;">
+                                <div class="mb-3 position-relative">
+                                    <label for="password_nuevo" class="form-label">Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="password_nuevo" name="password" autocomplete="new-password">
+                                    <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                                    <ul class="list-unstyled mt-2 mb-0" id="password-requisitos-nuevo">
+                                        <li id="req-len-nuevo" class="text-secondary">• Mínimo 8 caracteres</li>
+                                        <li id="req-mayus-nuevo" class="text-secondary">• Al menos una mayúscula</li>
+                                        <li id="req-minus-nuevo" class="text-secondary">• Al menos una minúscula</li>
+                                        <li id="req-num-nuevo" class="text-secondary">• Al menos un número</li>
+                                        <li id="req-esp-nuevo" class="text-secondary">• Al menos un símbolo</li>
+                                    </ul>
+                                </div>
+                                <div class="mb-3 position-relative">
+                                    <label for="confirm_password_nuevo" class="form-label">Confirmar Contraseña</label>
+                                    <input type="password" class="form-control" id="confirm_password_nuevo" name="confirm_password" autocomplete="new-password">
+                                    <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+                            <div class="mb-3 position-relative">
+                                <label for="password" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+                                <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                                <ul class="list-unstyled mt-2 mb-0" id="password-requisitos">
+                                    <li id="req-len" class="text-secondary">• Mínimo 8 caracteres</li>
+                                    <li id="req-mayus" class="text-secondary">• Al menos una mayúscula</li>
+                                    <li id="req-minus" class="text-secondary">• Al menos una minúscula</li>
+                                    <li id="req-num" class="text-secondary">• Al menos un número</li>
+                                    <li id="req-esp" class="text-secondary">• Al menos un símbolo</li>
+                                </ul>
+                            </div>
+                            <div class="mb-3 position-relative">
+                                <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" autocomplete="new-password">
+                                <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear Usuario -->
+<div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-labelledby="modalCrearUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCrearUsuarioLabel">Nuevo Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formCrearUsuario" method="POST" action="/proyecto-2/usuarios/create">
+                <div class="modal-body">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <label for="nombre_nuevo" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="nombre_nuevo" name="nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <label for="email_nuevo" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email_nuevo" name="email" required>
                     </div>
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono">
+                        <label for="telefono_nuevo" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono_nuevo" name="telefono">
                     </div>
                     <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion">
+                        <label for="direccion_nuevo" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion_nuevo" name="direccion">
                     </div>
                     <div class="mb-3">
-                        <label for="rol_id" class="form-label">Rol</label>
-                        <select class="form-select" id="rol_id" name="rol_id" required>
+                        <label for="rol_id_nuevo" class="form-label">Rol</label>
+                        <select class="form-select" id="rol_id_nuevo" name="rol_id" required>
                             <option value="">Seleccione un rol</option>
-                            <option value="2">Administrador</option>
-                            <option value="1">Superadministrador</option>
-                            <option value="3">Usuario</option>
+                            <?php if (!empty($roles)):
+                                foreach ($roles as $rol): ?>
+                                    <option value="<?= $rol['id'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
+                                <?php endforeach;
+                            endif; ?>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="mb-3 position-relative">
+                        <label for="password_nuevo" class="form-label">Nueva Contraseña</label>
+                        <input type="password" class="form-control" id="password_nuevo" name="password" autocomplete="new-password" required>
+                        <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                        <ul class="list-unstyled mt-2 mb-0" id="password-requisitos-nuevo">
+                            <li id="req-len-nuevo" class="text-secondary">• Mínimo 8 caracteres</li>
+                            <li id="req-mayus-nuevo" class="text-secondary">• Al menos una mayúscula</li>
+                            <li id="req-minus-nuevo" class="text-secondary">• Al menos una minúscula</li>
+                            <li id="req-num-nuevo" class="text-secondary">• Al menos un número</li>
+                            <li id="req-esp-nuevo" class="text-secondary">• Al menos un símbolo</li>
+                        </ul>
                     </div>
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    <div class="mb-3 position-relative">
+                        <label for="confirm_password_nuevo" class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="confirm_password_nuevo" name="confirm_password" autocomplete="new-password" required>
+                        <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -177,6 +318,17 @@
             success: function(response) {
                 if (response.success) {
                     const usuario = response.data;
+                    // Limpiar estado visual
+                    $('#usuarioTabs').show();
+                    $('#usuarioTabsContent').show();
+                    $('#datos').show();
+                    $('#msg-rol-restriccion').remove();
+                    $('#msg-restriccion').remove();
+                    $('#email').prop('readonly', true);
+                    $('#rol_id').prop('disabled', false);
+                    $('#password').prop('disabled', false);
+                    $('#confirm_password').prop('disabled', false);
+
                     $('#modalUsuarioLabel').text('Editar Usuario');
                     $('#usuario_id').val(usuario.id);
                     $('#nombre').val(usuario.nombre);
@@ -186,6 +338,102 @@
                     $('#rol_id').val(usuario.rol_id);
                     $('#password').val('');
                     $('#confirm_password').val('');
+
+                    // Lógica para mostrar solo la pestaña de contraseña si es superadmin o admin
+                    const rolNombre = (usuario.rol_nombre || '').toLowerCase();
+                    if (rolNombre === 'superadministrador' || rolNombre === 'administrador') {
+                        $('#usuarioTabs .nav-link').hide();
+                        $('#password-tab').show().addClass('active');
+                        $('#usuarioTabsContent .tab-pane').removeClass('show active');
+                        $('#password').closest('.tab-pane').addClass('show active');
+                    } else {
+                        $('#usuarioTabs .nav-link').show();
+                        $('#datos-tab').addClass('active');
+                        $('#password-tab').removeClass('active');
+                        $('#usuarioTabsContent .tab-pane').removeClass('show active');
+                        $('#datos').addClass('show active');
+                    }
+
+                    // Bloquear cambio de rol si es superadministrador (usando rol_id)
+                    if (usuario.rol_id == 1) { // 1 es el ID de Superadministrador
+                        $('#rol_id').prop('disabled', true).blur();
+                        if ($('#msg-rol-restriccion').length === 0) {
+                            $('#rol_id').parent().append('<div id="msg-rol-restriccion" class="text-danger mt-2">No puedes cambiar el rol de un Superadministrador.</div>');
+                        }
+                    } else {
+                        $('#rol_id').prop('disabled', false);
+                        $('#msg-rol-restriccion').remove();
+                    }
+
+                    // Si el usuario logueado es admin y el usuario a editar es superadmin, deshabilitar el cambio de contraseña
+                    const usuarioLogueadoRol = '<?= strtolower($_SESSION['rol_nombre'] ?? '') ?>';
+                    const usuarioLogueadoId = <?= $_SESSION['user_id'] ?? 0 ?>;
+                    
+                    // Lógica de restricción de cambio de contraseña
+                    if (rolNombre === 'superadministrador') {
+                        if (usuarioLogueadoRol === 'superadministrador' && usuarioLogueadoId === usuario.id) {
+                            $('#password').prop('disabled', false);
+                            $('#confirm_password').prop('disabled', false);
+                            $('#msg-restriccion').remove();
+                            $('#password-tab').css('display', ''); // Mostrar
+                        } else {
+                            $('#password').prop('disabled', true);
+                            $('#confirm_password').prop('disabled', true);
+                            if ($('#msg-restriccion').length === 0) {
+                                $('#password').parent().append('<div id="msg-restriccion" class="text-danger mt-2">Solo los superadministradores pueden cambiar sus propias contraseñas. Los roles inferiores no pueden modificar contraseñas de superadministradores.</div>');
+                            }
+                            // Ocultar la pestaña y forzar la de datos como activa
+                            $('#password-tab').css('display', 'none');
+                            $('#password-tab').removeClass('active');
+                            $('#datos-tab').addClass('active');
+                            $('#usuarioTabsContent .tab-pane').removeClass('show active');
+                            $('#datos').addClass('show active');
+                        }
+                    } else {
+                        $('#password').prop('disabled', false);
+                        $('#confirm_password').prop('disabled', false);
+                        $('#msg-restriccion').remove();
+                        $('#password-tab').css('display', ''); // Mostrar
+                    }
+
+                    // Restaurar la pestaña y el contenido de 'Cambiar Contraseña' si no existen
+                    if (!$('#password-tab').length) {
+                        $("<li class='nav-item' role='presentation'><button class='nav-link' id='password-tab' data-bs-toggle='tab' data-bs-target='#password' type='button' role='tab' aria-controls='password' aria-selected='false'><i class='fas fa-lock'></i> Cambiar Contraseña</button></li>").insertAfter('#datos-tab');
+                    }
+                    if (!$('#usuarioTabsContent #password').length) {
+                        var passwordTabContent = `<div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
+                            <div class="mb-3 position-relative">
+                                <label for="password" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+                                <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                                <ul class="list-unstyled mt-2 mb-0" id="password-requisitos">
+                                    <li id="req-len" class="text-secondary">• Mínimo 8 caracteres</li>
+                                    <li id="req-mayus" class="text-secondary">• Al menos una mayúscula</li>
+                                    <li id="req-minus" class="text-secondary">• Al menos una minúscula</li>
+                                    <li id="req-num" class="text-secondary">• Al menos un número</li>
+                                    <li id="req-esp" class="text-secondary">• Al menos un símbolo</li>
+                                </ul>
+                            </div>
+                            <div class="mb-3 position-relative">
+                                <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" autocomplete="new-password">
+                                <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
+                            </div>
+                        </div>`;
+                        $('#usuarioTabsContent').append(passwordTabContent);
+                    }
+
+                    // Limpiar clases activas para evitar remontes
+                    $('#usuarioTabs .nav-link').removeClass('active');
+                    $('#usuarioTabsContent .tab-pane').removeClass('show active');
+                    $('#datos-tab').addClass('active');
+                    $('#datos').addClass('show active');
+
+                    // Eliminar del DOM los campos de contraseña de nuevo usuario si existen
+                    if ($('#campos-password-nuevo').length) {
+                        $('#campos-password-nuevo').remove();
+                    }
+
                     const modal = new bootstrap.Modal(document.getElementById('modalUsuario'));
                     modal.show();
                 } else {
@@ -193,20 +441,13 @@
                 }
             }
         });
+        filtrarOpcionesRolPorPermiso();
     });
 
     $(document).on('click', '#btnNuevoUsuarioFlotante', function() {
-        $('#modalUsuarioLabel').text('Nuevo Usuario');
-        $('#usuario_id').val('');
-        $('#nombre').val('');
-        $('#email').val('');
-        $('#telefono').val('');
-        $('#direccion').val('');
-        $('#rol_id').val('');
-        $('#password').val('');
-        $('#confirm_password').val('');
-        const modal = new bootstrap.Modal(document.getElementById('modalUsuario'));
-        modal.show();
+        $('#formCrearUsuario')[0].reset();
+        filtrarOpcionesRolCrearPorPermiso();
+        $('#modalCrearUsuario').modal('show');
     });
 
     $(document).on('click', '.eliminar-usuario', function(e) {
@@ -255,6 +496,7 @@
                                 url: 'usuarios/delete',
                                 type: 'POST',
                                 data: { id },
+                                dataType: 'json',
                                 success: function(response) {
                                     if (response.success) {
                                         Swal.fire('Eliminado', 'Usuario y asociaciones eliminados correctamente', 'success');
@@ -262,6 +504,13 @@
                                     } else {
                                         Swal.fire('Error', response.error || 'Error al eliminar el usuario', 'error');
                                     }
+                                },
+                                error: function(xhr) {
+                                    let errorMsg = 'No se pudo eliminar el usuario. Intenta de nuevo.';
+                                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                                        errorMsg = xhr.responseJSON.error;
+                                    }
+                                    Swal.fire('Error', errorMsg, 'error');
                                 }
                             });
                         }
@@ -276,46 +525,131 @@
         });
     });
 
-    // Validación de contraseña
-    $('#formUsuario').on('submit', function(e) {
-        const password = $('#password').val();
-        const confirmPassword = $('#confirm_password').val();
-        if (password || confirmPassword) {
-            if (password.length < 6) {
-                alert('La contraseña debe tener al menos 6 caracteres');
-                e.preventDefault();
-                return false;
-            }
-            if (password !== confirmPassword) {
-                alert('Las contraseñas no coinciden');
-                e.preventDefault();
-                return false;
-            }
+    $(document).ready(function() {
+        function validarPasswordRealtime() {
+            $('#password').off('input').on('input', function() {
+                const password = $(this).val();
+                const requisitos = [
+                    { regex: /.{8,}/, id: 'req-len' },
+                    { regex: /[A-Z]/, id: 'req-mayus' },
+                    { regex: /[a-z]/, id: 'req-minus' },
+                    { regex: /[0-9]/, id: 'req-num' },
+                    { regex: /[^A-Za-z0-9]/, id: 'req-esp' }
+                ];
+                requisitos.forEach(r => {
+                    if (password.length === 0) {
+                        $('#' + r.id).removeClass('text-danger text-success').addClass('text-secondary');
+                    } else if (r.regex.test(password)) {
+                        $('#' + r.id).removeClass('text-danger text-secondary').addClass('text-success');
+                    } else {
+                        $('#' + r.id).removeClass('text-success text-secondary').addClass('text-danger');
+                    }
+                });
+            });
         }
-    });
-
-    function validarRequisitos(password) {
-        const requisitos = [
-            { regex: /.{8,}/, id: 'req-len' },
-            { regex: /[A-Z]/, id: 'req-mayus' },
-            { regex: /[a-z]/, id: 'req-minus' },
-            { regex: /[0-9]/, id: 'req-num' },
-            { regex: /[^A-Za-z0-9]/, id: 'req-esp' }
-        ];
-        let cumple = true;
-        requisitos.forEach(r => {
-            if (r.regex.test(password)) {
-                $('#' + r.id).removeClass('text-danger').addClass('text-success');
+        validarPasswordRealtime();
+        $('#modalUsuario').on('shown.bs.modal', function () {
+            validarPasswordRealtime();
+        });
+        // Mostrar/ocultar contraseña (referencia relativa al input hermano)
+        $(document).on('click', '.toggle-password', function() {
+            const input = $(this).siblings('input');
+            const icon = $(this).find('i');
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
             } else {
-                $('#' + r.id).removeClass('text-success').addClass('text-danger');
-                cumple = false;
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
             }
         });
-        return cumple;
-    }
-
-    $('#password').on('input', function() {
-        validarRequisitos($(this).val());
+        // Validación al enviar el formulario
+        $('#formUsuario').off('submit').on('submit', function(e) {
+            const password = $('#password').val();
+            const requisitos = [
+                { regex: /.{8,}/, id: 'req-len' },
+                { regex: /[A-Z]/, id: 'req-mayus' },
+                { regex: /[a-z]/, id: 'req-minus' },
+                { regex: /[0-9]/, id: 'req-num' },
+                { regex: /[^A-Za-z0-9]/, id: 'req-esp' }
+            ];
+            let cumple = true;
+            if (password.length > 0) {
+                requisitos.forEach(r => {
+                    if (!r.regex.test(password)) {
+                        $('#' + r.id).removeClass('text-success text-secondary').addClass('text-danger');
+                        cumple = false;
+                    }
+                });
+                if (!cumple) {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+        // Validación en tiempo real para nuevo usuario
+        function validarPasswordNuevoRealtime() {
+            $('#password_nuevo').off('input').on('input', function() {
+                const password = $(this).val();
+                const requisitos = [
+                    { regex: /.{8,}/, id: 'req-len-nuevo' },
+                    { regex: /[A-Z]/, id: 'req-mayus-nuevo' },
+                    { regex: /[a-z]/, id: 'req-minus-nuevo' },
+                    { regex: /[0-9]/, id: 'req-num-nuevo' },
+                    { regex: /[^A-Za-z0-9]/, id: 'req-esp-nuevo' }
+                ];
+                requisitos.forEach(r => {
+                    if (password.length === 0) {
+                        $('#' + r.id).removeClass('text-danger text-success').addClass('text-secondary');
+                    } else if (r.regex.test(password)) {
+                        $('#' + r.id).removeClass('text-danger text-secondary').addClass('text-success');
+                    } else {
+                        $('#' + r.id).removeClass('text-success text-secondary').addClass('text-danger');
+                    }
+                });
+            });
+        }
+        validarPasswordNuevoRealtime();
+        $('#modalUsuario').on('shown.bs.modal', function () {
+            validarPasswordNuevoRealtime();
+        });
+        // Validación al enviar el formulario para nuevo usuario
+        $('#formUsuario').off('submit').on('submit', function(e) {
+            // ... existing code ...
+            // Validar campos de contraseña para nuevo usuario
+            if ($('#campos-password-nuevo').is(':visible')) {
+                const passwordNuevo = $('#password_nuevo').val();
+                const confirmPasswordNuevo = $('#confirm_password_nuevo').val();
+                const requisitosNuevo = [
+                    { regex: /.{8,}/, id: 'req-len-nuevo' },
+                    { regex: /[A-Z]/, id: 'req-mayus-nuevo' },
+                    { regex: /[a-z]/, id: 'req-minus-nuevo' },
+                    { regex: /[0-9]/, id: 'req-num-nuevo' },
+                    { regex: /[^A-Za-z0-9]/, id: 'req-esp-nuevo' }
+                ];
+                let cumpleNuevo = true;
+                requisitosNuevo.forEach(r => {
+                    if (!r.regex.test(passwordNuevo)) {
+                        $('#' + r.id).removeClass('text-success text-secondary').addClass('text-danger');
+                        cumpleNuevo = false;
+                    }
+                });
+                if (!cumpleNuevo) {
+                    e.preventDefault();
+                    return false;
+                }
+                if (passwordNuevo !== confirmPasswordNuevo) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Las contraseñas no coinciden.'
+                    });
+                    return false;
+                }
+            }
+            // ... existing code ...
+        });
     });
 
     // Búsqueda AJAX para usuarios
@@ -377,6 +711,63 @@
                         text: 'El usuario ' + nombreUsuario + ' fue creado exitosamente.'
                     });
                     $('#modalUsuario').modal('hide');
+                    $('#formBuscarUsuarios').submit(); // Refresca la tabla
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error || 'Ocurrió un error al guardar el usuario'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo guardar el usuario. Intenta de nuevo.'
+                });
+            }
+        });
+    });
+
+    function filtrarOpcionesRolPorPermiso() {
+        var usuarioLogueadoRol = '<?= strtolower($_SESSION['rol_nombre'] ?? '') ?>';
+        if (usuarioLogueadoRol !== 'superadministrador') {
+            $("#rol_id option[value='1']").hide(); // Oculta Superadministrador
+        } else {
+            $("#rol_id option[value='1']").show();
+        }
+    }
+
+    // Filtro de roles para el modal de crear usuario
+    function filtrarOpcionesRolCrearPorPermiso() {
+        var usuarioLogueadoRol = '<?= strtolower($_SESSION['rol_nombre'] ?? '') ?>';
+        if (usuarioLogueadoRol !== 'superadministrador') {
+            $("#rol_id_nuevo option[value='1']").hide(); // Oculta Superadministrador
+        } else {
+            $("#rol_id_nuevo option[value='1']").show();
+        }
+    }
+
+    // Envío AJAX para crear usuario
+    $('#formCrearUsuario').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var formData = form.serialize();
+        var nombreUsuario = $('#nombre_nuevo').val();
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: 'El usuario ' + nombreUsuario + ' fue creado exitosamente.'
+                    });
+                    $('#modalCrearUsuario').modal('hide');
                     $('#formBuscarUsuarios').submit(); // Refresca la tabla
                 } else {
                     Swal.fire({

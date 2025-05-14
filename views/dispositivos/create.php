@@ -1,3 +1,6 @@
+<?php
+$puedeAsignarUsuario = verificarPermiso('ver_todos_dispositivo');
+?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -8,6 +11,19 @@
                 <div class="card-body">
                     <form id="createDispositivoForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>dispositivos/create')">
                         <div class="row mb-3">
+                            <?php if ($puedeAsignarUsuario): ?>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-control" id="usuario_id" name="usuario_id" required>
+                                        <option value="">Seleccione un usuario...</option>
+                                        <?php foreach ($usuarios as $usuario): ?>
+                                            <option value="<?= $usuario['id'] ?>"><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <label for="usuario_id">Usuario Asignado</label>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     <input class="form-control" id="nombre" name="nombre" type="text" required />
@@ -33,7 +49,9 @@
                                     <select class="form-control" id="mascota_id" name="mascota_id" required>
                                         <option value="">Seleccione una mascota...</option>
                                         <?php foreach ($mascotas as $mascota): ?>
-                                            <option value="<?= $mascota['id'] ?>"><?= $mascota['nombre'] ?></option>
+                                            <option value="<?= $mascota['id'] ?>" data-usuario="<?= $mascota['usuario_id'] ?? $mascota['propietario_id'] ?>">
+                                                <?= htmlspecialchars($mascota['nombre']) ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                     <label for="mascota_id">Mascota Asociada</label>
@@ -54,4 +72,34 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+<script>
+$(document).ready(function() {
+    <?php if ($puedeAsignarUsuario): ?>
+    // Filtrar mascotas según usuario seleccionado
+    $('#usuario_id').on('change', function() {
+        var usuarioId = $(this).val();
+        $('#mascota_id option').each(function() {
+            var mascotaUsuario = $(this).data('usuario');
+            if (!usuarioId || !mascotaUsuario || mascotaUsuario == usuarioId) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+        $('#mascota_id').val('');
+    });
+    <?php else: ?>
+    // Si no puede asignar usuario, filtrar solo las mascotas propias
+    var usuarioId = <?= json_encode($_SESSION['user_id']) ?>;
+    $('#mascota_id option').each(function() {
+        var mascotaUsuario = $(this).data('usuario');
+        if (!mascotaUsuario || mascotaUsuario == usuarioId) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+    <?php endif; ?>
+});
+</script> 

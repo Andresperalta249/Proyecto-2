@@ -1,109 +1,51 @@
-[13-May-2025 07:01:00 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:01:00
-[12-May-2025 23:01:00 America/Mexico_City] Ruta solicitada: /usuarios/create
-[12-May-2025 23:01:00 America/Mexico_City] Controlador: usuarios, Acción: create
-[12-May-2025 23:01:00 America/Mexico_City] Conexión a la base de datos establecida correctamente
-Array
-(
-    [id] => 
-    [nombre] => Andres Felipe Peralta
-    [email] => andresperalta249@gmail.com
-    [telefono] => 3184969893
-    [direccion] => andresperalta249@gmail.com
-    [rol_id] => 3
-    [password] => Gabi2022*
-    [confirm_password] => Gabi2022*
-)
-[12-May-2025 23:01:01 America/Mexico_City] Error al crear registro: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'confirm_password' in 'field list'
-[13-May-2025 07:02:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:45
-[12-May-2025 23:02:45 America/Mexico_City] Ruta solicitada: /usuarios/create
-[12-May-2025 23:02:45 America/Mexico_City] Controlador: usuarios, Acción: create
-[12-May-2025 23:02:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-Array
-(
-    [id] => 
-    [nombre] => Andres Felipe Peralta
-    [email] => andresperalta249@gmail.com
-    [telefono] => 3184969893
-    [direccion] => andresperalta249@gmail.com
-    [rol_id] => 3
-    [password] => Gabi2022*
-    [confirm_password] => Gabi2022*
-)
-[13-May-2025 07:02:46 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:46
-[12-May-2025 23:02:46 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:02:46 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:02:46 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:02:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:52
-[12-May-2025 23:02:52 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/18
-[12-May-2025 23:02:52 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:02:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:02:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:52
-[12-May-2025 23:02:52 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:02:52 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:02:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:02:56 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:56
-[12-May-2025 23:02:56 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:02:56 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:02:56 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:02:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:59
-[12-May-2025 23:02:59 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/18
-[12-May-2025 23:02:59 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:02:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:02:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:02:59
-[12-May-2025 23:02:59 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:02:59 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:02:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:03:01 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:03:01
-[12-May-2025 23:03:01 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:03:01 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:03:01 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:03:05 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:03:05
-[12-May-2025 23:03:05 America/Mexico_City] Ruta solicitada: /usuarios/get
-[12-May-2025 23:03:05 America/Mexico_City] Controlador: usuarios, Acción: get
-[12-May-2025 23:03:05 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:03:23 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:03:23
-[12-May-2025 23:03:23 America/Mexico_City] Ruta solicitada: /usuarios/verificarAsociaciones/18
-[12-May-2025 23:03:23 America/Mexico_City] Controlador: usuarios, Acción: verificarAsociaciones
-[12-May-2025 23:03:23 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:03:25 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:03:25
-[12-May-2025 23:03:25 America/Mexico_City] Ruta solicitada: /usuarios/delete
-[12-May-2025 23:03:25 America/Mexico_City] Controlador: usuarios, Acción: delete
-[12-May-2025 23:03:25 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:04:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:04:45
-[12-May-2025 23:04:45 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:04:45 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:04:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:04:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:04:59
-[12-May-2025 23:04:59 America/Mexico_City] Ruta solicitada: /usuarios/create
-[12-May-2025 23:04:59 America/Mexico_City] Controlador: usuarios, Acción: create
-[12-May-2025 23:04:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-Array
-(
-    [id] => 
-    [nombre] => Andres Felipe Peralta
-    [email] => andresperalta249@gmail.com
-    [telefono] => 3184969893
-    [direccion] => andresperalta249@gmail.com
-    [rol_id] => 3
-    [password] => Gabi2022*
-    [confirm_password] => Gabi2022*
-)
-[13-May-2025 07:07:34 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:07:34
-[12-May-2025 23:07:34 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:07:34 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:07:34 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:11:22 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:11:22
-[12-May-2025 23:11:22 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:11:22 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:11:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:12 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:12
-[12-May-2025 23:12:12 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:12:12 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:12:12 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:13 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:13
-[12-May-2025 23:12:13 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:12:13 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:12:13 America/Mexico_City] SESSION: Array
+[14-May-2025 07:51:05 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:51:05
+[13-May-2025 23:51:05 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:51:05 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:51:05 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[13-May-2025 23:51:05 America/Mexico_City] Error crítico: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'descripcion' in 'field list'
+#0 C:\xampp\htdocs\proyecto-2\config\database.php(106): PDO->prepare('INSERT INTO per...')
+#1 C:\xampp\htdocs\proyecto-2\models\Rol.php(196): Database->prepare('INSERT INTO per...')
+#2 C:\xampp\htdocs\proyecto-2\controllers\RolesController.php(25): Rol->getPermisos()
+#3 C:\xampp\htdocs\proyecto-2\index.php(93): RolesController->indexAction()
+#4 {main}
+[14-May-2025 07:51:07 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:51:07
+[13-May-2025 23:51:07 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:51:07 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:51:07 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[13-May-2025 23:51:07 America/Mexico_City] Error crítico: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'descripcion' in 'field list'
+#0 C:\xampp\htdocs\proyecto-2\config\database.php(106): PDO->prepare('INSERT INTO per...')
+#1 C:\xampp\htdocs\proyecto-2\models\Rol.php(196): Database->prepare('INSERT INTO per...')
+#2 C:\xampp\htdocs\proyecto-2\controllers\RolesController.php(25): Rol->getPermisos()
+#3 C:\xampp\htdocs\proyecto-2\index.php(93): RolesController->indexAction()
+#4 {main}
+[14-May-2025 07:52:49 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:52:49
+[13-May-2025 23:52:49 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:52:49 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:52:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:52:54 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:52:54
+[13-May-2025 23:52:54 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:52:54 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:52:54 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:52:55 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:52:55
+[13-May-2025 23:52:55 America/Mexico_City] Ruta solicitada: /usuarios
+[13-May-2025 23:52:55 America/Mexico_City] Controlador: usuarios, Acción: index
+[13-May-2025 23:52:55 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:56:21 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:56:21
+[13-May-2025 23:56:21 America/Mexico_City] Ruta solicitada: /usuarios
+[13-May-2025 23:56:21 America/Mexico_City] Controlador: usuarios, Acción: index
+[13-May-2025 23:56:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:58:17 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:58:17
+[13-May-2025 23:58:17 America/Mexico_City] Ruta solicitada: /usuarios
+[13-May-2025 23:58:17 America/Mexico_City] Controlador: usuarios, Acción: index
+[13-May-2025 23:58:17 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:58:22 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:58:22
+[13-May-2025 23:58:22 America/Mexico_City] Ruta solicitada: /usuarios
+[13-May-2025 23:58:22 America/Mexico_City] Controlador: usuarios, Acción: index
+[13-May-2025 23:58:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:58:23 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:58:23
+[13-May-2025 23:58:23 America/Mexico_City] Ruta solicitada: /mascotas
+[13-May-2025 23:58:23 America/Mexico_City] Controlador: mascotas, Acción: index
+[13-May-2025 23:58:23 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -123,15 +65,112 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
         )
 
 )
 
-[12-May-2025 23:12:13 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:17 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:17
-[12-May-2025 23:12:17 America/Mexico_City] Ruta solicitada: /mascotas/editarModal
-[12-May-2025 23:12:17 America/Mexico_City] Controlador: mascotas, Acción: editarModal
-[12-May-2025 23:12:17 America/Mexico_City] SESSION: Array
+[13-May-2025 23:58:23 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:58:27 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:58:27
+[13-May-2025 23:58:27 America/Mexico_City] Ruta solicitada: /usuarios
+[13-May-2025 23:58:27 America/Mexico_City] Controlador: usuarios, Acción: index
+[13-May-2025 23:58:27 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:58:48 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:58:48
+[13-May-2025 23:58:48 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:58:48 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:58:48 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:58:52 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:58:52
+[13-May-2025 23:58:52 America/Mexico_City] Ruta solicitada: /roles/get
+[13-May-2025 23:58:52 America/Mexico_City] Controlador: roles, Acción: get
+[13-May-2025 23:58:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[13-May-2025 23:58:52 America/Mexico_City] PHP Warning:  Undefined array key "id" in C:\xampp\htdocs\proyecto-2\controllers\RolesController.php on line 162
+[14-May-2025 07:59:14 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:59:14
+[13-May-2025 23:59:14 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:59:14 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:59:14 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 07:59:29 Europe/Berlin] Aplicación iniciando - 2025-05-14 07:59:29
+[13-May-2025 23:59:29 America/Mexico_City] Ruta solicitada: /roles
+[13-May-2025 23:59:29 America/Mexico_City] Controlador: roles, Acción: index
+[13-May-2025 23:59:29 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:03:05 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:03:05
+[14-May-2025 00:03:05 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:03:05 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:03:05 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:03:08 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:03:08
+[14-May-2025 00:03:08 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:03:08 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:03:08 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:03:08 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:03:08 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:03:19 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:03:19
+[14-May-2025 00:03:19 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:03:19 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:03:19 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:03:19 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:03:19
+[14-May-2025 00:03:19 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:03:19 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:03:19 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:03:20 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:03:20
+[14-May-2025 00:03:20 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:03:20 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:03:20 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:03:21 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:03:21
+[14-May-2025 00:03:21 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:03:21 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:03:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:03:21 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:03:21 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:05:12 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:05:12
+[14-May-2025 00:05:12 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:05:12 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:05:12 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:05:12 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:05:12 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:06:00 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:06:00
+[14-May-2025 00:06:00 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:06:00 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:06:00 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:06:00 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:06:00 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:07:06 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:07:06
+[14-May-2025 00:07:06 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:07:06 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:07:06 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:07:09 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:07:09
+[14-May-2025 00:07:09 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:07:09 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:07:09 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:07:09 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:07:09 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:07:10 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:07:10
+[14-May-2025 00:07:10 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:07:10 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:07:10 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:07:10 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:07:10 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:07:10 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:07:10
+[14-May-2025 00:07:10 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:07:10 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:07:10 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:07:10 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:07:10 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:08:10 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:10
+[14-May-2025 00:08:10 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:08:10 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:08:10 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:08:21 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:21
+[14-May-2025 00:08:21 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:08:21 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:08:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:08:21 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:08:21 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:08:22 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:22
+[14-May-2025 00:08:22 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:08:22 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:08:22 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -151,15 +190,28 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
         )
 
 )
 
-[12-May-2025 23:12:17 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:27 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:27
-[12-May-2025 23:12:27 America/Mexico_City] Ruta solicitada: /mascotas/edit/16
-[12-May-2025 23:12:27 America/Mexico_City] Controlador: mascotas, Acción: edit
-[12-May-2025 23:12:27 America/Mexico_City] SESSION: Array
+[14-May-2025 00:08:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:08:24 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:24
+[14-May-2025 00:08:24 America/Mexico_City] Ruta solicitada: /dashboard
+[14-May-2025 00:08:24 America/Mexico_City] Controlador: dashboard, Acción: index
+[2025-05-14 00:08:24][INFO] Iniciando DashboardController
+[14-May-2025 00:08:24 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[2025-05-14 00:08:24][INFO] Constructor padre completado
+[2025-05-14 00:08:24][INFO] Cargando modelos...
+[2025-05-14 00:08:24][INFO] Modelo Mascota cargado
+[2025-05-14 00:08:24][INFO] Modelo Dispositivo cargado
+[2025-05-14 00:08:24][INFO] Modelo Alerta cargado
+[2025-05-14 00:08:24][INFO] Modelo Log cargado
+[2025-05-14 00:08:24][INFO] Iniciando indexAction
+[2025-05-14 00:08:24][DEBUG] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -179,15 +231,65 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
         )
 
 )
 
-[12-May-2025 23:12:27 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:29 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:29
-[12-May-2025 23:12:29 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:12:29 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:12:29 America/Mexico_City] SESSION: Array
+[2025-05-14 00:08:24][INFO] Usuario autenticado, ID: 1
+[2025-05-14 00:08:24][INFO] Estadísticas obtenidas: Array
+(
+    [mascotas] => 3
+    [dispositivos] => 0
+    [dispositivos_activos] => 0
+    [alertas] => Array
+        (
+            [total] => 0
+            [no_leidas] => 0
+            [alertas_altas] => 0
+        )
+
+)
+
+[2025-05-14 00:08:24][INFO] Últimas alertas obtenidas: 0
+[2025-05-14 00:08:24][INFO] Dispositivos activos obtenidos: 0
+[2025-05-14 00:08:24][INFO] Actividad reciente obtenida: 0
+[2025-05-14 00:08:24][INFO] Renderizando vista
+[2025-05-14 00:08:24][INFO] Vista renderizada correctamente
+[2025-05-14 00:08:24][INFO] Cargando layout
+[2025-05-14 00:08:24][DEBUG] Layout file exists: 1
+[2025-05-14 00:08:24][INFO] Layout cargado correctamente
+[14-May-2025 08:08:27 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:27
+[14-May-2025 00:08:27 America/Mexico_City] Ruta solicitada: /auth/logout
+[14-May-2025 00:08:27 America/Mexico_City] Controlador: auth, Acción: logout
+[14-May-2025 00:08:27 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:08:27 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:27
+[14-May-2025 00:08:27 America/Mexico_City] Ruta solicitada: /auth/login
+[14-May-2025 00:08:27 America/Mexico_City] Controlador: auth, Acción: login
+[14-May-2025 00:08:27 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:08:32 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:32
+[14-May-2025 00:08:32 America/Mexico_City] Ruta solicitada: /auth/login
+[14-May-2025 00:08:32 America/Mexico_City] Controlador: auth, Acción: login
+[14-May-2025 00:08:32 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[2025-05-14 00:08:32] loginAction: POST recibido
+[2025-05-14 00:08:32] loginAction: Email recibido: 'superadmin@petcare.com', Password recibido: 'Admin123!'
+[2025-05-14 00:08:32] loginAction: Respondiendo JSON de éxito AJAX
+[14-May-2025 08:08:32 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:32
+[14-May-2025 00:08:32 America/Mexico_City] Ruta solicitada: /dashboard
+[14-May-2025 00:08:32 America/Mexico_City] Controlador: dashboard, Acción: index
+[2025-05-14 00:08:32][INFO] Iniciando DashboardController
+[14-May-2025 00:08:32 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[2025-05-14 00:08:32][INFO] Constructor padre completado
+[2025-05-14 00:08:32][INFO] Cargando modelos...
+[2025-05-14 00:08:32][INFO] Modelo Mascota cargado
+[2025-05-14 00:08:32][INFO] Modelo Dispositivo cargado
+[2025-05-14 00:08:32][INFO] Modelo Alerta cargado
+[2025-05-14 00:08:32][INFO] Modelo Log cargado
+[2025-05-14 00:08:32][INFO] Iniciando indexAction
+[2025-05-14 00:08:32][DEBUG] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -207,15 +309,64 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:29 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:33 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:33
-[12-May-2025 23:12:33 America/Mexico_City] Ruta solicitada: /mascotas/editarModal
-[12-May-2025 23:12:33 America/Mexico_City] Controlador: mascotas, Acción: editarModal
-[12-May-2025 23:12:33 America/Mexico_City] SESSION: Array
+[2025-05-14 00:08:32][INFO] Usuario autenticado, ID: 1
+[2025-05-14 00:08:32][INFO] Estadísticas obtenidas: Array
+(
+    [mascotas] => 3
+    [dispositivos] => 0
+    [dispositivos_activos] => 0
+    [alertas] => Array
+        (
+            [total] => 0
+            [no_leidas] => 0
+            [alertas_altas] => 0
+        )
+
+)
+
+[2025-05-14 00:08:32][INFO] Últimas alertas obtenidas: 0
+[2025-05-14 00:08:32][INFO] Dispositivos activos obtenidos: 0
+[2025-05-14 00:08:32][INFO] Actividad reciente obtenida: 0
+[2025-05-14 00:08:32][INFO] Renderizando vista
+[2025-05-14 00:08:32][INFO] Vista renderizada correctamente
+[2025-05-14 00:08:32][INFO] Cargando layout
+[2025-05-14 00:08:32][DEBUG] Layout file exists: 1
+[2025-05-14 00:08:32][INFO] Layout cargado correctamente
+[14-May-2025 08:08:36 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:36
+[14-May-2025 00:08:36 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:08:36 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:08:36 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:08:39 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:39
+[14-May-2025 00:08:39 America/Mexico_City] Ruta solicitada: /usuarios/get
+[14-May-2025 00:08:39 America/Mexico_City] Controlador: usuarios, Acción: get
+[14-May-2025 00:08:39 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:08:48 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:48
+[14-May-2025 00:08:48 America/Mexico_City] Ruta solicitada: /dashboard
+[14-May-2025 00:08:48 America/Mexico_City] Controlador: dashboard, Acción: index
+[2025-05-14 00:08:48][INFO] Iniciando DashboardController
+[14-May-2025 00:08:48 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[2025-05-14 00:08:48][INFO] Constructor padre completado
+[2025-05-14 00:08:48][INFO] Cargando modelos...
+[2025-05-14 00:08:48][INFO] Modelo Mascota cargado
+[2025-05-14 00:08:48][INFO] Modelo Dispositivo cargado
+[2025-05-14 00:08:48][INFO] Modelo Alerta cargado
+[2025-05-14 00:08:48][INFO] Modelo Log cargado
+[2025-05-14 00:08:48][INFO] Iniciando indexAction
+[2025-05-14 00:08:48][DEBUG] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -235,15 +386,77 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:40 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:40
-[12-May-2025 23:12:40 America/Mexico_City] Ruta solicitada: /mascotas/edit/18
-[12-May-2025 23:12:40 America/Mexico_City] Controlador: mascotas, Acción: edit
-[12-May-2025 23:12:40 America/Mexico_City] SESSION: Array
+[2025-05-14 00:08:48][INFO] Usuario autenticado, ID: 1
+[2025-05-14 00:08:48][INFO] Estadísticas obtenidas: Array
+(
+    [mascotas] => 3
+    [dispositivos] => 0
+    [dispositivos_activos] => 0
+    [alertas] => Array
+        (
+            [total] => 0
+            [no_leidas] => 0
+            [alertas_altas] => 0
+        )
+
+)
+
+[2025-05-14 00:08:48][INFO] Últimas alertas obtenidas: 0
+[2025-05-14 00:08:48][INFO] Dispositivos activos obtenidos: 0
+[2025-05-14 00:08:48][INFO] Actividad reciente obtenida: 0
+[2025-05-14 00:08:48][INFO] Renderizando vista
+[2025-05-14 00:08:48][INFO] Vista renderizada correctamente
+[2025-05-14 00:08:48][INFO] Cargando layout
+[2025-05-14 00:08:48][DEBUG] Layout file exists: 1
+[2025-05-14 00:08:48][INFO] Layout cargado correctamente
+[14-May-2025 08:08:52 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:08:52
+[14-May-2025 00:08:52 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:08:52 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:08:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:08:52 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:08:52 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:09:56 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:09:56
+[14-May-2025 00:09:56 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:09:56 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:09:56 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:09:56 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:09:56 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:11:42 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:11:42
+[14-May-2025 00:11:42 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:11:42 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:11:42 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:11:42 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:11:42 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:11:45 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:11:45
+[14-May-2025 00:11:45 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:11:45 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:11:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:11:45 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:11:45 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:11:45 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:11:45
+[14-May-2025 00:11:45 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:11:45 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:11:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:11:45 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:11:45 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:11:47 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:11:47
+[14-May-2025 00:11:47 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:11:47 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:11:47 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -263,15 +476,25 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:40 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:41 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:41
-[12-May-2025 23:12:41 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:12:41 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:12:41 America/Mexico_City] SESSION: Array
+[14-May-2025 00:11:47 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:11:47 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:11:47
+[14-May-2025 00:11:47 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:11:47 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:11:47 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -291,15 +514,119 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:41 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:45
-[12-May-2025 23:12:45 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/18
-[12-May-2025 23:12:45 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:12:45 America/Mexico_City] SESSION: Array
+[14-May-2025 00:11:47 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:11:49 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:11:49
+[14-May-2025 00:11:49 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:11:49 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:11:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:11:49 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:11:49 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:04 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:04
+[14-May-2025 00:12:04 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:04 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:04 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:04 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:04 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:10 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:10
+[14-May-2025 00:12:10 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:10 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:10 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:10 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:10 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:11 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:11
+[14-May-2025 00:12:11 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:12:11 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:12:11 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:12:12 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:12
+[14-May-2025 00:12:12 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:12 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:12 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:12 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:12 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:16 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:16
+[14-May-2025 00:12:16 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:16 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:16 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:16 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:16 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:18 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:18
+[14-May-2025 00:12:18 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:18 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:18 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:18 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:18 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:20 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:20
+[14-May-2025 00:12:20 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:20 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:20 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:20 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:20 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:22 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:23
+[14-May-2025 00:12:23 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:23 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:23 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:23 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:23 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:24 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:24
+[14-May-2025 00:12:24 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:24 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:24 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:24 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:24 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:25 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:25
+[14-May-2025 00:12:25 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:25 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:25 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:25 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:25 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:12:50 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:12:50
+[14-May-2025 00:12:50 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:12:50 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:12:50 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:12:50 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:12:50 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:15 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:15
+[14-May-2025 00:13:15 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:13:15 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:13:15 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:19 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:19
+[14-May-2025 00:13:19 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:19 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:19 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:19 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:19 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:21 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:21
+[14-May-2025 00:13:21 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:13:21 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:13:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:27 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:27
+[14-May-2025 00:13:27 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:13:27 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:13:27 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:30 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:30
+[14-May-2025 00:13:30 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:30 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:30 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:30 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:30 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:33 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:33
+[14-May-2025 00:13:33 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:13:33 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:13:33 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -319,15 +646,34 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:45
-[12-May-2025 23:12:45 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:12:45 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:12:45 America/Mexico_City] SESSION: Array
+[14-May-2025 00:13:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:35 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:35
+[14-May-2025 00:13:35 America/Mexico_City] Ruta solicitada: /dashboard
+[14-May-2025 00:13:35 America/Mexico_City] Controlador: dashboard, Acción: index
+[2025-05-14 00:13:35][INFO] Iniciando DashboardController
+[14-May-2025 00:13:35 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[2025-05-14 00:13:35][INFO] Constructor padre completado
+[2025-05-14 00:13:35][INFO] Cargando modelos...
+[2025-05-14 00:13:35][INFO] Modelo Mascota cargado
+[2025-05-14 00:13:35][INFO] Modelo Dispositivo cargado
+[2025-05-14 00:13:35][INFO] Modelo Alerta cargado
+[2025-05-14 00:13:35][INFO] Modelo Log cargado
+[2025-05-14 00:13:35][INFO] Iniciando indexAction
+[2025-05-14 00:13:35][DEBUG] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -347,15 +693,47 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:47 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:47
-[12-May-2025 23:12:47 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:12:47 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:12:47 America/Mexico_City] SESSION: Array
+[2025-05-14 00:13:35][INFO] Usuario autenticado, ID: 1
+[2025-05-14 00:13:35][INFO] Estadísticas obtenidas: Array
+(
+    [mascotas] => 3
+    [dispositivos] => 0
+    [dispositivos_activos] => 0
+    [alertas] => Array
+        (
+            [total] => 0
+            [no_leidas] => 0
+            [alertas_altas] => 0
+        )
+
+)
+
+[2025-05-14 00:13:35][INFO] Últimas alertas obtenidas: 0
+[2025-05-14 00:13:35][INFO] Dispositivos activos obtenidos: 0
+[2025-05-14 00:13:35][INFO] Actividad reciente obtenida: 0
+[2025-05-14 00:13:35][INFO] Renderizando vista
+[2025-05-14 00:13:35][INFO] Vista renderizada correctamente
+[2025-05-14 00:13:35][INFO] Cargando layout
+[2025-05-14 00:13:35][DEBUG] Layout file exists: 1
+[2025-05-14 00:13:35][INFO] Layout cargado correctamente
+[14-May-2025 08:13:37 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:38
+[14-May-2025 00:13:38 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:13:38 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:13:38 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -375,15 +753,97 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:47 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:49 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:49
-[12-May-2025 23:12:49 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:12:49 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:12:49 America/Mexico_City] SESSION: Array
+[14-May-2025 00:13:38 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:46 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:46
+[14-May-2025 00:13:46 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:46 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:46 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:46 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:46 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:48 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:48
+[14-May-2025 00:13:48 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:13:48 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:13:48 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:49 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:49
+[14-May-2025 00:13:49 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:13:49 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:13:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:13:53 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:53
+[14-May-2025 00:13:53 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:53 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:53 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:53 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:53 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:54 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:54
+[14-May-2025 00:13:54 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:54 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:54 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:54 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:54 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:54 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:54
+[14-May-2025 00:13:54 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:54 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:54 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:54 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:54 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:13:58 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:13:58
+[14-May-2025 00:13:58 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:13:58 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:13:58 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:13:58 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:13:58 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:14:00 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:14:00
+[14-May-2025 00:14:00 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:14:00 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:14:00 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:14:00 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:14:00 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:14:01 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:14:01
+[14-May-2025 00:14:01 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:14:01 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:14:01 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:14:01 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:14:01 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:16:01 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:16:01
+[14-May-2025 00:16:01 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:16:01 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:16:01 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:16:01 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:16:01 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:14 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:14
+[14-May-2025 00:17:14 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:17:14 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:17:14 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:16 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:16
+[14-May-2025 00:17:16 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:16 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:16 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:16 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:16 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:16 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:16
+[14-May-2025 00:17:16 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:16 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:16 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:16 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:16 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:18 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:18
+[14-May-2025 00:17:18 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:17:18 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:17:18 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -403,15 +863,63 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:50 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:50
-[12-May-2025 23:12:50 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/17
-[12-May-2025 23:12:50 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:12:50 America/Mexico_City] SESSION: Array
+[14-May-2025 00:17:18 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:20 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:20
+[14-May-2025 00:17:20 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:17:20 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:17:20 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:20 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:20
+[14-May-2025 00:17:20 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:17:20 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:17:20 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:21 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:21
+[14-May-2025 00:17:21 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:17:21 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:17:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:21 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:21
+[14-May-2025 00:17:21 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:17:21 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:17:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:23 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:23
+[14-May-2025 00:17:23 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:17:23 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:17:23 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:24 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:24
+[14-May-2025 00:17:24 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:17:24 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:17:24 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:26 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:26
+[14-May-2025 00:17:26 America/Mexico_City] Ruta solicitada: /roles
+[14-May-2025 00:17:26 America/Mexico_City] Controlador: roles, Acción: index
+[14-May-2025 00:17:26 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:27 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:27
+[14-May-2025 00:17:27 America/Mexico_City] Ruta solicitada: /usuarios
+[14-May-2025 00:17:27 America/Mexico_City] Controlador: usuarios, Acción: index
+[14-May-2025 00:17:27 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:29 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:29
+[14-May-2025 00:17:29 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:29 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:29 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:29 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:29 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:32 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:32
+[14-May-2025 00:17:32 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:17:32 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:17:32 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -431,15 +939,67 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:50 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:50 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:50
-[12-May-2025 23:12:50 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:12:50 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:12:50 America/Mexico_City] SESSION: Array
+[14-May-2025 00:17:32 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:17:34 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:34
+[14-May-2025 00:17:34 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:34 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:34 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:34 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:34 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:41 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:41
+[14-May-2025 00:17:41 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:41 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:41 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:41 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:41 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:42 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:42
+[14-May-2025 00:17:42 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:42 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:42 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:42 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:42 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:45 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:45
+[14-May-2025 00:17:45 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:45 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:45 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:45 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:48 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:48
+[14-May-2025 00:17:48 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:17:48 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:17:48 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:17:48 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:17:48 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:17:53 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:17:53
+[14-May-2025 00:17:53 America/Mexico_City] Ruta solicitada: /dispositivos/create
+[14-May-2025 00:17:53 America/Mexico_City] Controlador: dispositivos, Acción: create
+[14-May-2025 00:17:53 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:18:18 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:18:18
+[14-May-2025 00:18:18 America/Mexico_City] Ruta solicitada: /dispositivos/create
+[14-May-2025 00:18:18 America/Mexico_City] Controlador: dispositivos, Acción: create
+[14-May-2025 00:18:18 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:18:18 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:18:18
+[14-May-2025 00:18:18 America/Mexico_City] Ruta solicitada: /dispositivos/create
+[14-May-2025 00:18:18 America/Mexico_City] Controlador: dispositivos, Acción: create
+[14-May-2025 00:18:18 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:18:22 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:18:22
+[14-May-2025 00:18:22 America/Mexico_City] Ruta solicitada: /mascotas
+[14-May-2025 00:18:22 America/Mexico_City] Controlador: mascotas, Acción: index
+[14-May-2025 00:18:22 America/Mexico_City] SESSION: Array
 (
     [user_id] => 1
     [usuario_id] => 1
@@ -459,902 +1019,30 @@ Array
             [8] => eliminar_mascotas
             [9] => cambiar_estado_mascotas
             [10] => editar_cualquier_mascota
+            [11] => crear_roles
+            [12] => editar_roles
+            [13] => eliminar_roles
+            [14] => ver_roles
+            [15] => ver_dispositivos
+            [16] => ver_todos_dispositivo
+            [17] => crear_dispositivos
+            [18] => editar_dispositivos
+            [19] => eliminar_dispositivos
+            [20] => cambiar_estado_dispositivos
         )
 
 )
 
-[12-May-2025 23:12:50 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:54 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:54
-[12-May-2025 23:12:54 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:12:54 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:12:54 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:12:54 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:57 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:57
-[12-May-2025 23:12:57 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/17
-[12-May-2025 23:12:57 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:12:57 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:12:57 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:12:57 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:12:57
-[12-May-2025 23:12:57 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:12:57 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:12:57 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:12:57 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:13:49 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:13:49
-[12-May-2025 23:13:49 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:13:49 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:13:49 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:13:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:13:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:13:59
-[12-May-2025 23:13:59 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:13:59 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:13:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:02 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:02
-[12-May-2025 23:14:02 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:14:02 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:14:02 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:02 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:02
-[12-May-2025 23:14:02 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:14:02 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:14:02 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:08 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:08
-[12-May-2025 23:14:08 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:14:08 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:14:08 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:11 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:11
-[12-May-2025 23:14:11 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:14:11 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:14:11 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:11 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:11
-[12-May-2025 23:14:11 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:14:11 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:14:11 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:19 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:19
-[12-May-2025 23:14:19 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:14:19 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:14:19 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:14:19 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:21 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:21
-[12-May-2025 23:14:21 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/18
-[12-May-2025 23:14:21 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:14:21 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:14:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:21 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:21
-[12-May-2025 23:14:21 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:14:21 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:14:21 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:14:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:23 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:23
-[12-May-2025 23:14:23 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:14:23 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:14:23 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:14:23 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:26 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:26
-[12-May-2025 23:14:26 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/18
-[12-May-2025 23:14:26 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:14:26 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:14:26 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:26 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:26
-[12-May-2025 23:14:26 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:14:26 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:14:26 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:14:26 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:49 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:49
-[12-May-2025 23:14:49 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:14:49 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:14:49 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:51 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:51
-[12-May-2025 23:14:51 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:14:51 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:14:51 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:14:51 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:14:51
-[12-May-2025 23:14:51 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:14:51 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:14:51 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:02 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:02
-[12-May-2025 23:18:02 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:18:02 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:18:02 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:04 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:04
-[12-May-2025 23:18:04 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:18:04 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:18:04 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:04 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:04
-[12-May-2025 23:18:04 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:18:04 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:18:04 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:21 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:21
-[12-May-2025 23:18:21 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:18:21 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:18:21 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:40 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:40
-[12-May-2025 23:18:40 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:18:40 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:18:40 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:40 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:42 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:42
-[12-May-2025 23:18:42 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/17
-[12-May-2025 23:18:42 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:18:42 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:42 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:42 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:42
-[12-May-2025 23:18:42 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:18:42 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:18:42 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:42 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:45
-[12-May-2025 23:18:45 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/17
-[12-May-2025 23:18:45 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:18:45 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:45
-[12-May-2025 23:18:45 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:18:45 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:18:45 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:47 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:47
-[12-May-2025 23:18:47 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/17
-[12-May-2025 23:18:47 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:18:47 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:47 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:47 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:47
-[12-May-2025 23:18:47 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:18:47 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:18:47 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:47 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:50 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:50
-[12-May-2025 23:18:50 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:18:50 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:18:50 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:50 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:52
-[12-May-2025 23:18:52 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/17
-[12-May-2025 23:18:52 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:18:52 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:18:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:18:52
-[12-May-2025 23:18:52 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:18:52 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:18:52 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:18:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:12 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:12
-[12-May-2025 23:23:12 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:23:12 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:23:12 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:23:12 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:25 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:25
-[12-May-2025 23:23:25 America/Mexico_City] Ruta solicitada: /mascotas/cambiarEstado/18
-[12-May-2025 23:23:25 America/Mexico_City] Controlador: mascotas, Acción: cambiarEstado
-[12-May-2025 23:23:25 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:23:25 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:25 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:25
-[12-May-2025 23:23:25 America/Mexico_City] Ruta solicitada: /mascotas/tabla
-[12-May-2025 23:23:25 America/Mexico_City] Controlador: mascotas, Acción: tabla
-[12-May-2025 23:23:25 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:23:25 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:28 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:28
-[12-May-2025 23:23:28 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:23:28 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:23:28 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:31 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:31
-[12-May-2025 23:23:31 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/2
-[12-May-2025 23:23:31 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:23:31 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:31 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:31
-[12-May-2025 23:23:31 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:23:31 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:23:31 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:32 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:32
-[12-May-2025 23:23:32 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:23:32 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:23:32 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:32 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:32
-[12-May-2025 23:23:32 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:23:32 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:23:32 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:33 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:33
-[12-May-2025 23:23:33 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/2
-[12-May-2025 23:23:33 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:23:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:33 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:33
-[12-May-2025 23:23:33 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:23:33 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:23:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:34 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:34
-[12-May-2025 23:23:34 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:23:34 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:23:34 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:34 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:34
-[12-May-2025 23:23:34 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:23:34 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:23:34 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:35 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:35
-[12-May-2025 23:23:35 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/2
-[12-May-2025 23:23:35 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:23:35 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:35 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:35
-[12-May-2025 23:23:35 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:23:35 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:23:35 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:37 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:37
-[12-May-2025 23:23:37 America/Mexico_City] Ruta solicitada: /usuarios/cambiarEstado/1
-[12-May-2025 23:23:37 America/Mexico_City] Controlador: usuarios, Acción: cambiarEstado
-[12-May-2025 23:23:37 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:37 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:37
-[12-May-2025 23:23:37 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:23:37 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:23:37 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:23:56 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:23:56
-[12-May-2025 23:23:56 America/Mexico_City] Ruta solicitada: /usuarios/verificarAsociaciones/19
-[12-May-2025 23:23:56 America/Mexico_City] Controlador: usuarios, Acción: verificarAsociaciones
-[12-May-2025 23:23:56 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:35:25 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:25
-[12-May-2025 23:35:25 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:35:25 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:35:25 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:35:31 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:31
-[12-May-2025 23:35:31 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:31 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:31 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:35:34 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:34
-[12-May-2025 23:35:34 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:34 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:34 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:35:36 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:36
-[12-May-2025 23:35:36 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:36 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:36 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:35:39 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:39
-[12-May-2025 23:35:39 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:39 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:39 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:39 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:39 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:43 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:43
-[12-May-2025 23:35:43 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:43 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:43 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:43 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:43 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:43 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:43
-[12-May-2025 23:35:43 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:43 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:43 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:43 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:43 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:45
-[12-May-2025 23:35:45 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:45 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:45 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:45 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:45
-[12-May-2025 23:35:45 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:45 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:45 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:45 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:45 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:45
-[12-May-2025 23:35:45 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:45 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:45 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:45 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:45 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:47 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:47
-[12-May-2025 23:35:47 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:47 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:47 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:35:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:52
-[12-May-2025 23:35:52 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:52 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:52 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:52 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:56 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:56
-[12-May-2025 23:35:56 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:56 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:56 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:56 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:56 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:58 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:58
-[12-May-2025 23:35:58 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:58 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:58 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:58 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:58 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:59
-[12-May-2025 23:35:59 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:59 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:59 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:59 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:59
-[12-May-2025 23:35:59 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:59 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:59 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:59 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:35:59 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:35:59
-[12-May-2025 23:35:59 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:35:59 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:35:59 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:35:59 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:35:59 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:36:00 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:36:00
-[12-May-2025 23:36:00 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:36:00 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:36:00 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[12-May-2025 23:36:00 America/Mexico_City] Error al ejecutar la consulta: SQLSTATE[HY093]: Invalid parameter number
-[12-May-2025 23:36:00 America/Mexico_City] Error en consulta SQL: Error al ejecutar la consulta
-[13-May-2025 07:36:02 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:36:02
-[12-May-2025 23:36:02 America/Mexico_City] Ruta solicitada: /usuarios/tabla
-[12-May-2025 23:36:02 America/Mexico_City] Controlador: usuarios, Acción: tabla
-[12-May-2025 23:36:02 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:41:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:41:52
-[12-May-2025 23:41:52 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:41:52 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:41:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:41:52 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:41:52
-[12-May-2025 23:41:52 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:41:52 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:41:52 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:41:53 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:41:53
-[12-May-2025 23:41:53 America/Mexico_City] Ruta solicitada: /mascotas
-[12-May-2025 23:41:53 America/Mexico_City] Controlador: mascotas, Acción: index
-[12-May-2025 23:41:53 America/Mexico_City] SESSION: Array
-(
-    [user_id] => 1
-    [usuario_id] => 1
-    [user_name] => Super Administrador
-    [user_email] => superadmin@petcare.com
-    [user_role] => 1
-    [permissions] => Array
-        (
-            [0] => ver_usuarios
-            [1] => crear_usuarios
-            [2] => editar_usuarios
-            [3] => eliminar_usuarios
-            [4] => cambiar_estado_usuarios
-            [5] => ver_mascotas
-            [6] => crear_mascotas
-            [7] => editar_mascotas
-            [8] => eliminar_mascotas
-            [9] => cambiar_estado_mascotas
-            [10] => editar_cualquier_mascota
-        )
-
-)
-
-[12-May-2025 23:41:53 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[13-May-2025 07:41:55 Europe/Berlin] Aplicación iniciando - 2025-05-13 07:41:55
-[12-May-2025 23:41:55 America/Mexico_City] Ruta solicitada: /usuarios
-[12-May-2025 23:41:55 America/Mexico_City] Controlador: usuarios, Acción: index
-[12-May-2025 23:41:55 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:18:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 08:18:22 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:18:22
+[14-May-2025 00:18:22 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:18:22 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:18:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:18:22 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:18:22 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL
+[14-May-2025 08:18:22 Europe/Berlin] Aplicación iniciando - 2025-05-14 08:18:22
+[14-May-2025 00:18:22 America/Mexico_City] Ruta solicitada: /dispositivos
+[14-May-2025 00:18:22 America/Mexico_City] Controlador: dispositivos, Acción: index
+[14-May-2025 00:18:22 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[14-May-2025 00:18:22 America/Mexico_City] Error en la consulta SQL: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.raza' in 'field list'
+[14-May-2025 00:18:22 America/Mexico_City] Error en consulta SQL: Error en la consulta SQL

@@ -80,7 +80,7 @@
                     </li>
                     <?php endif; ?>
                     
-                    <?php if (verificarPermiso('gestionar_dispositivos')): ?>
+                    <?php if (verificarPermiso('ver_dispositivos') || verificarPermiso('ver_todos_dispositivo')): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/dispositivos">
                             <i class="fas fa-microchip"></i>
@@ -122,7 +122,12 @@
                     </li>
                     <?php endif; ?>
                     
-                    <?php if (verificarPermiso('gestionar_roles')): ?>
+                    <?php if (
+                        verificarPermiso('ver_roles') ||
+                        verificarPermiso('crear_roles') ||
+                        verificarPermiso('editar_roles') ||
+                        verificarPermiso('eliminar_roles')
+                    ): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= APP_URL ?>/roles">
                             <i class="fas fa-user-tag"></i>

@@ -50,7 +50,7 @@ class User extends Model {
 
     public function updateUsuario($id, $data) {
         // Validar email único excluyendo el usuario actual
-        $usuario = $this->findById($id);
+        $usuario = $this->find($id);
         if (!$usuario) {
             throw new Exception('Usuario no encontrado');
         }

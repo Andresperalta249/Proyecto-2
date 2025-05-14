@@ -41,7 +41,9 @@ class AuthController extends Controller {
                 
                 if ($user) {
                     if (password_verify($data['password'], $user['password'])) {
-                        if ($user['estado'] === 'activo') {
+                        if (empty($user['rol_id'])) {
+                            $loginError = 'No tienes un rol asignado. Por favor, comunícate con el administrador: superadmin@petcare.com';
+                        } else if ($user['estado'] === 'activo') {
                             $_SESSION['user_id'] = $user['id'];
                             $_SESSION['usuario_id'] = $user['id'];
                             $_SESSION['user_name'] = $user['nombre'];

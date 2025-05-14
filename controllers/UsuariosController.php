@@ -99,16 +99,19 @@ class UsuariosController extends Controller {
                 }
 
                 $data = $_POST;
-                
-                // Validaciones básicas
-                if (empty($data['nombre']) || empty($data['email'])) {
-                    throw new Exception('Todos los campos obligatorios deben estar completos');
-                }
-
+                // Log de depuración para password y confirm_password
+                file_put_contents('logs/error.log', "[".date('Y-m-d H:i:s')."] password: " . ($data['password'] ?? 'NO SET') . " | confirm_password: " . ($data['confirm_password'] ?? 'NO SET') . "\n", FILE_APPEND);
+                // Validar coincidencia antes de eliminar confirm_password
                 if (!empty($data['password'])) {
                     if ($data['password'] !== $data['confirm_password']) {
                         throw new Exception('Las contraseñas no coinciden');
                     }
+                }
+                unset($data['confirm_password']);
+                
+                // Validaciones básicas
+                if (empty($data['nombre']) || empty($data['email'])) {
+                    throw new Exception('Todos los campos obligatorios deben estar completos');
                 }
 
                 if ($this->userModel->updateUsuario($id, $data)) {

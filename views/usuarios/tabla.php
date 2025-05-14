@@ -33,9 +33,14 @@
                     </button>
                 <?php endif; ?>
                 <?php if (verificarPermiso('eliminar_usuarios')): ?>
-                    <button class="btn-accion btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <?php
+                    $rol = strtolower(trim($usuario['rol_nombre'] ?? ''));
+                    if (!in_array($rol, ['administrador', 'superadministrador'])):
+                    ?>
+                        <button class="btn-accion btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    <?php endif; ?>
                 <?php endif; ?>
             </td>
         </tr>
