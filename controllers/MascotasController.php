@@ -20,8 +20,15 @@ class MascotasController extends Controller {
             redirect('auth/login');
         }
 
-        // Obtener mascotas del usuario
-        $mascotas = $this->mascotaModel->getMascotasByUser($_SESSION['user_id']);
+        // Verificar si es admin/superadmin y tiene permiso para ver todas las mascotas
+        $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1, 2]);
+        $tienePermiso = function_exists('verificarPermiso') ? verificarPermiso('ver_todas_mascotas') : false;
+
+        if ($esAdmin && $tienePermiso) {
+            $mascotas = $this->mascotaModel->findAll();
+        } else {
+            $mascotas = $this->mascotaModel->getMascotasByUser($_SESSION['user_id']);
+        }
         $usuariosModel = $this->loadModel('User');
         $usuarios = $usuariosModel->getActiveUsers();
         $title = 'Mis Mascotas';
@@ -36,7 +43,7 @@ class MascotasController extends Controller {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->validateRequest(['nombre', 'especie', 'tamano', 'fecha_nacimiento']);
-            $data['usuario_id'] = $_SESSION['user_id'];
+            $data['usuario_id'] = $_SESSION['propietario_id'];
 
             // Validar que todos los campos estén completos
             foreach (['nombre', 'especie', 'tamano', 'fecha_nacimiento'] as $campo) {
@@ -50,7 +57,7 @@ class MascotasController extends Controller {
 
             // Validar nombre único por usuario
             $existe = $this->mascotaModel->findAll([
-                'usuario_id' => $_SESSION['user_id'],
+                'usuario_id' => $_SESSION['propietario_id'],
                 'nombre' => $data['nombre']
             ]);
             if ($existe) {
@@ -70,9 +77,9 @@ class MascotasController extends Controller {
             }
 
             if ($this->mascotaModel->createMascota($data)) {
-                $this->logModel->crearLog($_SESSION['user_id'], 'Creación de mascota: ' . $data['nombre']);
+                $this->logModel->crearLog($_SESSION['propietario_id'], 'Creación de mascota: ' . $data['nombre']);
                 $this->notificacionModel->crearNotificacion(
-                    $_SESSION['user_id'],
+                    $_SESSION['propietario_id'],
                     'Nueva Mascota Registrada',
                     'Has registrado exitosamente a ' . $data['nombre'],
                     'exito',
@@ -120,7 +127,7 @@ class MascotasController extends Controller {
         $puedeEditarCualquiera = in_array('editar_cualquier_mascota', $_SESSION['permissions'] ?? []);
         $puedeEditarPropias = in_array('editar_mascotas', $_SESSION['permissions'] ?? []);
 
-        if (!$esAdmin && !$puedeEditarCualquiera && !($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['user_id'])) {
+        if (!$esAdmin && !$puedeEditarCualquiera && !($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['propietario_id'])) {
             $this->jsonResponse([
                 'success' => false,
                 'error' => 'No tienes permisos para editar esta mascota'
@@ -147,7 +154,7 @@ class MascotasController extends Controller {
             }
 
             if ($this->mascotaModel->updateMascota($id, $data)) {
-                $this->logModel->crearLog($_SESSION['user_id'], 'Actualización de mascota: ' . $data['nombre']);
+                $this->logModel->crearLog($_SESSION['propietario_id'], 'Actualización de mascota: ' . $data['nombre']);
                 $this->jsonResponse([
                     'success' => true,
                     'message' => 'Mascota actualizada correctamente'
@@ -171,7 +178,7 @@ class MascotasController extends Controller {
 
         // Verificar que la mascota pertenezca al usuario
         $mascota = $this->mascotaModel->findById($id);
-        if (!$mascota || $mascota['usuario_id'] != $_SESSION['user_id']) {
+        if (!$mascota || $mascota['usuario_id'] != $_SESSION['propietario_id']) {
             $this->jsonResponse([
                 'success' => false,
                 'error' => 'Mascota no encontrada'
@@ -184,7 +191,7 @@ class MascotasController extends Controller {
         // }
 
         if ($this->mascotaModel->deleteMascota($id)) {
-            $this->logModel->crearLog($_SESSION['user_id'], 'Eliminación de mascota: ' . $mascota['nombre']);
+            $this->logModel->crearLog($_SESSION['propietario_id'], 'Eliminación de mascota: ' . $mascota['nombre']);
             
             $this->jsonResponse([
                 'success' => true,
@@ -205,7 +212,7 @@ class MascotasController extends Controller {
 
         // Verificar que la mascota pertenezca al usuario
         $mascota = $this->mascotaModel->findById($id);
-        if (!$mascota || $mascota['usuario_id'] != $_SESSION['user_id']) {
+        if (!$mascota || $mascota['usuario_id'] != $_SESSION['propietario_id']) {
             redirect('mascotas');
         }
 
@@ -234,7 +241,7 @@ class MascotasController extends Controller {
                 'especie' => $_POST['especie'] ?? '',
                 'tamano' => $_POST['tamano'] ?? '',
                 'fecha_nacimiento' => $_POST['fecha_nacimiento'] ?? '',
-                'usuario_id' => $_SESSION['user_id']
+                'usuario_id' => $_SESSION['propietario_id']
             ];
             if (isset($_POST['genero'])) {
                 $data['genero'] = $_POST['genero'];
@@ -247,7 +254,7 @@ class MascotasController extends Controller {
             }
 
             if ($this->mascotaModel->createMascota($data)) {
-                $this->logModel->crearLog($_SESSION['user_id'], 'Creación de mascota: ' . $data['nombre']);
+                $this->logModel->crearLog($_SESSION['propietario_id'], 'Creación de mascota: ' . $data['nombre']);
                 $this->jsonResponse([
                     'status' => 'success',
                     'message' => 'Mascota guardada exitosamente'
@@ -339,20 +346,23 @@ class MascotasController extends Controller {
             exit;
         }
 
-        // Obtener filtros desde GET
+        // Verificar si es admin/superadmin y tiene permiso para ver todas las mascotas
+        $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1, 2]);
+        $tienePermiso = function_exists('verificarPermiso') ? verificarPermiso('ver_todas_mascotas') : false;
+
         $filtros = [
-            'usuario_id' => $_SESSION['user_id'],
             'nombre' => $_GET['nombre'] ?? '',
             'especie' => $_GET['especie'] ?? '',
             'estado' => $_GET['estado'] ?? ''
         ];
+        if (!($esAdmin && $tienePermiso)) {
+            $filtros['usuario_id'] = $_SESSION['propietario_id'];
+        }
 
         $mascotas = $this->mascotaModel->getMascotasFiltradas($filtros);
-        
         // Obtener usuarios activos para mostrar información del propietario
         $usuariosModel = $this->loadModel('User');
         $usuarios = $usuariosModel->getActiveUsers();
-        
         echo $this->render('mascotas/tabla', [
             'mascotas' => $mascotas,
             'usuarios' => $usuarios
@@ -368,7 +378,17 @@ class MascotasController extends Controller {
             ], 403);
         }
         $mascota = $this->mascotaModel->findById($id);
-        if (!$mascota || $mascota['usuario_id'] != $_SESSION['user_id']) {
+        $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]);
+        $puedeEditarCualquiera = in_array('editar_cualquier_mascota', $_SESSION['permissions'] ?? []);
+        $puedeEditarPropias = in_array('editar_mascotas', $_SESSION['permissions'] ?? []);
+        if (
+            !$mascota ||
+            (
+                !$esAdmin &&
+                !$puedeEditarCualquiera &&
+                !($puedeEditarPropias && $mascota['propietario_id'] == $_SESSION['propietario_id'])
+            )
+        ) {
             $this->jsonResponse([
                 'success' => false,
                 'error' => 'Mascota no encontrada'
@@ -435,7 +455,7 @@ class MascotasController extends Controller {
         $puedeEditarCualquiera = in_array('editar_cualquier_mascota', $_SESSION['permissions'] ?? []);
         $puedeEditarPropias = in_array('editar_mascotas', $_SESSION['permissions'] ?? []);
 
-        if (!$esAdmin && !$puedeEditarCualquiera && !($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['user_id'])) {
+        if (!$esAdmin && !$puedeEditarCualquiera && !($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['propietario_id'])) {
             header('Content-Type: application/json');
             http_response_code(403);
             echo json_encode([
@@ -456,6 +476,32 @@ class MascotasController extends Controller {
             'usuarios' => $usuarios
         ], true);
         exit;
+    }
+
+    public function obtenerPorUsuarioAction($usuario_id = null) {
+        if (!isset($_SESSION['user_id'])) {
+            $this->jsonResponse([
+                'success' => false,
+                'error' => 'Acceso denegado'
+            ], 403);
+            return;
+        }
+
+        // Verificar permisos
+        if ($usuario_id != $_SESSION['propietario_id'] && !verificarPermiso('ver_todos_dispositivo')) {
+            $this->jsonResponse([
+                'success' => false,
+                'error' => 'No tiene permiso para ver las mascotas de otros usuarios'
+            ], 403);
+            return;
+        }
+
+        // Solo mascotas sin dispositivo
+        $mascotas = $this->mascotaModel->getMascotasSinDispositivos($usuario_id);
+        $this->jsonResponse([
+            'success' => true,
+            'data' => $mascotas
+        ]);
     }
 }
 ?> 

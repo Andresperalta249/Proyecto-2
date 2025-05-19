@@ -52,7 +52,7 @@
                         </div>
                     <?php else: ?>
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table class="tabla-app">
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>

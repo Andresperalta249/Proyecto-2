@@ -32,34 +32,23 @@ class AuthController extends Controller {
         
         // Solo procesar el formulario si es una solicitud POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: POST recibido\n", FILE_APPEND);
-            $data = $this->validateRequest(['email', 'password']);
-            file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Email recibido: '" . $data['email'] . "', Password recibido: '" . $data['password'] . "'\n", FILE_APPEND);
+            $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+            $password = $_POST['password'] ?? '';
             
-            if ($data) {
-                $user = $this->userModel->findByEmail($data['email']);
+            if ($email && $password) {
+                $user = $this->userModel->findByEmail($email);
                 
                 if ($user) {
-                    if (password_verify($data['password'], $user['password'])) {
-                        if (empty($user['rol_id'])) {
-                            $loginError = 'No tienes un rol asignado. Por favor, comunícate con el administrador: superadmin@petcare.com';
-                        } else if ($user['estado'] === 'activo') {
+                    if (password_verify($password, $user['password'])) {
+                        if ($user['estado'] === 'activo') {
+                            // Establecer variables de sesión
                             $_SESSION['user_id'] = $user['id'];
-                            $_SESSION['usuario_id'] = $user['id'];
-                            $_SESSION['user_name'] = $user['nombre'];
-                            $_SESSION['user_email'] = $user['email'];
+                            $_SESSION['user'] = $user;
                             $_SESSION['user_role'] = $user['rol_id'];
-                            $permissions = obtenerPermisosUsuario($user['id']);
-                            $_SESSION['permissions'] = $permissions;
-
-                            // Solo guardar el mensaje de sesión si NO es AJAX
-                            if (empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-                                $_SESSION['message'] = [
-                                    'type' => 'success',
-                                    'text' => '¡Bienvenido ' . $user['nombre'] . '!'
-                                ];
-                            }
-
+                            
+                            // Registrar el inicio de sesión
+                            $this->userModel->logLogin($user['id']);
+                            
                             if (!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
                                 file_put_contents(dirname(__DIR__) . '/logs/error.log', "[".date('Y-m-d H:i:s')."] loginAction: Respondiendo JSON de éxito AJAX\n", FILE_APPEND);
                                 $this->jsonResponse([

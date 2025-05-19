@@ -1,6 +1,6 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Monitor - <?= $dispositivo['nombre'] ?></h1>
+        <h1>Monitor - <?= isset($dispositivo['nombre']) ? htmlspecialchars($dispositivo['nombre']) : '-' ?></h1>
         <a href="<?= BASE_URL ?>monitor" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Volver
         </a>
@@ -15,25 +15,83 @@
                 </div>
                 <div class="card-body">
                     <p class="mb-2">
-                        <strong>Tipo:</strong> <?= $dispositivo['tipo'] ?><br>
-                        <strong>ID:</strong> <?= $dispositivo['identificador'] ?><br>
+                        <strong>Tipo:</strong> <?= isset($dispositivo['tipo']) ? htmlspecialchars($dispositivo['tipo']) : '-' ?><br>
+                        <strong>ID:</strong> <?= isset($dispositivo['identificador']) ? htmlspecialchars($dispositivo['identificador']) : '-' ?><br>
                         <strong>Estado:</strong> 
-                        <span class="badge bg-<?= $dispositivo['estado'] === 'activo' ? 'success' : 'danger' ?>">
-                            <?= ucfirst($dispositivo['estado']) ?>
+                        <span class="badge bg-<?= (isset($dispositivo['estado']) && $dispositivo['estado'] === 'activo') ? 'success' : 'danger' ?>">
+                            <?= isset($dispositivo['estado']) ? ucfirst($dispositivo['estado']) : '-' ?>
                         </span>
                     </p>
                     <hr>
                     <h6>Mascota Asociada</h6>
                     <p class="mb-0">
-                        <strong>Nombre:</strong> <?= $mascota['nombre'] ?><br>
-                        <strong>Especie:</strong> <?= $mascota['especie'] ?><br>
-                        <strong>Raza:</strong> <?= $mascota['raza'] ?>
+                        <strong>Nombre:</strong> <?= isset($mascota['nombre']) ? htmlspecialchars($mascota['nombre']) : '-' ?><br>
+                        <strong>Especie:</strong> <?= isset($mascota['especie']) ? htmlspecialchars($mascota['especie']) : '-' ?><br>
+                        <strong>Raza:</strong> <?= isset($mascota['raza']) ? htmlspecialchars($mascota['raza']) : '-' ?>
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Estadísticas -->
+        <!-- Mapa de ubicación -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Ubicación Actual</h5>
+                </div>
+                <div class="card-body">
+                    <div id="mapaDispositivo" style="height: 350px; width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paneles de sensores actuales -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Temperatura</h6>
+                    <p class="display-6 mb-0">
+                        <?= isset($dispositivo['temperatura']) ? number_format($dispositivo['temperatura'], 1) . '°C' : '-' ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Batería</h6>
+                    <p class="display-6 mb-0">
+                        <?= isset($dispositivo['bateria']) ? number_format($dispositivo['bateria'], 1) . '%' : '-' ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Actividad</h6>
+                    <p class="display-6 mb-0">
+                        <?= isset($dispositivo['actividad']) ? number_format($dispositivo['actividad'], 1) : '-' ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6 class="card-title">Ritmo Cardíaco</h6>
+                    <p class="display-6 mb-0">
+                        <?= isset($dispositivo['ritmo_cardiaco']) ? number_format($dispositivo['ritmo_cardiaco'], 0) . ' bpm' : '-' ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row">
         <div class="col-md-8 mb-4">
             <div class="card">
                 <div class="card-header">
@@ -46,9 +104,9 @@
                                 <div class="card-body">
                                     <h6 class="card-title">Temperatura</h6>
                                     <p class="mb-0">
-                                        Promedio: <?= number_format($estadisticas['temp_promedio'], 1) ?>°C<br>
-                                        Máxima: <?= number_format($estadisticas['temp_maxima'], 1) ?>°C<br>
-                                        Mínima: <?= number_format($estadisticas['temp_minima'], 1) ?>°C
+                                        Promedio: <?= isset($estadisticas['temp_promedio']) ? number_format($estadisticas['temp_promedio'], 1) . '°C' : '-' ?><br>
+                                        Máxima: <?= isset($estadisticas['temp_maxima']) ? number_format($estadisticas['temp_maxima'], 1) . '°C' : '-' ?><br>
+                                        Mínima: <?= isset($estadisticas['temp_minima']) ? number_format($estadisticas['temp_minima'], 1) . '°C' : '-' ?>
                                     </p>
                                 </div>
                             </div>
@@ -58,9 +116,9 @@
                                 <div class="card-body">
                                     <h6 class="card-title">Humedad</h6>
                                     <p class="mb-0">
-                                        Promedio: <?= number_format($estadisticas['hum_promedio'], 1) ?>%<br>
-                                        Máxima: <?= number_format($estadisticas['hum_maxima'], 1) ?>%<br>
-                                        Mínima: <?= number_format($estadisticas['hum_minima'], 1) ?>%
+                                        Promedio: <?= isset($estadisticas['hum_promedio']) ? number_format($estadisticas['hum_promedio'], 1) . '%' : '-' ?><br>
+                                        Máxima: <?= isset($estadisticas['hum_maxima']) ? number_format($estadisticas['hum_maxima'], 1) . '%' : '-' ?><br>
+                                        Mínima: <?= isset($estadisticas['hum_minima']) ? number_format($estadisticas['hum_minima'], 1) . '%' : '-' ?>
                                     </p>
                                 </div>
                             </div>
@@ -70,9 +128,9 @@
                                 <div class="card-body">
                                     <h6 class="card-title">Actividad</h6>
                                     <p class="mb-0">
-                                        Promedio: <?= number_format($estadisticas['act_promedio'], 1) ?><br>
-                                        Máxima: <?= number_format($estadisticas['act_maxima'], 1) ?><br>
-                                        Mínima: <?= number_format($estadisticas['act_minima'], 1) ?>
+                                        Promedio: <?= isset($estadisticas['act_promedio']) ? number_format($estadisticas['act_promedio'], 1) : '-' ?><br>
+                                        Máxima: <?= isset($estadisticas['act_maxima']) ? number_format($estadisticas['act_maxima'], 1) : '-' ?><br>
+                                        Mínima: <?= isset($estadisticas['act_minima']) ? number_format($estadisticas['act_minima'], 1) : '-' ?>
                                     </p>
                                 </div>
                             </div>
@@ -119,11 +177,11 @@
                             <tbody id="ultimosDatos">
                                 <?php foreach ($ultimosDatos as $dato): ?>
                                 <tr>
-                                    <td><?= date('d/m/Y H:i:s', strtotime($dato['fecha'])) ?></td>
-                                    <td><?= number_format($dato['temperatura'], 1) ?>°C</td>
-                                    <td><?= number_format($dato['humedad'], 1) ?>%</td>
-                                    <td><?= number_format($dato['actividad'], 1) ?></td>
-                                    <td><?= number_format($dato['bateria'], 1) ?>%</td>
+                                    <td><?= isset($dato['fecha']) ? date('d/m/Y H:i:s', strtotime($dato['fecha'])) : '-' ?></td>
+                                    <td><?= isset($dato['temperatura']) ? number_format($dato['temperatura'], 1) . '°C' : '-' ?></td>
+                                    <td><?= isset($dato['humedad']) ? number_format($dato['humedad'], 1) . '%' : '-' ?></td>
+                                    <td><?= isset($dato['actividad']) ? number_format($dato['actividad'], 1) : '-' ?></td>
+                                    <td><?= isset($dato['bateria']) ? number_format($dato['bateria'], 1) . '%' : '-' ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -136,6 +194,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 let chart;
 let ultimaActualizacion = new Date();
@@ -229,4 +288,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Actualizar cada 30 segundos
     setInterval(actualizarDatos, 30000);
 });
+
+// Mapa con icono personalizado
+var lat = <?= $dispositivo['latitud'] ?>;
+var lng = <?= $dispositivo['longitud'] ?>;
+var especie = '<?= strtolower($mascota['especie'] ?? '') ?>';
+var iconUrl = especie === 'gato'
+    ? '/assets/img/huella_gato.png'
+    : '/assets/img/huella_perro.png';
+var iconoHuella = L.icon({
+    iconUrl: iconUrl,
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+});
+var mapa = L.map('mapaDispositivo').setView([lat, lng], 16);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(mapa);
+var popupContent = `
+    <b><?= htmlspecialchars($dispositivo['nombre']) ?></b><br>
+    Temperatura: <?= $dispositivo['temperatura'] ?> °C<br>
+    Batería: <?= $dispositivo['bateria'] ?> %<br>
+    Ritmo cardíaco: <?= $dispositivo['ritmo_cardiaco'] ?> bpm<br>
+    Actividad: <?= $dispositivo['actividad'] ?><br>
+    Última lectura: <?= $dispositivo['ultima_lectura'] ?>
+`;
+L.marker([lat, lng], {icon: iconoHuella})
+    .addTo(mapa)
+    .bindPopup(popupContent)
+    .on('mouseover', function(e) { this.openPopup(); })
+    .on('mouseout', function(e) { this.closePopup(); });
 </script> 

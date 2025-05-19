@@ -45,25 +45,63 @@ class DashboardController extends Controller {
 
             $this->logger->info("Usuario autenticado, ID: " . $_SESSION['user_id']);
 
+            // Verificar si es admin/superadmin y tiene permiso para ver todos los dispositivos
+            $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1, 2]);
+            $tienePermiso = function_exists('verificarPermiso') ? verificarPermiso('ver_todas_mascotas') : false;
+
+            if ($esAdmin && $tienePermiso) {
+                $totalMascotas = $this->mascotaModel->count();
+                $totalDispositivos = $this->dispositivoModel->count();
+                // Estadísticas de sensores globales
+                $db = Database::getInstance();
+                $rowSensores = $db->query('SELECT COUNT(*) as total FROM datos_sensores')->single();
+                $totalSensores = $rowSensores ? $rowSensores['total'] : 0;
+                $rowTemp = $db->query('SELECT AVG(temperatura) as promedio FROM datos_sensores')->single();
+                $promedioTemp = $rowTemp && $rowTemp['promedio'] !== null ? $rowTemp['promedio'] : 0;
+
+                // Obtener dispositivos activos con información del propietario
+                $dispositivosActivos = $db->query('
+                    SELECT d.*, u.nombre as propietario_nombre, m.nombre as mascota_nombre 
+                    FROM dispositivos d 
+                    LEFT JOIN usuarios u ON d.propietario_id = u.id 
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id 
+                    WHERE d.estado = "activo"
+                ')->resultSet();
+            } else {
+                $totalMascotas = $this->mascotaModel->count(['propietario_id' => $_SESSION['user_id']]);
+                $totalDispositivos = $this->dispositivoModel->count(['propietario_id' => $_SESSION['user_id']]);
+                // Estadísticas de sensores por usuario
+                $db = Database::getInstance();
+                $rowSensores = $db->query('SELECT COUNT(*) as total FROM datos_sensores ds JOIN dispositivos d ON ds.dispositivo_id = d.id WHERE d.propietario_id = ' . intval($_SESSION['user_id']))->single();
+                $totalSensores = $rowSensores ? $rowSensores['total'] : 0;
+                $rowTemp = $db->query('SELECT AVG(ds.temperatura) as promedio FROM datos_sensores ds JOIN dispositivos d ON ds.dispositivo_id = d.id WHERE d.propietario_id = ' . intval($_SESSION['user_id']))->single();
+                $promedioTemp = $rowTemp && $rowTemp['promedio'] !== null ? $rowTemp['promedio'] : 0;
+
+                // Obtener dispositivos activos con información del propietario para el usuario actual
+                $dispositivosActivos = $db->query('
+                    SELECT d.*, u.nombre as propietario_nombre, m.nombre as mascota_nombre 
+                    FROM dispositivos d 
+                    LEFT JOIN usuarios u ON d.propietario_id = u.id 
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id 
+                    WHERE d.propietario_id = ' . intval($_SESSION['user_id']) . ' 
+                    AND d.estado = "activo"
+                ')->resultSet();
+            }
+
             // Obtener estadísticas
             $stats = [
-                'mascotas' => $this->mascotaModel->count(['usuario_id' => $_SESSION['user_id']]),
-                'dispositivos' => $this->dispositivoModel->count(['usuario_id' => $_SESSION['user_id']]),
-                'dispositivos_activos' => $this->dispositivoModel->count([
-                    'usuario_id' => $_SESSION['user_id'],
-                    'estado' => 'activo'
-                ]),
-                'alertas' => $this->alertaModel->getEstadisticas($_SESSION['user_id'])
+                'mascotas' => $totalMascotas,
+                'dispositivos' => $totalDispositivos,
+                'dispositivos_activos' => count($dispositivosActivos),
+                'alertas' => $this->alertaModel->getEstadisticas($_SESSION['user_id']),
+                'total_sensores' => $totalSensores,
+                'promedio_temperatura' => round($promedioTemp, 2)
             ];
             $this->logger->info("Estadísticas obtenidas: " . print_r($stats, true));
 
             // Obtener últimas alertas
             $ultimasAlertas = $this->alertaModel->getAlertasNoLeidas($_SESSION['user_id']);
             $this->logger->info("Últimas alertas obtenidas: " . count($ultimasAlertas));
-
-            // Obtener dispositivos activos
-            $dispositivosActivos = $this->dispositivoModel->getDispositivosActivos($_SESSION['user_id']);
-            $this->logger->info("Dispositivos activos obtenidos: " . count($dispositivosActivos));
 
             // Obtener actividad reciente
             $actividadReciente = $this->logModel->getActividadReciente($_SESSION['user_id']);
@@ -110,10 +148,10 @@ class DashboardController extends Controller {
 
         try {
             $stats = [
-                'mascotas' => $this->mascotaModel->count(['usuario_id' => $_SESSION['user_id']]),
-                'dispositivos' => $this->dispositivoModel->count(['usuario_id' => $_SESSION['user_id']]),
+                'mascotas' => $this->mascotaModel->count(['propietario_id' => $_SESSION['user_id']]),
+                'dispositivos' => $this->dispositivoModel->count(['propietario_id' => $_SESSION['user_id']]),
                 'dispositivos_activos' => $this->dispositivoModel->count([
-                    'usuario_id' => $_SESSION['user_id'],
+                    'propietario_id' => $_SESSION['user_id'],
                     'estado' => 'activo'
                 ]),
                 'alertas' => $this->alertaModel->getEstadisticas($_SESSION['user_id'])

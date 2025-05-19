@@ -50,7 +50,10 @@ $puedeEliminar = in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []);
                 </div>
             </td>
             <td>
-                <?php if ($puedeEditarCualquiera || ($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['user_id'])): ?>
+                <?php if (
+                    $puedeEditarCualquiera ||
+                    ($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['propietario_id'])
+                ): ?>
                 <button class="btn btn-sm btn-info me-1 btnEditarMascota" data-id="<?= $mascota['id'] ?>">
                     <i class="fas fa-edit"></i>
                 </button>

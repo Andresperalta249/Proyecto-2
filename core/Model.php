@@ -47,17 +47,34 @@ class Model {
     }
 
     public function create($data) {
-        $columns = implode(', ', array_keys($data));
-        $values = ':' . implode(', :', array_keys($data));
-        
-        $sql = "INSERT INTO {$this->table} ($columns) VALUES ($values)";
-        
         try {
+            $columns = implode(', ', array_keys($data));
+            $placeholders = ':' . implode(', :', array_keys($data));
+            
+            $sql = "INSERT INTO {$this->table} ($columns) VALUES ($placeholders)";
+            
+            error_log("SQL de inserción: " . $sql);
+            error_log("Datos a insertar: " . print_r($data, true));
+            
             $stmt = $this->db->prepare($sql);
-            $stmt->execute($data);
+            if (!$stmt) {
+                $error = $this->db->errorInfo();
+                error_log("Error al preparar la consulta: " . print_r($error, true));
+                throw new PDOException("Error al preparar la consulta: " . $error[2]);
+            }
+            
+            $result = $stmt->execute($data);
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                error_log("Error al ejecutar la consulta: " . print_r($error, true));
+                throw new PDOException("Error al ejecutar la consulta: " . $error[2]);
+            }
+            
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
+            $this->lastError = $e->getMessage();
             error_log("Error al crear registro: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             return false;
         }
     }

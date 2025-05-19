@@ -23,29 +23,14 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <!-- Barra de búsqueda -->
-            <form id="formBuscarMascota" class="row g-2 mb-3">
-                <div class="col-md-4">
+            <form id="formBuscarMascota" class="form-filtros d-flex align-items-end gap-2 mb-3">
+                <div class="flex-grow-1">
                     <input type="text" class="form-control" name="nombre" placeholder="Buscar por nombre...">
                 </div>
-                <div class="col-md-3">
-                    <select class="form-select" name="especie">
-                        <option value="">Todas las especies</option>
-                        <option value="Perro">Perro</option>
-                        <option value="Gato">Gato</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select" name="estado">
-                        <option value="">Todos los estados</option>
-                        <option value="Activo">Activo</option>
-                        <option value="Inactivo">Inactivo</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-search"></i> Buscar
-                    </button>
-                </div>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalFiltrosMascotasPHP">
+                    <i class="fas fa-filter"></i> Filtros
+                </button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
             </form>
             <div class="table-responsive">
                 <table class="tabla-app" id="tablaMascotas">
@@ -109,12 +94,12 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
                             </td>
                             <td>
                                 <?php if ($puedeEditar): ?>
-                                <button class="btn-accion btn-info btnEditarMascota" data-id="<?= $mascota['id'] ?>">
+                                <button class="btn-accion btn-info btnEditarMascota" data-id="<?= $mascota['id'] ?>" title="Editar mascota">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <?php endif; ?>
                                 <?php if ($puedeEliminar): ?>
-                                <button class="btn-accion btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>">
+                                <button class="btn-accion btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>" title="Eliminar mascota">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                                 <?php endif; ?>
@@ -150,6 +135,52 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
     <span class="fab-text">Agregar Mascota</span>
 </button>
 <?php endif; ?>
+
+<!-- Modal de Filtros Avanzados -->
+<div class="modal fade" id="modalFiltrosMascotasPHP" tabindex="-1" aria-labelledby="modalFiltrosMascotasPHPLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFiltrosMascotasPHPLabel">Filtros Avanzados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formFiltrosMascotasPHP">
+                    <div class="mb-3">
+                        <label for="filtroEstadoMascota" class="form-label">Estado</label>
+                        <select class="form-select" id="filtroEstadoMascota" name="estado">
+                            <option value="">Todos</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="filtroEspecieMascota" class="form-label">Especie</label>
+                        <select class="form-select" id="filtroEspecieMascota" name="especie">
+                            <option value="">Todas</option>
+                            <option value="perro">Perro</option>
+                            <option value="gato">Gato</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="filtroDuenoMascota" class="form-label">Dueño</label>
+                        <select class="form-select" id="filtroDuenoMascota" name="dueno">
+                            <option value="">Todos</option>
+                            <?php foreach ($usuarios as $usuario): ?>
+                                <option value="<?= $usuario['id'] ?>"><?= htmlspecialchars($usuario['nombre']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="aplicarFiltrosMascotasPHP">Aplicar Filtros</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 // Asegurarse de que jQuery esté disponible antes de ejecutar cualquier código
@@ -363,6 +394,17 @@ if (typeof jQuery === 'undefined') {
                     });
                 }
             });
+        });
+
+        // Lógica para aplicar filtros avanzados en mascotas
+        document.getElementById('aplicarFiltrosMascotasPHP').addEventListener('click', function() {
+            const estado = document.getElementById('filtroEstadoMascota').value;
+            const especie = document.getElementById('filtroEspecieMascota').value;
+            const dueno = document.getElementById('filtroDuenoMascota').value;
+            // Por ahora solo cierra el modal
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalFiltrosMascotasPHP'));
+            if (modal) modal.hide();
+            // Aquí puedes agregar la lógica para filtrar la tabla según los valores seleccionados
         });
     });
 }

@@ -1,6 +1,6 @@
 <?php if (empty($usuarios)): ?>
     <tr>
-        <td colspan="9" class="text-center text-muted py-4">No hay usuarios registrados.</td>
+        <td colspan="9" class="text-center sin-resultados">No hay usuarios registrados.</td>
     </tr>
 <?php else: ?>
     <?php foreach ($usuarios as $usuario): ?>
@@ -28,7 +28,7 @@
             </td>
             <td class="text-center">
                 <?php if (verificarPermiso('editar_usuarios')): ?>
-                    <button class="btn-accion btn-info editar-usuario" data-id="<?= $usuario['id'] ?>">
+                    <button class="btn-accion btn-info editar-usuario" data-id="<?= $usuario['id'] ?>" title="Editar usuario">
                         <i class="fas fa-edit"></i>
                     </button>
                 <?php endif; ?>
@@ -37,7 +37,7 @@
                     $rol = strtolower(trim($usuario['rol_nombre'] ?? ''));
                     if (!in_array($rol, ['administrador', 'superadministrador'])):
                     ?>
-                        <button class="btn-accion btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>">
+                        <button class="btn-accion btn-danger eliminar-usuario" data-id="<?= $usuario['id'] ?>" title="Eliminar usuario">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     <?php endif; ?>

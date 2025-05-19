@@ -10,6 +10,18 @@ error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/logs/error.log');
 
+// Registrar todos los errores, incluyendo fatales
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    error_log("[ERROR] [$errno] $errstr en $errfile:$errline");
+    return false; // Permite que PHP maneje el error también
+});
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        error_log("[FATAL] [{$error['type']}] {$error['message']} en {$error['file']}:{$error['line']}");
+    }
+});
+
 // Verificar que podemos escribir en el archivo de log
 $logFile = __DIR__ . '/logs/error.log';
 if (!file_exists($logFile)) {

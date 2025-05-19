@@ -33,8 +33,8 @@
         <label for="genero" class="form-label">Género</label>
         <select class="form-select" id="genero" name="genero" required>
             <option value="">Seleccione género</option>
-            <option value="Macho" <?= ($mascota['genero'] ?? '') === 'Macho' ? 'selected' : '' ?>>Macho</option>
-            <option value="Hembra" <?= ($mascota['genero'] ?? '') === 'Hembra' ? 'selected' : '' ?>>Hembra</option>
+            <option value="macho" <?= ($mascota['genero'] ?? '') === 'macho' ? 'selected' : '' ?>>Macho</option>
+            <option value="hembra" <?= ($mascota['genero'] ?? '') === 'hembra' ? 'selected' : '' ?>>Hembra</option>
         </select>
     </div>
     <?php 

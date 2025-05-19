@@ -30,6 +30,7 @@ class MonitorController extends Controller {
         // Verificar que el dispositivo pertenezca al usuario
         $dispositivo = $this->dispositivoModel->findById($id);
         if (!$dispositivo || $dispositivo['usuario_id'] != $_SESSION['user_id']) {
+            $_SESSION['error'] = 'Dispositivo no encontrado o no autorizado.';
             redirect('monitor');
         }
 
@@ -37,6 +38,19 @@ class MonitorController extends Controller {
         $ultimosDatos = $this->dispositivoModel->getUltimosDatos($id);
         $estadisticas = $this->dispositivoModel->getEstadisticas($id);
         $mascota = $this->mascotaModel->findById($dispositivo['mascota_id']);
+
+        if (!$mascota) {
+            $_SESSION['error'] = 'La mascota asociada a este dispositivo no existe.';
+            redirect('monitor');
+        }
+        if (!$ultimosDatos || !is_array($ultimosDatos)) {
+            $_SESSION['error'] = 'No hay datos recientes para este dispositivo.';
+            redirect('monitor');
+        }
+        if (!$estadisticas || !is_array($estadisticas)) {
+            $_SESSION['error'] = 'No hay estadísticas disponibles para este dispositivo.';
+            redirect('monitor');
+        }
 
         $title = 'Monitor - ' . $dispositivo['nombre'];
         $content = $this->render('monitor/device', [

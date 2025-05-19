@@ -118,4 +118,14 @@ class User extends Model {
                 WHERE m.propietario_id = :usuario_id";
         return $this->query($sql, [':usuario_id' => $usuarioId]);
     }
+
+    public function getUsuarioById($id) {
+        $sql = "SELECT u.*, r.nombre as rol_nombre 
+                FROM usuarios u 
+                LEFT JOIN roles r ON u.rol_id = r.id 
+                WHERE u.id = :id 
+                LIMIT 1";
+        $result = $this->query($sql, [':id' => $id]);
+        return $result ? $result[0] : null;
+    }
 } 

@@ -6,14 +6,14 @@ class Dispositivo extends Model {
         parent::__construct();
     }
 
-    public function getDispositivosWithMascotas($usuario_id) {
+    public function getDispositivosWithMascotas($propietario_id) {
         try {
             $sql = "SELECT d.*, m.nombre as mascota_nombre, m.especie, m.raza
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id
+                    WHERE d.propietario_id = :propietario_id
                     ORDER BY d.ultima_conexion DESC";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getDispositivosWithMascotas: " . $e->getMessage());
@@ -23,9 +23,47 @@ class Dispositivo extends Model {
 
     public function createDispositivo($data) {
         try {
-            return $this->create($data);
+            // Validar campos requeridos
+            $requiredFields = ['nombre', 'mac', 'estado', 'propietario_id'];
+            foreach ($requiredFields as $field) {
+                if (empty($data[$field])) {
+                    error_log("Campo requerido faltante: {$field}");
+                    $this->lastError = "El campo {$field} es requerido";
+                    return false;
+                }
+            }
+
+            // Asegurar que los campos opcionales tengan valores por defecto
+            $data['bateria'] = $data['bateria'] ?? 100;
+            $data['ultima_conexion'] = $data['ultima_conexion'] ?? date('Y-m-d H:i:s');
+            $data['identificador'] = $data['identificador'] ?? 'DEV-' . strtoupper(uniqid());
+
+            // Validar formato de MAC
+            if (!preg_match('/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/', $data['mac'])) {
+                error_log("Formato de MAC inválido: {$data['mac']}");
+                $this->lastError = "Formato de MAC inválido";
+                return false;
+            }
+
+            // Validar unicidad de MAC
+            if ($this->existeMac($data['mac'])) {
+                error_log("MAC duplicada: {$data['mac']}");
+                $this->lastError = "La MAC ya está registrada";
+                return false;
+            }
+
+            error_log("Intentando crear dispositivo con datos: " . print_r($data, true));
+            $result = $this->create($data);
+            
+            if (!$result) {
+                error_log("Error al crear dispositivo: " . $this->lastError);
+            }
+            
+            return $result;
         } catch (Exception $e) {
             error_log("Error en createDispositivo: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
+            $this->lastError = $e->getMessage();
             return false;
         }
     }
@@ -66,15 +104,15 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosActivos($usuario_id) {
+    public function getDispositivosActivos($propietario_id) {
         try {
             $sql = "SELECT d.*, m.nombre as mascota_nombre
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :propietario_id 
                     AND d.estado = 'activo'
                     ORDER BY d.ultima_conexion DESC";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getDispositivosActivos: " . $e->getMessage());
@@ -112,7 +150,7 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getEstadisticas($usuario_id) {
+    public function getEstadisticas($propietario_id) {
         try {
             $sql = "SELECT 
                         COUNT(*) as total,
@@ -120,8 +158,8 @@ class Dispositivo extends Model {
                         COUNT(DISTINCT tipo) as tipos,
                         COUNT(DISTINCT mascota_id) as mascotas_asignadas
                     FROM {$this->table}
-                    WHERE usuario_id = :usuario_id";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+                    WHERE propietario_id = :propietario_id";
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ? $result[0] : [
                 'total' => 0,
                 'activos' => 0,
@@ -139,16 +177,16 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosPorTipo($usuario_id, $tipo) {
+    public function getDispositivosPorTipo($propietario_id, $tipo) {
         try {
             $sql = "SELECT d.*, m.nombre as mascota_nombre
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :propietario_id 
                     AND d.tipo = :tipo
                     ORDER BY d.ultima_conexion DESC";
             $result = $this->query($sql, [
-                ':usuario_id' => $usuario_id,
+                ':propietario_id' => $propietario_id,
                 ':tipo' => $tipo
             ]);
             return $result ?: [];
@@ -173,14 +211,14 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosSinMascota($usuario_id) {
+    public function getDispositivosSinMascota($propietario_id) {
         try {
             $sql = "SELECT d.*
                     FROM {$this->table} d
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :propietario_id 
                     AND d.mascota_id IS NULL
                     ORDER BY d.ultima_conexion DESC";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getDispositivosSinMascota: " . $e->getMessage());
@@ -188,15 +226,15 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosPorEstado($usuario_id) {
+    public function getDispositivosPorEstado($propietario_id) {
         try {
             $sql = "SELECT 
                         estado,
                         COUNT(*) as total
                     FROM {$this->table}
-                    WHERE usuario_id = :usuario_id
+                    WHERE propietario_id = :propietario_id
                     GROUP BY estado";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getDispositivosPorEstado: " . $e->getMessage());
@@ -204,7 +242,7 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosPorTipoConEstadisticas($usuario_id) {
+    public function getDispositivosPorTipoConEstadisticas($propietario_id) {
         try {
             $sql = "SELECT 
                         tipo,
@@ -212,9 +250,9 @@ class Dispositivo extends Model {
                         SUM(CASE WHEN estado = 'activo' THEN 1 ELSE 0 END) as activos,
                         COUNT(DISTINCT mascota_id) as mascotas_asignadas
                     FROM {$this->table}
-                    WHERE usuario_id = :usuario_id
+                    WHERE propietario_id = :propietario_id
                     GROUP BY tipo";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getDispositivosPorTipoConEstadisticas: " . $e->getMessage());
@@ -222,16 +260,16 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosConAlertas($usuario_id) {
+    public function getDispositivosConAlertas($propietario_id) {
         try {
             $sql = "SELECT DISTINCT d.*, m.nombre as mascota_nombre
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
                     JOIN alertas a ON d.id = a.dispositivo_id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :propietario_id 
                     AND a.leida = 0
                     ORDER BY d.ultima_conexion DESC";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error en getDispositivosConAlertas: " . $e->getMessage());
@@ -239,16 +277,16 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosPorUltimaConexion($usuario_id, $dias = 7) {
+    public function getDispositivosPorUltimaConexion($propietario_id, $dias = 7) {
         try {
             $sql = "SELECT d.*, m.nombre as mascota_nombre
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :propietario_id 
                     AND d.ultima_conexion >= DATE_SUB(NOW(), INTERVAL :dias DAY)
                     ORDER BY d.ultima_conexion DESC";
             $result = $this->query($sql, [
-                ':usuario_id' => $usuario_id,
+                ':propietario_id' => $propietario_id,
                 ':dias' => $dias
             ]);
             return $result ?: [];
@@ -260,17 +298,95 @@ class Dispositivo extends Model {
 
     public function getTodosDispositivosConMascotas() {
         try {
-            $sql = "SELECT d.*, m.nombre as mascota_nombre, m.especie, m.raza, u.nombre as usuario_nombre, u.email as usuario_email
+            $sql = "SELECT d.*, m.nombre as mascota_nombre, u.nombre as propietario_nombre
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    LEFT JOIN usuarios u ON d.usuario_id = u.id
+                    LEFT JOIN usuarios u ON d.propietario_id = u.id
                     ORDER BY d.ultima_conexion DESC";
             $result = $this->query($sql);
             return $result ?: [];
         } catch (Exception $e) {
-            error_log('Error en getTodosDispositivosConMascotas: ' . $e->getMessage());
+            error_log("Error en getTodosDispositivosConMascotas: " . $e->getMessage());
             return [];
         }
+    }
+
+    /**
+     * Verifica si una MAC ya existe en la base de datos.
+     * Si se pasa $ignoreId, ignora ese ID (útil para edición).
+     */
+    public function existeMac($mac, $ignoreId = null) {
+        $sql = "SELECT id FROM {$this->table} WHERE mac = :mac";
+        $params = [':mac' => $mac];
+        if ($ignoreId) {
+            $sql .= " AND id != :ignoreId";
+            $params[':ignoreId'] = $ignoreId;
+        }
+        $result = $this->query($sql, $params);
+        return !empty($result);
+    }
+
+    /**
+     * Obtiene todos los dispositivos sin mascota asignada (disponibles para asignar).
+     */
+    public function getDispositivosDisponibles() {
+        $sql = "SELECT * FROM {$this->table} WHERE mascota_id IS NULL";
+        $result = $this->query($sql);
+        return $result ?: [];
+    }
+
+    /**
+     * Filtra dispositivos según los parámetros recibidos.
+     * $filtros: ['busqueda', 'estado', 'propietario_id', 'mascota_id', 'bateria']
+     * $propietario_id: si se pasa, filtra solo por ese propietario
+     */
+    public function filtrarDispositivos($filtros, $propietario_id = null) {
+        $sql = "SELECT d.*, m.nombre as mascota_nombre, u.nombre as propietario_nombre
+                FROM {$this->table} d
+                LEFT JOIN mascotas m ON d.mascota_id = m.id
+                LEFT JOIN usuarios u ON d.propietario_id = u.id
+                WHERE 1=1";
+        $params = [];
+        if ($propietario_id) {
+            $sql .= " AND d.propietario_id = :propietario_id";
+            $params[':propietario_id'] = $propietario_id;
+        } elseif (!empty($filtros['propietario_id'])) {
+            $sql .= " AND d.propietario_id = :propietario_id";
+            $params[':propietario_id'] = $filtros['propietario_id'];
+        }
+        if (!empty($filtros['estado'])) {
+            $sql .= " AND d.estado = :estado";
+            $params[':estado'] = $filtros['estado'];
+        }
+        if (!empty($filtros['mascota_id'])) {
+            $sql .= " AND d.mascota_id = :mascota_id";
+            $params[':mascota_id'] = $filtros['mascota_id'];
+        }
+        if (!empty($filtros['bateria'])) {
+            if ($filtros['bateria'] === 'baja') {
+                $sql .= " AND d.bateria < 30";
+            } elseif ($filtros['bateria'] === 'media') {
+                $sql .= " AND d.bateria >= 30 AND d.bateria <= 70";
+            } elseif ($filtros['bateria'] === 'alta') {
+                $sql .= " AND d.bateria > 70";
+            }
+        }
+        if (!empty($filtros['busqueda'])) {
+            $sql .= " AND (d.nombre LIKE :busqueda OR d.mac LIKE :busqueda OR d.identificador LIKE :busqueda)";
+            $params[':busqueda'] = '%' . $filtros['busqueda'] . '%';
+        }
+        $sql .= " ORDER BY d.ultima_conexion DESC";
+        $result = $this->query($sql, $params);
+        return $result ?: [];
+    }
+
+    /**
+     * Obtiene la última fecha de lectura para un dispositivo
+     */
+    public function getUltimaLectura($dispositivo_id) {
+        $sql = "SELECT MAX(creado_en) as ultima_lectura FROM datos_sensores WHERE dispositivo_id = :dispositivo_id";
+        $result = $this->query($sql, [':dispositivo_id' => $dispositivo_id]);
+        return $result && $result[0]['ultima_lectura'] ? $result[0]['ultima_lectura'] : null;
     }
 }
 ?> 

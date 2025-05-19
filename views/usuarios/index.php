@@ -28,28 +28,14 @@
 <!-- Barra de búsqueda y filtros -->
 <div class="card mb-4">
     <div class="card-body">
-        <form id="formBuscarUsuarios" class="row g-3 mb-2">
-            <div class="col-md-4">
+        <form id="formBuscarUsuarios" class="form-filtros d-flex align-items-end gap-2 mb-3">
+            <div class="flex-grow-1">
                 <input type="text" class="form-control" id="buscarNombreUsuario" name="nombre" placeholder="Buscar por nombre o email...">
             </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filtroRol" name="rol">
-                    <option value="">Todos los roles</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Superadministrador">Superadministrador</option>
-                        <option value="Usuario">Usuario</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select class="form-select" id="filtroEstado" name="estado">
-                    <option value="">Todos los estados</option>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Buscar</button>
-            </div>
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalFiltrosUsuariosPHP">
+                <i class="fas fa-filter"></i> Filtros
+            </button>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
         </form>
         <div class="card shadow-sm">
             <div class="card-body p-0">
@@ -190,8 +176,8 @@
                             <!-- Campos de contraseña solo para nuevo usuario -->
                             <div id="campos-password-nuevo" style="display:none;">
                                 <div class="mb-3 position-relative">
-                                    <label for="password_nuevo" class="form-label">Nueva Contraseña</label>
-                                    <input type="password" class="form-control" id="password_nuevo" name="password" autocomplete="new-password">
+                                    <label for="password_nuevo_usuario" class="form-label">Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="password_nuevo_usuario" name="password" autocomplete="new-password">
                                     <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
                                     <ul class="list-unstyled mt-2 mb-0" id="password-requisitos-nuevo">
                                         <li id="req-len-nuevo" class="text-secondary">• Mínimo 8 caracteres</li>
@@ -202,28 +188,28 @@
                                     </ul>
                                 </div>
                                 <div class="mb-3 position-relative">
-                                    <label for="confirm_password_nuevo" class="form-label">Confirmar Contraseña</label>
-                                    <input type="password" class="form-control" id="confirm_password_nuevo" name="confirm_password" autocomplete="new-password">
+                                    <label for="confirm_password_nuevo_usuario" class="form-label">Confirmar Contraseña</label>
+                                    <input type="password" class="form-control" id="confirm_password_nuevo_usuario" name="confirm_password" autocomplete="new-password">
                                     <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="password" role="tabpanel" aria-labelledby="password-tab">
                             <div class="mb-3 position-relative">
-                                <label for="password" class="form-label">Nueva Contraseña</label>
-                                <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+                                <label for="password_editar" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="password_editar" name="password" autocomplete="new-password" required>
                                 <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
-                                <ul class="list-unstyled mt-2 mb-0" id="password-requisitos">
-                                    <li id="req-len" class="text-secondary">• Mínimo 8 caracteres</li>
-                                    <li id="req-mayus" class="text-secondary">• Al menos una mayúscula</li>
-                                    <li id="req-minus" class="text-secondary">• Al menos una minúscula</li>
-                                    <li id="req-num" class="text-secondary">• Al menos un número</li>
-                                    <li id="req-esp" class="text-secondary">• Al menos un símbolo</li>
+                                <ul class="list-unstyled mt-2 mb-0" id="password-requisitos-editar">
+                                    <li id="req-len-editar" class="text-secondary">• Mínimo 8 caracteres</li>
+                                    <li id="req-mayus-editar" class="text-secondary">• Al menos una mayúscula</li>
+                                    <li id="req-minus-editar" class="text-secondary">• Al menos una minúscula</li>
+                                    <li id="req-num-editar" class="text-secondary">• Al menos un número</li>
+                                    <li id="req-esp-editar" class="text-secondary">• Al menos un símbolo</li>
                                 </ul>
                             </div>
                             <div class="mb-3 position-relative">
-                                <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
-                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" autocomplete="new-password">
+                                <label for="confirm_password_editar" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" class="form-control" id="confirm_password_editar" name="confirm_password" autocomplete="new-password" required>
                                 <span class="toggle-password" style="position:absolute;top:38px;right:15px;cursor:pointer;"><i class="fas fa-eye"></i></span>
                             </div>
                         </div>
@@ -298,6 +284,43 @@
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Filtros Avanzados para usuarios -->
+<div class="modal fade" id="modalFiltrosUsuariosPHP" tabindex="-1" aria-labelledby="modalFiltrosUsuariosPHPLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFiltrosUsuariosPHPLabel">Filtros Avanzados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formFiltrosUsuariosPHP">
+                    <div class="mb-3">
+                        <label for="filtroRolUsuario" class="form-label">Rol</label>
+                        <select class="form-select" id="filtroRolUsuario" name="rol">
+                            <option value="">Todos los roles</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Superadministrador">Superadministrador</option>
+                            <option value="Usuario">Usuario</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="filtroEstadoUsuario" class="form-label">Estado</label>
+                        <select class="form-select" id="filtroEstadoUsuario" name="estado">
+                            <option value="">Todos los estados</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="aplicarFiltrosUsuariosPHP">Aplicar Filtros</button>
+            </div>
         </div>
     </div>
 </div>
@@ -589,7 +612,7 @@
         });
         // Validación en tiempo real para nuevo usuario
         function validarPasswordNuevoRealtime() {
-            $('#password_nuevo').off('input').on('input', function() {
+            $('#password_nuevo_usuario').off('input').on('input', function() {
                 const password = $(this).val();
                 const requisitos = [
                     { regex: /.{8,}/, id: 'req-len-nuevo' },
@@ -609,17 +632,43 @@
                 });
             });
         }
+
+        function validarPasswordEditarRealtime() {
+            $('#password_editar').off('input').on('input', function() {
+                const password = $(this).val();
+                const requisitos = [
+                    { regex: /.{8,}/, id: 'req-len-editar' },
+                    { regex: /[A-Z]/, id: 'req-mayus-editar' },
+                    { regex: /[a-z]/, id: 'req-minus-editar' },
+                    { regex: /[0-9]/, id: 'req-num-editar' },
+                    { regex: /[^A-Za-z0-9]/, id: 'req-esp-editar' }
+                ];
+                requisitos.forEach(r => {
+                    if (password.length === 0) {
+                        $('#' + r.id).removeClass('text-danger text-success').addClass('text-secondary');
+                    } else if (r.regex.test(password)) {
+                        $('#' + r.id).removeClass('text-danger text-secondary').addClass('text-success');
+                    } else {
+                        $('#' + r.id).removeClass('text-success text-secondary').addClass('text-danger');
+                    }
+                });
+            });
+        }
+
         validarPasswordNuevoRealtime();
+        validarPasswordEditarRealtime();
+        
         $('#modalUsuario').on('shown.bs.modal', function () {
             validarPasswordNuevoRealtime();
+            validarPasswordEditarRealtime();
         });
+
         // Validación al enviar el formulario para nuevo usuario
         $('#formUsuario').off('submit').on('submit', function(e) {
-            // ... existing code ...
             // Validar campos de contraseña para nuevo usuario
             if ($('#campos-password-nuevo').is(':visible')) {
-                const passwordNuevo = $('#password_nuevo').val();
-                const confirmPasswordNuevo = $('#confirm_password_nuevo').val();
+                const passwordNuevo = $('#password_nuevo_usuario').val();
+                const confirmPasswordNuevo = $('#confirm_password_nuevo_usuario').val();
                 const requisitosNuevo = [
                     { regex: /.{8,}/, id: 'req-len-nuevo' },
                     { regex: /[A-Z]/, id: 'req-mayus-nuevo' },
@@ -648,7 +697,39 @@
                     return false;
                 }
             }
-            // ... existing code ...
+
+            // Validar campos de contraseña para edición
+            if ($('#password_editar').is(':visible')) {
+                const passwordEditar = $('#password_editar').val();
+                const confirmPasswordEditar = $('#confirm_password_editar').val();
+                const requisitosEditar = [
+                    { regex: /.{8,}/, id: 'req-len-editar' },
+                    { regex: /[A-Z]/, id: 'req-mayus-editar' },
+                    { regex: /[a-z]/, id: 'req-minus-editar' },
+                    { regex: /[0-9]/, id: 'req-num-editar' },
+                    { regex: /[^A-Za-z0-9]/, id: 'req-esp-editar' }
+                ];
+                let cumpleEditar = true;
+                requisitosEditar.forEach(r => {
+                    if (!r.regex.test(passwordEditar)) {
+                        $('#' + r.id).removeClass('text-success text-secondary').addClass('text-danger');
+                        cumpleEditar = false;
+                    }
+                });
+                if (!cumpleEditar) {
+                    e.preventDefault();
+                    return false;
+                }
+                if (passwordEditar !== confirmPasswordEditar) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Las contraseñas no coinciden.'
+                    });
+                    return false;
+                }
+            }
         });
     });
 
@@ -785,6 +866,36 @@
                 });
             }
         });
+    });
+    </script>
+    <script>
+    // Sincronizar filtros avanzados con el formulario principal
+    document.getElementById('aplicarFiltrosUsuariosPHP').addEventListener('click', function() {
+        // Obtener valores del modal
+        var rol = document.getElementById('filtroRolUsuario').value;
+        var estado = document.getElementById('filtroEstadoUsuario').value;
+        // Asignar a campos ocultos o crear si no existen
+        let form = document.getElementById('formBuscarUsuarios');
+        let inputRol = form.querySelector('input[name="rol"]');
+        let inputEstado = form.querySelector('input[name="estado"]');
+        if (!inputRol) {
+            inputRol = document.createElement('input');
+            inputRol.type = 'hidden';
+            inputRol.name = 'rol';
+            form.appendChild(inputRol);
+        }
+        if (!inputEstado) {
+            inputEstado = document.createElement('input');
+            inputEstado.type = 'hidden';
+            inputEstado.name = 'estado';
+            form.appendChild(inputEstado);
+        }
+        inputRol.value = rol;
+        inputEstado.value = estado;
+        // Cerrar modal y disparar búsqueda
+        var modal = bootstrap.Modal.getInstance(document.getElementById('modalFiltrosUsuariosPHP'));
+        modal.hide();
+        form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
     });
     </script>
 </div>

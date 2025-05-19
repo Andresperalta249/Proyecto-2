@@ -60,40 +60,69 @@
     background: var(--bg-hover);
 }
 
-/* === Botones de acción === */
+/* === Filtros de tablas unificados === */
+.form-filtros {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.form-filtros .form-control, .form-filtros .form-select {
+    min-width: 180px;
+    max-width: 260px;
+}
+.form-filtros .btn {
+    min-width: 120px;
+}
+
+/* === Botones de acción mejorados === */
 .btn-accion {
     font-size: 1.1rem;
     border-radius: 8px;
     box-shadow: var(--shadow-sm);
-    margin: 0 2px;
+    margin: 0 4px;
+    padding: 6px 10px;
+    transition: box-shadow 0.2s, background 0.2s;
     width: 36px;
     height: 36px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, color 0.2s;
+}
+.btn-accion:focus, .btn-accion:hover {
+    box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+    background: #f3f6fa;
+}
+.btn-accion[title] {
+    position: relative;
 }
 
-.btn-accion.btn-info {
-    background: var(--color-info);
-    color: #fff;
-    border: none;
+/* === Feedback visual === */
+.tabla-app .cargando, .tabla-app .sin-resultados {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 24px 0;
 }
 
-.btn-accion.btn-info:hover {
-    background: var(--color-info-dark);
-    color: #fff;
+/* === Responsive: ocultar columnas menos importantes === */
+@media (max-width: 700px) {
+    .tabla-app th:nth-child(4), .tabla-app td:nth-child(4),
+    .tabla-app th:nth-child(5), .tabla-app td:nth-child(5) {
+        display: none;
+    }
 }
 
-.btn-accion.btn-danger {
-    background: var(--color-danger);
-    color: #fff;
-    border: none;
+/* === Hover y bordes suaves === */
+.tabla-app tbody tr:hover {
+    background: #e9f5ff;
+    transition: background 0.2s;
 }
 
-.btn-accion.btn-danger:hover {
-    background: var(--color-danger-dark);
-    color: #fff;
+/* === Tooltip accesible === */
+[data-bs-toggle="tooltip"] {
+    cursor: pointer;
 }
 
 /* === ID azul === */
@@ -122,6 +151,18 @@
     .tabla-app th,
     .tabla-app td {
         padding: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .tabla-app {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabla-app {
+        font-size: 0.75rem;
     }
 }
 
@@ -169,4 +210,22 @@
 /* -.switch-inactivo {
 -    background-color: #e5e7eb !important;
 -    border-color: #d1d5db !important;
--} */ 
+-} */
+
+/* Fijar columnas 'id' y 'nombre' en la tabla */
+.tabla-app th:first-child,
+.tabla-app td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--bg-header);
+  z-index: 2;
+}
+
+/* Eliminar sticky de la segunda columna para evitar espacios en blanco */
+/* .tabla-app th:nth-child(2),
+.tabla-app td:nth-child(2) {
+  position: sticky;
+  left: 120px;
+  background: var(--bg-header);
+  z-index: 2;
+} */ 

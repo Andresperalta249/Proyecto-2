@@ -10,20 +10,14 @@
 <div class="container-fluid">
     <div class="card mb-4">
         <div class="card-body">
-            <form id="formBuscar" class="row g-3 mb-2">
-                <div class="col-md-4">
+            <form id="formBuscar" class="form-filtros d-flex align-items-end gap-2 mb-3">
+                <div class="flex-grow-1">
                     <input type="text" class="form-control" id="txtBuscarNombreRol" placeholder="Buscar por nombre...">
                 </div>
-                <div class="col-md-3">
-                    <select class="form-select" id="cmbEstadoRol">
-                        <option value="">Todos los estados</option>
-                        <option value="activo">Activo</option>
-                        <option value="inactivo">Inactivo</option>
-                    </select>
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Buscar</button>
-                </div>
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalFiltrosRolesPHP">
+                    <i class="fas fa-filter"></i> Filtros
+                </button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
             </form>
             <div class="card shadow-sm">
                 <div class="card-body p-0">
@@ -69,20 +63,10 @@
                                         </button>
                                     </td>
                                     <td>
-                                        <?php if (in_array($rol['id'], [1,2])): ?>
+                                        <?php if ($rol['id'] > 3): ?>
                                             <?php if (verificarPermiso('editar_roles')): ?>
                                             <button class="btn-accion btn-info editar-rol" data-id="<?= $rol['id'] ?>" data-bs-toggle="modal" data-bs-target="#modalRol">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="22" height="22">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487a2.25 2.25 0 0 1 3.182 3.182L7.5 20.213l-4.182 1 1-4.182L16.862 4.487z" />
-                                                </svg>
-                                            </button>
-                                            <?php endif; ?>
-                                        <?php elseif ($rol['id'] > 3): ?>
-                                            <?php if (verificarPermiso('editar_roles')): ?>
-                                            <button class="btn-accion btn-info editar-rol" data-id="<?= $rol['id'] ?>" data-bs-toggle="modal" data-bs-target="#modalRol">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="22" height="22">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487a2.25 2.25 0 0 1 3.182 3.182L7.5 20.213l-4.182 1 1-4.182L16.862 4.487z" />
-                                                </svg>
+                                                <i class="fas fa-edit"></i>
                                             </button>
                                             <?php endif; ?>
                                             <?php if (verificarPermiso('eliminar_roles')): ?>
@@ -224,7 +208,114 @@
     </div>
 </div>
 
+<!-- Modal de Filtros Avanzados para roles -->
+<div class="modal fade" id="modalFiltrosRolesPHP" tabindex="-1" aria-labelledby="modalFiltrosRolesPHPLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalFiltrosRolesPHPLabel">Filtros Avanzados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formFiltrosRolesPHP">
+                    <div class="mb-3">
+                        <label for="filtroEstadoRol" class="form-label">Estado</label>
+                        <select class="form-select" id="filtroEstadoRol" name="estado">
+                            <option value="">Todos los estados</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="aplicarFiltrosRolesPHP">Aplicar Filtros</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
+/* Unificación de filtros */
+.form-filtros {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.form-filtros .form-control, .form-filtros .form-select {
+    min-width: 180px;
+    max-width: 260px;
+}
+.form-filtros .btn {
+    min-width: 120px;
+}
+
+/* Botones de acción */
+.btn-accion {
+    font-size: 1.1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    margin: 0 4px;
+    padding: 6px 10px;
+    transition: box-shadow 0.2s, background 0.2s;
+}
+.btn-accion:focus, .btn-accion:hover {
+    box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+    background: #f3f6fa;
+}
+.btn-accion[title] {
+    position: relative;
+}
+
+/* Tabla visual */
+.tabla-app {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.tabla-app th, .tabla-app td {
+    vertical-align: middle;
+    padding: 12px 8px;
+    border: none;
+}
+.tabla-app th {
+    background: #f8f9fa;
+    font-weight: 600;
+    text-align: center;
+    color: #222;
+}
+.tabla-app td {
+    color: #222;
+    text-align: center;
+}
+.tabla-app td:first-child, .tabla-app th:first-child {
+    text-align: center;
+}
+.tabla-app tbody tr:hover {
+    background: #e9f5ff;
+    transition: background 0.2s;
+}
+
+/* Feedback visual */
+.tabla-app .cargando, .tabla-app .sin-resultados {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 24px 0;
+}
+
+/* Responsive: ocultar columnas menos importantes */
+@media (max-width: 700px) {
+    .tabla-app th:nth-child(4), .tabla-app td:nth-child(4),
+    .tabla-app th:nth-child(5), .tabla-app td:nth-child(5) {
+        display: none;
+    }
+}
+
 .permisos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -629,6 +720,23 @@ $(document).ready(function() {
                 $(this).closest('.form-check').hide();
             }
         });
+    });
+
+    // Sincronizar filtros avanzados con el formulario principal de roles
+    document.getElementById('aplicarFiltrosRolesPHP').addEventListener('click', function() {
+        var estado = document.getElementById('filtroEstadoRol').value;
+        let form = document.getElementById('formBuscar');
+        let inputEstado = form.querySelector('input[name="estado"]');
+        if (!inputEstado) {
+            inputEstado = document.createElement('input');
+            inputEstado.type = 'hidden';
+            inputEstado.name = 'estado';
+            form.appendChild(inputEstado);
+        }
+        inputEstado.value = estado;
+        var modal = bootstrap.Modal.getInstance(document.getElementById('modalFiltrosRolesPHP'));
+        modal.hide();
+        form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}));
     });
 });
 </script> 

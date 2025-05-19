@@ -43,11 +43,11 @@
                                     <td>
                                         <div class="btn-group">
                                             <?php if (!$alerta['leida']): ?>
-                                            <button class="btn btn-sm btn-success" onclick="marcarLeida(<?= $alerta['id'] ?>)">
+                                            <button class="btn-accion btn-success" onclick="marcarLeida(<?= $alerta['id'] ?>)" title="Marcar como leída">
                                                 <i class="fas fa-check"></i>
                                             </button>
                                             <?php endif; ?>
-                                            <button class="btn btn-sm btn-danger" onclick="eliminarAlerta(<?= $alerta['id'] ?>)">
+                                            <button class="btn-accion btn-danger" onclick="eliminarAlerta(<?= $alerta['id'] ?>)" title="Eliminar alerta">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
