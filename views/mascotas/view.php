@@ -74,7 +74,7 @@
                                             </td>
                                             <td><?= $dispositivo['ultima_lectura'] ? date('d/m/Y H:i', strtotime($dispositivo['ultima_lectura'])) : 'N/A' ?></td>
                                             <td>
-                                                <a href="<?= BASE_URL ?>monitor/view/<?= $dispositivo['id'] ?>" class="btn btn-info btn-sm">
+                                                <a href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" class="btn btn-info btn-sm">
                                                     <i class="fas fa-chart-line"></i>
                                                 </a>
                                                 <a href="<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id'] ?>" class="btn btn-warning btn-sm">

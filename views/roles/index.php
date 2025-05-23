@@ -19,74 +19,72 @@
                 </button>
                 <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
             </form>
-            <div class="card shadow-sm">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="tabla-app" id="tablaRoles">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">ID</th>
-                                    <th>NOMBRE</th>
-                                    <th>ESTADO</th>
-                                    <th>DESCRIPCIÓN</th>
-                                    <th>DETALLES</th>
-                                    <th>ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyRoles">
-                                <?php foreach ($roles as $rol): ?>
-                                <tr>
-                                    <td class="id-azul"><?= $rol['id'] ?></td>
-                                    <td><?= htmlspecialchars($rol['nombre']) ?></td>
-                                    <td>
-                                        <?php $estado = isset($rol['estado']) && $rol['estado'] ? $rol['estado'] : 'inactivo'; ?>
-                                        <?php if ($rol['id'] > 3 && verificarPermiso('editar_roles')): ?>
-                                            <div class="form-check form-switch d-flex align-items-center mb-0">
-                                                <input class="form-check-input cambiar-estado-rol" type="checkbox" data-id="<?= $rol['id'] ?>" <?= ($estado === 'activo') ? 'checked' : '' ?> >
-                                                <label class="form-check-label ms-2">
-                                                    <?= ucfirst($estado) ?>
-                                                </label>
-                                            </div>
-                                        <?php else: ?>
-                                            <span class="badge bg-<?= $estado === 'activo' ? 'success' : 'danger' ?>">
-                                                <?= ucfirst($estado) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?= htmlspecialchars($rol['descripcion'] ?? 'Sin descripción') ?></td>
-                                    <td>
-                                        <button class="btn-accion btn-primary ver-detalles" data-id="<?= $rol['id'] ?>" data-bs-toggle="modal" data-bs-target="#modalDetalles">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="22" height="22">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75-7.5 9.75-7.5 9.75 7.5 9.75 7.5-3.75 7.5-9.75 7.5S2.25 12 2.25 12z" />
-                                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" fill="none" />
-                                            </svg>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <?php if ($rol['id'] > 3): ?>
-                                            <?php if (verificarPermiso('editar_roles')): ?>
-                                            <button class="btn-accion btn-info editar-rol" data-id="<?= $rol['id'] ?>" data-bs-toggle="modal" data-bs-target="#modalRol">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <?php endif; ?>
-                                            <?php if (verificarPermiso('eliminar_roles')): ?>
-                                            <button class="btn-accion btn-danger eliminar-rol" data-id="<?= $rol['id'] ?>">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                            <?php endif; ?>
-                                        <?php else: ?>
-                                            <span class="text-muted" title="Rol protegido"><i class="fas fa-lock"></i> No editable</span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="card p-2">
+              <div class="fw-semibold mb-2" id="tituloTabla"><i class="fa-solid fa-table me-1"></i>Roles registrados</div>
+              <div class="table-responsive" style="max-height: 350px;">
+                <table class="tabla-app" id="tablaRoles">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width: 50px;">ID</th>
+                      <th>NOMBRE</th>
+                      <th>ESTADO</th>
+                      <th>DESCRIPCIÓN</th>
+                      <th>DETALLES</th>
+                      <th>ACCIONES</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyRoles">
+                    <?php foreach ($roles as $rol): ?>
+                    <tr>
+                      <td class="id-azul"><?= $rol['id'] ?></td>
+                      <td><?= htmlspecialchars($rol['nombre']) ?></td>
+                      <td>
+                        <?php $estado = isset($rol['estado']) && $rol['estado'] ? $rol['estado'] : 'inactivo'; ?>
+                        <?php if ($rol['id'] > 3 && verificarPermiso('editar_roles')): ?>
+                          <div class="form-check form-switch d-flex align-items-center mb-0">
+                            <input class="form-check-input cambiar-estado-rol" type="checkbox" data-id="<?= $rol['id'] ?>" <?= ($estado === 'activo') ? 'checked' : '' ?> >
+                            <label class="form-check-label ms-2">
+                              <?= ucfirst($estado) ?>
+                            </label>
+                          </div>
+                        <?php else: ?>
+                          <span class="badge bg-<?= $estado === 'activo' ? 'success' : 'danger' ?>">
+                            <?= ucfirst($estado) ?>
+                          </span>
+                        <?php endif; ?>
+                      </td>
+                      <td><?= htmlspecialchars($rol['descripcion'] ?? 'Sin descripción') ?></td>
+                      <td>
+                        <button class="btn-accion btn-primary ver-detalles" data-id="<?= $rol['id'] ?>" data-bs-toggle="modal" data-bs-target="#modalDetalles">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="22" height="22">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75-7.5 9.75-7.5 9.75 7.5 9.75 7.5-3.75 7.5-9.75 7.5S2.25 12 2.25 12z" />
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" fill="none" />
+                          </svg>
+                        </button>
+                      </td>
+                      <td>
+                        <?php if ($rol['id'] > 3): ?>
+                          <?php if (verificarPermiso('editar_roles')): ?>
+                          <button class="btn-accion btn-info editar-rol" data-id="<?= $rol['id'] ?>" data-bs-toggle="modal" data-bs-target="#modalRol">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <?php endif; ?>
+                          <?php if (verificarPermiso('eliminar_roles')): ?>
+                          <button class="btn-accion btn-danger eliminar-rol" data-id="<?= $rol['id'] ?>">
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                          <?php endif; ?>
+                        <?php else: ?>
+                          <span class="text-muted" title="Rol protegido"><i class="fas fa-lock"></i> No editable</span>
+                        <?php endif; ?>
+                      </td>
+                    </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-3">
-                <div id="rolesInfo"></div>
                 <nav>
                     <ul class="pagination mb-0" id="rolesPagination"></ul>
                 </nav>
@@ -236,162 +234,7 @@
     </div>
 </div>
 
-<style>
-/* Unificación de filtros */
-.form-filtros {
-    display: flex;
-    gap: 12px;
-    align-items: end;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
-.form-filtros .form-control, .form-filtros .form-select {
-    min-width: 180px;
-    max-width: 260px;
-}
-.form-filtros .btn {
-    min-width: 120px;
-}
-
-/* Botones de acción */
-.btn-accion {
-    font-size: 1.1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
-    margin: 0 4px;
-    padding: 6px 10px;
-    transition: box-shadow 0.2s, background 0.2s;
-}
-.btn-accion:focus, .btn-accion:hover {
-    box-shadow: 0 4px 12px rgba(37,99,235,0.15);
-    background: #f3f6fa;
-}
-.btn-accion[title] {
-    position: relative;
-}
-
-/* Tabla visual */
-.tabla-app {
-    border-radius: 12px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-.tabla-app th, .tabla-app td {
-    vertical-align: middle;
-    padding: 12px 8px;
-    border: none;
-}
-.tabla-app th {
-    background: #f8f9fa;
-    font-weight: 600;
-    text-align: center;
-    color: #222;
-}
-.tabla-app td {
-    color: #222;
-    text-align: center;
-}
-.tabla-app td:first-child, .tabla-app th:first-child {
-    text-align: center;
-}
-.tabla-app tbody tr:hover {
-    background: #e9f5ff;
-    transition: background 0.2s;
-}
-
-/* Feedback visual */
-.tabla-app .cargando, .tabla-app .sin-resultados {
-    text-align: center;
-    color: #888;
-    font-style: italic;
-    padding: 24px 0;
-}
-
-/* Responsive: ocultar columnas menos importantes */
-@media (max-width: 700px) {
-    .tabla-app th:nth-child(4), .tabla-app td:nth-child(4),
-    .tabla-app th:nth-child(5), .tabla-app td:nth-child(5) {
-        display: none;
-    }
-}
-
-.permisos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.permiso-item {
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.permiso-item i {
-    color: #0d6efd;
-}
-
-.permiso-item.active {
-    background: #e7f1ff;
-    border-color: #0d6efd;
-}
-
-.fab-crear {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #0d6efd;
-    color: white;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 1000;
-    overflow: hidden;
-}
-
-.fab-crear:hover {
-    width: 150px;
-    border-radius: 25px;
-    background-color: #0b5ed7;
-}
-
-.fab-crear i {
-    font-size: 20px;
-    transition: all 0.3s ease;
-}
-
-.fab-crear .fab-text {
-    font-size: 16px;
-    font-weight: 500;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(20px);
-    transition: all 0.3s ease;
-    margin-left: 10px;
-}
-
-.fab-crear:hover .fab-text {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.fab-crear:hover i {
-    transform: translateX(-5px);
-}
-</style>
-
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="<?= APP_URL ?>/assets/css/app.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Tippy.js para tooltips modernos -->

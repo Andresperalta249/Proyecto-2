@@ -194,27 +194,33 @@ class Mascota extends Model {
         return $this->find($id);
     }
 
-    public function getMascotasFiltradas($filtros) {
-        $sql = "SELECT * FROM mascotas WHERE 1=1";
+    public function getMascotasFiltradas($filtros = []) {
+        $sql = "SELECT m.*
+                FROM {$this->table} m
+                WHERE 1=1";
         $params = [];
 
-        if (!empty($filtros['propietario_id'])) {
-            $sql .= " AND propietario_id = :propietario_id";
-            $params[':propietario_id'] = $filtros['propietario_id'];
-        }
         if (!empty($filtros['nombre'])) {
-            $sql .= " AND nombre LIKE :nombre";
-            $params[':nombre'] = '%' . $filtros['nombre'] . '%';
+            $sql .= " AND m.nombre LIKE :nombre";
+            $params[':nombre'] = "%{$filtros['nombre']}%";
         }
+
         if (!empty($filtros['especie'])) {
-            $sql .= " AND especie = :especie";
+            $sql .= " AND m.especie = :especie";
             $params[':especie'] = $filtros['especie'];
         }
+
         if (!empty($filtros['estado'])) {
-            $sql .= " AND estado = :estado";
+            $sql .= " AND m.estado = :estado";
             $params[':estado'] = $filtros['estado'];
         }
 
+        if (!empty($filtros['usuario_id'])) {
+            $sql .= " AND m.propietario_id = :usuario_id";
+            $params[':usuario_id'] = $filtros['usuario_id'];
+        }
+
+        $sql .= " ORDER BY m.nombre ASC";
         return $this->query($sql, $params);
     }
 }

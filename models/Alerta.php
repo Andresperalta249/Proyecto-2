@@ -28,7 +28,7 @@ class Alerta extends Model {
                     FROM {$this->table} a
                     LEFT JOIN dispositivos d ON a.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND a.leida = 0
                     ORDER BY a.fecha_creacion DESC
                     LIMIT :limit";
@@ -62,7 +62,7 @@ class Alerta extends Model {
                     JOIN dispositivos d ON a.dispositivo_id = d.id
                     SET a.leida = 1,
                         a.fecha_lectura = NOW()
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND a.leida = 0";
             return $this->query($sql, [':usuario_id' => $usuario_id]);
         } catch (Exception $e) {
@@ -111,7 +111,7 @@ class Alerta extends Model {
                         SUM(CASE WHEN a.leida = 0 AND a.prioridad = 'alta' THEN 1 ELSE 0 END) as alertas_altas
                     FROM {$this->table} a
                     LEFT JOIN dispositivos d ON a.dispositivo_id = d.id
-                    WHERE d.usuario_id = :usuario_id";
+                    WHERE d.propietario_id = :usuario_id";
             $result = $this->query($sql, [':usuario_id' => $usuario_id]);
             if (!$result || !isset($result[0])) {
                 return [
@@ -181,7 +181,7 @@ class Alerta extends Model {
                     FROM {$this->table} a
                     JOIN dispositivos d ON a.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND a.tipo = :tipo
                     ORDER BY a.fecha_creacion DESC
                     LIMIT :limit";
@@ -203,7 +203,7 @@ class Alerta extends Model {
                     FROM {$this->table} a
                     JOIN dispositivos d ON a.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND a.prioridad = :prioridad
                     ORDER BY a.fecha_creacion DESC
                     LIMIT :limit";
@@ -225,7 +225,7 @@ class Alerta extends Model {
                     FROM {$this->table} a
                     JOIN dispositivos d ON a.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND a.fecha_creacion BETWEEN :fecha_inicio AND :fecha_fin
                     ORDER BY a.fecha_creacion DESC";
             $result = $this->query($sql, [

@@ -1,5 +1,7 @@
+/* Eliminar todas las reglas para .table, .table th, .table td en este archivo para evitar conflictos con .tabla-app */
+
 /* Estilo base para la tabla */
-.table {
+/* .table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
@@ -36,4 +38,4 @@
   .table {
     font-size: 0.75rem;
   }
-} */ 
+} */ */ 

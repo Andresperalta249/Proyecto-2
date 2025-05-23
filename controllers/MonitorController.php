@@ -27,16 +27,16 @@ class MonitorController extends Controller {
             redirect('auth/login');
         }
 
-        // Verificar que el dispositivo pertenezca al usuario
-        $dispositivo = $this->dispositivoModel->findById($id);
-        if (!$dispositivo || $dispositivo['usuario_id'] != $_SESSION['user_id']) {
+        $dispositivo = $this->dispositivoModel->getDispositivoById($id);
+        $puedeVerTodos = function_exists('verificarPermiso') ? verificarPermiso('ver_todos_dispositivo') : false;
+        if (!$dispositivo || (!$puedeVerTodos && $dispositivo['propietario_id'] != $_SESSION['user_id'])) {
             $_SESSION['error'] = 'Dispositivo no encontrado o no autorizado.';
             redirect('monitor');
         }
 
         // Obtener datos del dispositivo
-        $ultimosDatos = $this->dispositivoModel->getUltimosDatos($id);
-        $estadisticas = $this->dispositivoModel->getEstadisticas($id);
+        $ultimosDatos = $this->dispositivoModel->getHistorialCompleto($id);
+        $estadisticas = $this->dispositivoModel->getEstadisticasSensores($id);
         $mascota = $this->mascotaModel->findById($dispositivo['mascota_id']);
 
         if (!$mascota) {
@@ -53,6 +53,7 @@ class MonitorController extends Controller {
         }
 
         $title = 'Monitor - ' . $dispositivo['nombre'];
+        $menuActivo = 'dispositivos';
         $content = $this->render('monitor/device', [
             'dispositivo' => $dispositivo,
             'mascota' => $mascota,
@@ -70,9 +71,9 @@ class MonitorController extends Controller {
             ], 403);
         }
 
-        // Verificar que el dispositivo pertenezca al usuario
-        $dispositivo = $this->dispositivoModel->findById($id);
-        if (!$dispositivo || $dispositivo['usuario_id'] != $_SESSION['user_id']) {
+        $dispositivo = $this->dispositivoModel->getDispositivoById($id);
+        $puedeVerTodos = function_exists('verificarPermiso') ? verificarPermiso('ver_todos_dispositivo') : false;
+        if (!$dispositivo || (!$puedeVerTodos && $dispositivo['usuario_id'] != $_SESSION['user_id'])) {
             $this->jsonResponse([
                 'success' => false,
                 'error' => 'Dispositivo no encontrado'
@@ -81,7 +82,7 @@ class MonitorController extends Controller {
 
         // Obtener últimos datos
         $ultimosDatos = $this->dispositivoModel->getUltimosDatos($id);
-        $estadisticas = $this->dispositivoModel->getEstadisticas($id);
+        $estadisticas = $this->dispositivoModel->getEstadisticasSensores($id);
 
         $this->jsonResponse([
             'success' => true,

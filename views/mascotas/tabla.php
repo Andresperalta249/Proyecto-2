@@ -8,26 +8,13 @@ $puedeEliminar = in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []);
 <?php if (!empty($mascotas)): ?>
     <?php foreach ($mascotas as $mascota): ?>
         <tr>
-            <td><?= $mascota['id'] ?></td>
-            <td><?= htmlspecialchars($mascota['nombre']) ?></td>
-            <td><?= htmlspecialchars($mascota['especie']) ?></td>
-            <td><?= htmlspecialchars($mascota['tamano']) ?></td>
-            <td><?= htmlspecialchars($mascota['genero'] ?? '-') ?></td>
-            <td>
-                <?php
-                $propietario = '';
-                if (!empty($mascota['propietario_id']) && isset($usuarios)) {
-                    foreach ($usuarios as $usuario) {
-                        if ($usuario['id'] == $mascota['propietario_id']) {
-                            $propietario = htmlspecialchars($usuario['nombre']);
-                            break;
-                        }
-                    }
-                }
-                echo $propietario ?: '-';
-                ?>
-            </td>
-            <td>
+            <td style="width: 48px;"><?= $mascota['id'] ?></td>
+            <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?= htmlspecialchars($mascota['nombre']) ?>"><?= htmlspecialchars($mascota['nombre']) ?></td>
+            <td style="width: 80px;"><?= htmlspecialchars($mascota['especie']) ?></td>
+            <td style="width: 80px;"><?= htmlspecialchars($mascota['tamano']) ?></td>
+            <td style="width: 60px;"><?= htmlspecialchars($mascota['genero'] ?? '-') ?></td>
+            <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?= $propietario ?>"><?= $propietario ?: '-' ?></td>
+            <td style="width: 60px; text-align:center;">
                 <?php
                 if (!empty($mascota['fecha_nacimiento'])) {
                     $nacimiento = new DateTime($mascota['fecha_nacimiento']);
@@ -39,17 +26,28 @@ $puedeEliminar = in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []);
                 }
                 ?>
             </td>
-            <td>
-                <div class="form-check form-switch">
-                    <input class="form-check-input cambiar-estado-mascota" type="checkbox"
+            <td style="width: 80px; text-align:center;">
+                <?php
+                $bateria = isset($mascota['bateria']) ? (int)$mascota['bateria'] : null;
+                if ($bateria === null || $bateria === '') {
+                    echo '-';
+                } else {
+                    echo '<span style="color:#222;font-weight:500;">' . $bateria . '%</span>';
+                }
+                ?>
+            </td>
+            <td style="width: 110px;">
+                <div class="form-check form-switch d-flex align-items-center mb-0">
+                    <input class="form-check-input cambiar-estado-mascota <?= $mascota['estado'] === 'inactivo' ? 'switch-inactivo' : '' ?>"
+                        type="checkbox"
                         data-id="<?= $mascota['id'] ?>"
-                        <?= $mascota['estado'] === 'activo' ? 'checked' : '' ?>>
-                    <label class="form-check-label">
+                        <?= $mascota['estado'] === 'activo' ? 'checked' : '' ?> >
+                    <label class="form-check-label ms-2">
                         <?= ucfirst($mascota['estado']) ?>
                     </label>
                 </div>
             </td>
-            <td>
+            <td style="width: 90px;">
                 <?php if (
                     $puedeEditarCualquiera ||
                     ($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['propietario_id'])
@@ -68,7 +66,7 @@ $puedeEliminar = in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []);
     <?php endforeach; ?>
 <?php else: ?>
     <tr>
-        <td colspan="9" class="text-center text-muted py-4">
+        <td colspan="10" class="text-center text-muted py-4">
             No hay mascotas registradas.
         </td>
     </tr>

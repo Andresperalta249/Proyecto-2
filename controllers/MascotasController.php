@@ -31,7 +31,8 @@ class MascotasController extends Controller {
         }
         $usuariosModel = $this->loadModel('User');
         $usuarios = $usuariosModel->getActiveUsers();
-        $title = 'Mis Mascotas';
+        // $title = 'Mis Mascotas'; // Eliminado para que no se muestre en el layout
+        $menuActivo = 'mascotas';
         $content = $this->render('mascotas/index', ['mascotas' => $mascotas, 'usuarios' => $usuarios]);
         require_once 'views/layouts/main.php';
     }
@@ -363,10 +364,23 @@ class MascotasController extends Controller {
         // Obtener usuarios activos para mostrar información del propietario
         $usuariosModel = $this->loadModel('User');
         $usuarios = $usuariosModel->getActiveUsers();
-        echo $this->render('mascotas/tabla', [
+        // Validar si cada mascota tiene dispositivo asociado
+        foreach ($mascotas as &$mascota) {
+            $dispositivos = $this->dispositivoModel->getDispositivosByMascota($mascota['id']);
+            $mascota['tiene_dispositivo'] = !empty($dispositivos);
+        }
+        unset($mascota);
+        header('Content-Type: application/json');
+        echo json_encode([
             'mascotas' => $mascotas,
-            'usuarios' => $usuarios
-        ], true);
+            'usuarios' => $usuarios,
+            'permisos' => [
+                'editar_cualquiera' => in_array('editar_cualquier_mascota', $_SESSION['permissions'] ?? []),
+                'editar_propias' => in_array('editar_mascotas', $_SESSION['permissions'] ?? []),
+                'eliminar' => in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []),
+                'propietario_id' => $_SESSION['propietario_id'] ?? null
+            ]
+        ]);
         exit;
     }
 

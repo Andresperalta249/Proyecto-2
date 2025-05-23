@@ -30,6 +30,7 @@ class RolesController {
         $content = ob_get_clean();
         
         $title = 'Gestión de Roles';
+        $menuActivo = 'roles';
         require_once 'views/layouts/main.php';
     }
     

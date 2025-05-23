@@ -45,6 +45,8 @@ class AuthController extends Controller {
                             $_SESSION['user_id'] = $user['id'];
                             $_SESSION['user'] = $user;
                             $_SESSION['user_role'] = $user['rol_id'];
+                            $_SESSION['permissions'] = array_unique(obtenerPermisosUsuario($user['id']));
+                            $_SESSION['propietario_id'] = $user['id'];
                             
                             // Registrar el inicio de sesión
                             $this->userModel->logLogin($user['id']);

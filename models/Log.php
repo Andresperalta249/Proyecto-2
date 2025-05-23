@@ -26,7 +26,7 @@ class Log extends Model {
                     FROM {$this->table} l
                     LEFT JOIN dispositivos d ON l.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id
+                    WHERE d.propietario_id = :usuario_id
                     ORDER BY l.fecha DESC
                     LIMIT :limit";
             $result = $this->query($sql, [
@@ -91,7 +91,7 @@ class Log extends Model {
                         COUNT(DISTINCT tipo) as tipos
                     FROM {$this->table} l
                     LEFT JOIN dispositivos d ON l.dispositivo_id = d.id
-                    WHERE d.usuario_id = :usuario_id";
+                    WHERE d.propietario_id = :usuario_id";
             $result = $this->query($sql, [':usuario_id' => $usuario_id]);
             return $result ? $result[0] : [
                 'total' => 0,
@@ -171,7 +171,7 @@ class Log extends Model {
                     FROM {$this->table} l
                     JOIN dispositivos d ON l.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND l.tipo = :tipo
                     ORDER BY l.fecha DESC
                     LIMIT :limit";
@@ -193,7 +193,7 @@ class Log extends Model {
                     FROM {$this->table} l
                     JOIN dispositivos d ON l.dispositivo_id = d.id
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    WHERE d.usuario_id = :usuario_id 
+                    WHERE d.propietario_id = :usuario_id 
                     AND l.fecha BETWEEN :fecha_inicio AND :fecha_fin
                     ORDER BY l.fecha DESC";
             $result = $this->query($sql, [
@@ -216,7 +216,7 @@ class Log extends Model {
                         COUNT(DISTINCT l.dispositivo_id) as dispositivos
                     FROM {$this->table} l
                     LEFT JOIN dispositivos d ON l.dispositivo_id = d.id
-                    WHERE d.usuario_id = :usuario_id
+                    WHERE d.propietario_id = :usuario_id
                     GROUP BY l.tipo";
             $result = $this->query($sql, [':usuario_id' => $usuario_id]);
             return $result ?: [];

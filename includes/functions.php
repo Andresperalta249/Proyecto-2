@@ -49,8 +49,13 @@ function obtenerPermisosUsuario($usuario_id) {
  * @return bool True si el usuario tiene el permiso, False en caso contrario
  */
 function verificarPermiso($permiso_codigo) {
-    if (!isset($_SESSION['usuario_id'])) {
+    if (!isset($_SESSION['user_id'])) {
         return false;
     }
-    return tienePermiso($_SESSION['usuario_id'], $permiso_codigo);
+    // Si es super admin (rol_id == 1), tiene todos los permisos
+    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 1) {
+        return true;
+    }
+    // Usar el array de permisos en sesión
+    return in_array($permiso_codigo, $_SESSION['permissions'] ?? []);
 } 

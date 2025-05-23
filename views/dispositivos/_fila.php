@@ -1,57 +1,33 @@
 <?php
 // Plantilla parcial para una fila de la tabla de dispositivos
 ?>
-<tr
-  <?php if (($dispositivo['estado'] ?? '') === 'activo'): ?>
-    style="background-color: #e6f9ed;"
-  <?php elseif (($dispositivo['estado'] ?? '') === 'inactivo'): ?>
-    style="background-color: #f5f5f5;"
-  <?php endif; ?>
-  class="fila-dispositivo"
-  data-id="<?= $dispositivo['id'] ?>"
-  style="padding: 12px 0;"
->
+<tr class="fila-dispositivo" data-id="<?= $dispositivo['id'] ?>">
     <td class="id-azul text-center"><?= $dispositivo['id'] ?></td>
     <td class="nombre-dispositivo" style="max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" title="<?= htmlspecialchars($dispositivo['nombre']) ?>">
         <?= htmlspecialchars($dispositivo['nombre']) ?>
     </td>
     <td><?= htmlspecialchars($dispositivo['mac']) ?></td>
     <td><?= htmlspecialchars($dispositivo['usuario_nombre'] ?? $dispositivo['propietario_nombre'] ?? '-') ?></td>
-    <td
+    <td class="text-center">
         <?php if (empty($dispositivo['mascota_nombre'])): ?>
-            style="background-color: #198754; color: #fff; font-weight: bold;"
+            <span style="color: #198754; font-weight: 600;">Disponible</span>
         <?php else: ?>
-            style="background-color: #f8f9fa; color: #212529;"
+            <span style="color: #222; font-weight: 600;">Asignado</span>
         <?php endif; ?>
-    >
-        <?= empty($dispositivo['mascota_nombre']) ? 'Sí' : 'No' ?>
     </td>
     <td class="text-center"><?= htmlspecialchars($dispositivo['estado'] ?? '-') ?></td>
-    <td class="text-center"><?= htmlspecialchars($dispositivo['bateria'] ?? '-') ?></td>
+    <td class="text-center">
+        <?php
+        $bateria = isset($dispositivo['bateria']) ? (int)$dispositivo['bateria'] : null;
+        if ($bateria === null || $bateria === '') {
+            echo '-';
+        } else {
+            echo '<span style="color:#222;font-weight:500;">' . $bateria . '%</span>';
+        }
+        ?>
+    </td>
     <td><?= htmlspecialchars($dispositivo['mascota_nombre'] ?? '-') ?></td>
     <td><?= htmlspecialchars($dispositivo['ultima_lectura'] ?? '-') ?></td>
-    <td class="text-center">
-        <div class="btn-group" role="group">
-            <a class="btn-accion btn-primary" href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" data-bs-toggle="tooltip" title="Monitor en vivo">
-                <i class="fas fa-chart-line"></i>
-            </a>
-            <?php if (verificarPermiso('editar_dispositivos')): ?>
-            <button class="btn-accion btn-info editar-dispositivo" data-id="<?= $dispositivo['id'] ?>" data-bs-toggle="tooltip" title="Editar">
-                <i class="fas fa-edit"></i>
-            </button>
-            <?php endif; ?>
-            <?php if (verificarPermiso('eliminar_dispositivos')): ?>
-            <button class="btn-accion btn-danger eliminar-dispositivo" data-id="<?= $dispositivo['id'] ?>" data-bs-toggle="tooltip" title="Eliminar">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-            <?php endif; ?>
-            <?php if (verificarPermiso('editar_dispositivos')): ?>
-            <button class="btn-accion btn-dark asignar-dispositivo" data-id="<?= $dispositivo['id'] ?>" data-bs-toggle="tooltip" title="Asignar/Reasignar">
-                <i class="fas fa-user-plus"></i>
-            </button>
-            <?php endif; ?>
-        </div>
-    </td>
 </tr>
 <?php if (isset($soloMobile) && $soloMobile): ?>
 <!-- Detalle acordeón solo visible en mobile -->

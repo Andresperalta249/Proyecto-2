@@ -31,6 +31,7 @@ $header_buttons = '<div class="d-flex gap-2">
                     <table class="tabla-app" id="tablaDispositivos">
                         <thead>
                             <tr>
+                                <!-- <th></th> -->
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>MAC</th>
@@ -40,12 +41,39 @@ $header_buttons = '<div class="d-flex gap-2">
                                 <th>Batería</th>
                                 <th>Mascota</th>
                                 <th>Última Lectura</th>
-                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tbodyDispositivos">
                             <?php foreach ($dispositivos as $dispositivo): ?>
-                                <?php include __DIR__ . '/_fila.php'; ?>
+                            <tr class="fila-dispositivo" data-id="<?= $dispositivo['id'] ?>">
+                                <!-- <td class="dt-control" style="cursor:pointer;"></td> -->
+                                <td class="id-azul text-center"><?= $dispositivo['id'] ?></td>
+                                <td class="nombre-dispositivo" style="max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-bs-toggle="tooltip" title="<?= htmlspecialchars($dispositivo['nombre']) ?>">
+                                    <?= htmlspecialchars($dispositivo['nombre']) ?>
+                                </td>
+                                <td><?= htmlspecialchars($dispositivo['mac']) ?></td>
+                                <td><?= htmlspecialchars($dispositivo['usuario_nombre'] ?? $dispositivo['propietario_nombre'] ?? '-') ?></td>
+                                <td class="text-center">
+                                    <?php if (empty($dispositivo['mascota_nombre'])): ?>
+                                        <span style="color: #198754; font-weight: 600;">Disponible</span>
+                                    <?php else: ?>
+                                        <span style="color: #222; font-weight: 600;">Asignado</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center"><?= htmlspecialchars($dispositivo['estado'] ?? '-') ?></td>
+                                <td class="text-center">
+                                    <?php
+                                    $bateria = isset($dispositivo['bateria']) ? (int)$dispositivo['bateria'] : null;
+                                    if ($bateria === null || $bateria === '') {
+                                        echo '-';
+                                    } else {
+                                        echo '<span style="color:#222;font-weight:500;">' . $bateria . '%</span>';
+                                    }
+                                    ?>
+                                </td>
+                                <td><?= htmlspecialchars($dispositivo['mascota_nombre'] ?? '-') ?></td>
+                                <td><?= htmlspecialchars($dispositivo['ultima_lectura'] ?? '-') ?></td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -436,12 +464,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         // Inicializar DataTable solo en escritorio
         if (window.innerWidth > 430) {
-            $('#tablaDispositivos').DataTable({
+            var table = $('#tablaDispositivos').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
                 },
                 responsive: false,
-                scrollX: true,
                 scrollCollapse: true,
                 paging: false,
                 info: false,
@@ -454,6 +481,55 @@ document.addEventListener('DOMContentLoaded', function() {
                         className: 'fixed-column'
                     }
                 ]
+            });
+
+            // Formato de los botones de acción
+            function format(rowData) {
+                var id = $(rowData[0]).text() || rowData[0];
+                return `
+                    <div style=\"padding:0.5rem 1rem;\">
+                        <div class=\"btn-group\" role=\"group\">
+                            <a class=\"btn-accion btn-primary\" href=\"<?= BASE_URL ?>monitor/device/${id}\" data-bs-toggle=\"tooltip\" title=\"Monitor en vivo\">
+                                <i class=\"fas fa-chart-line\"></i>
+                            </a>
+                            <?php if (verificarPermiso('editar_dispositivos')): ?>
+                            <button class=\"btn-accion btn-info editar-dispositivo\" data-id=\"${id}\" data-bs-toggle=\"tooltip\" title=\"Editar\">
+                                <i class=\"fas fa-edit\"></i>
+                            </button>
+                            <?php endif; ?>
+                            <?php if (verificarPermiso('eliminar_dispositivos')): ?>
+                            <button class=\"btn-accion btn-danger eliminar-dispositivo\" data-id=\"${id}\" data-bs-toggle=\"tooltip\" title=\"Eliminar\">
+                                <i class=\"fas fa-trash-alt\"></i>
+                            </button>
+                            <?php endif; ?>
+                            <?php if (verificarPermiso('editar_dispositivos')): ?>
+                            <button class=\"btn-accion btn-dark asignar-dispositivo\" data-id=\"${id}\" data-bs-toggle=\"tooltip\" title=\"Asignar/Reasignar\">
+                                <i class=\"fas fa-user-plus\"></i>
+                            </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Evento para expandir/cerrar child row al hacer clic en la fila (excepto en los botones)
+            $('#tablaDispositivos tbody').on('click', 'tr.fila-dispositivo', function (e) {
+                // Evitar que el clic en los botones de acción dispare el evento
+                if ($(e.target).closest('.btn-accion').length) return;
+                var tr = $(this);
+                var row = table.row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Cierra otros child rows abiertos
+                    table.rows('.shown').every(function() {
+                        this.child.hide();
+                        $(this.node()).removeClass('shown');
+                    });
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
             });
         }
     }
@@ -648,6 +724,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isMobile()) {
             $('.detalle-mobile').hide();
         }
+    });
+
+    $(document).ready(function() {
+        $('#tablaDispositivos').on('click', '.fila-dispositivo', function() {
+            if (window.innerWidth > 430) {
+                // Solo en escritorio: mostrar fila de acciones
+                $('.fila-acciones').hide();
+                var $acciones = $(this).next('.fila-acciones');
+                $acciones.toggle();
+            }
+            // En mobile, el acordeón de detalles ya está implementado más arriba
+        });
+        // Ocultar la fila de acciones al hacer clic fuera de la tabla (solo escritorio)
+        $(document).on('click', function(e) {
+            if (window.innerWidth > 430 && !$(e.target).closest('#tablaDispositivos').length) {
+                $('.fila-acciones').hide();
+            }
+        });
     });
 });
 </script>

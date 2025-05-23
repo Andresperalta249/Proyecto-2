@@ -24,8 +24,8 @@ body {
     top: 0;
     left: 0;
     height: 100vh;
-    background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
-    color: white;
+    background: linear-gradient(180deg, #233876 0%, #224abe 100%);
+    color: #fff;
     transition: all 0.3s;
     z-index: 1000;
 }
@@ -37,29 +37,57 @@ body {
 }
 
 .sidebar-nav {
-    padding: 1rem 0;
+    padding: 1.5rem 0;
 }
 
 .nav-item {
-    padding: 0.5rem 1rem;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .nav-link {
-    color: rgba(255,255,255,0.8);
+    color: #fff;
     display: flex;
     align-items: center;
-    padding: 0.75rem 1rem;
-    border-radius: 0.35rem;
-    transition: all 0.3s;
-}
-
-.nav-link:hover {
-    color: white;
-    background: rgba(255,255,255,0.1);
+    padding: 0.7rem 1.2rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.2px;
+    gap: 0.7rem;
 }
 
 .nav-link i {
-    margin-right: 0.5rem;
+    color: #fff;
+    font-size: 1.15rem;
+    transition: color 0.2s, text-shadow 0.2s;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.10);
+}
+
+.nav-link:hover {
+    color: #224abe;
+    background: #e6edfa;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(34,74,190,0.06);
+}
+
+.nav-link:hover i {
+    color: #224abe;
+    text-shadow: 0 1px 4px rgba(34,74,190,0.10);
+}
+
+.nav-link.active, .nav-link.active i {
+    background: #2563eb;
+    color: #fff !important;
+    font-weight: 700;
+    border-left: 4px solid #facc15;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+}
+
+/* Quitar líneas divisorias entre opciones */
+.nav-item:not(:last-child) {
+    border-bottom: none;
 }
 
 /* Contenido Principal */
@@ -149,22 +177,6 @@ body {
     font-size: 1.2rem;
     margin-right: 0.5rem;
     opacity: 0.9;
-}
-
-/* Tablas */
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    background-color: transparent;
-}
-
-.table th {
-    border-top: none;
-    background-color: #f8f9fc;
-    color: var(--dark-color);
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.85rem;
 }
 
 /* Formularios */
@@ -310,4 +322,12 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.fila-dispositivo {
+    cursor: pointer !important;
+}
+
+.fila-mascota {
+    cursor: pointer !important;
 } 

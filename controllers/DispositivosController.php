@@ -44,6 +44,7 @@ class DispositivosController extends Controller {
             'usuarios' => $usuarios,
             'mascotas' => $mascotas
         ]);
+        $menuActivo = 'dispositivos';
         require_once 'views/layouts/main.php';
     }
 

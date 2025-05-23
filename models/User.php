@@ -128,4 +128,9 @@ class User extends Model {
         $result = $this->query($sql, [':id' => $id]);
         return $result ? $result[0] : null;
     }
+
+    public function logLogin($userId) {
+        $sql = "UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?";
+        return $this->query($sql, [$userId]);
+    }
 } 

@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../includes/functions.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -56,7 +57,7 @@
     </style>
 </head>
 <body>
-    <?php if (isset($_SESSION['usuario_id'])): ?>
+    <?php if (isset($_SESSION['user_id'])): ?>
         <!-- Sidebar -->
         <nav class="sidebar">
             <div class="sidebar-brand">
@@ -66,7 +67,7 @@
             <div class="sidebar-nav">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= APP_URL ?>/dashboard">
+                        <a class="nav-link <?= (isset($menuActivo) && $menuActivo == 'dashboard' ? 'active' : '') ?>" href="<?= APP_URL ?>/dashboard">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
@@ -74,7 +75,7 @@
                     
                     <?php if (verificarPermiso('gestionar_mascotas') || verificarPermiso('ver_mascotas')): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= APP_URL ?>/mascotas">
+                        <a class="nav-link <?= (isset($menuActivo) && $menuActivo == 'mascotas' ? 'active' : '') ?>" href="<?= APP_URL ?>/mascotas">
                             <i class="fas fa-paw"></i>
                             Mascotas
                         </a>
@@ -83,7 +84,7 @@
                     
                     <?php if (verificarPermiso('ver_dispositivos') || verificarPermiso('ver_todos_dispositivo')): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= APP_URL ?>/dispositivos">
+                        <a class="nav-link <?= (isset($menuActivo) && $menuActivo == 'dispositivos' ? 'active' : '') ?>" href="<?= APP_URL ?>/dispositivos">
                             <i class="fas fa-microchip"></i>
                             Dispositivos
                         </a>
@@ -116,7 +117,7 @@
                         verificarPermiso('cambiar_estado_usuarios')
                     ): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= APP_URL ?>/usuarios">
+                        <a class="nav-link <?= (isset($menuActivo) && $menuActivo == 'usuarios' ? 'active' : '') ?>" href="<?= APP_URL ?>/usuarios">
                             <i class="fas fa-users"></i>
                             Usuarios
                         </a>
@@ -130,7 +131,7 @@
                         verificarPermiso('eliminar_roles')
                     ): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= APP_URL ?>/roles">
+                        <a class="nav-link <?= (isset($menuActivo) && $menuActivo == 'roles' ? 'active' : '') ?>" href="<?= APP_URL ?>/roles">
                             <i class="fas fa-user-tag"></i>
                             Roles y Permisos
                         </a>
@@ -171,7 +172,7 @@
                         <div class="dropdown">
                             <button class="btn btn-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
                                 <i class="fas fa-user-circle"></i>
-                                <?= $_SESSION['user_name'] ?>
+                                <?= $_SESSION['user']['nombre'] ?? 'Usuario' ?>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
@@ -195,7 +196,7 @@
             
             <!-- Page Content -->
             <div class="container-fluid">
-                <?php if (isset($title)): ?>
+                <?php if (isset($title) && !(isset($_SERVER['REQUEST_URI']) && preg_match('#/monitor/device/#', $_SERVER['REQUEST_URI']))): ?>
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 mb-0 text-gray-800"><?= $title ?></h1>
                     <?php if (isset($header_buttons)): ?>

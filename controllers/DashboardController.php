@@ -108,6 +108,7 @@ class DashboardController extends Controller {
             $this->logger->info("Actividad reciente obtenida: " . count($actividadReciente));
 
             $title = 'Panel de Control';
+            $menuActivo = 'dashboard';
             $this->logger->info("Renderizando vista");
             
             try {

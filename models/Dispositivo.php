@@ -8,7 +8,7 @@ class Dispositivo extends Model {
 
     public function getDispositivosWithMascotas($propietario_id) {
         try {
-            $sql = "SELECT d.*, m.nombre as mascota_nombre, m.especie, m.raza
+            $sql = "SELECT d.*, m.nombre as mascota_nombre, m.especie
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
                     WHERE d.propietario_id = :propietario_id
@@ -387,6 +387,40 @@ class Dispositivo extends Model {
         $sql = "SELECT MAX(creado_en) as ultima_lectura FROM datos_sensores WHERE dispositivo_id = :dispositivo_id";
         $result = $this->query($sql, [':dispositivo_id' => $dispositivo_id]);
         return $result && $result[0]['ultima_lectura'] ? $result[0]['ultima_lectura'] : null;
+    }
+
+    public function getEstadisticasSensores($dispositivo_id) {
+        $sql = "SELECT
+                    AVG(temperatura) as temp_promedio,
+                    MAX(temperatura) as temp_maxima,
+                    MIN(temperatura) as temp_minima,
+                    AVG(bpm) as bpm_promedio,
+                    MAX(bpm) as bpm_maxima,
+                    MIN(bpm) as bpm_minima,
+                    AVG(bateria) as bat_promedio,
+                    MAX(bateria) as bat_maxima,
+                    MIN(bateria) as bat_minima
+                FROM datos_sensores
+                WHERE dispositivo_id = :dispositivo_id
+                  AND fecha >= DATE_SUB(NOW(), INTERVAL 1 DAY)";
+        $result = $this->query($sql, [':dispositivo_id' => $dispositivo_id]);
+        return $result ? $result[0] : [
+            'temp_promedio' => null, 'temp_maxima' => null, 'temp_minima' => null,
+            'bpm_promedio' => null, 'bpm_maxima' => null, 'bpm_minima' => null,
+            'bat_promedio' => null, 'bat_maxima' => null, 'bat_minima' => null
+        ];
+    }
+
+    // Obtener todo el historial de datos de un dispositivo (sin límite)
+    public function getHistorialCompleto($dispositivoId) {
+        try {
+            $sql = "SELECT * FROM datos_sensores WHERE dispositivo_id = ? ORDER BY fecha DESC";
+            $result = $this->query($sql, [$dispositivoId]);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error en getHistorialCompleto: " . $e->getMessage());
+            return [];
+        }
     }
 }
 ?> 

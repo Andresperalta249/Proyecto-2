@@ -4,6 +4,9 @@ $puedeCrear = true; // Permitimos que todos los usuarios puedan crear mascotas
 $puedeEditar = in_array('editar_mascotas', $_SESSION['permissions'] ?? []);
 $puedeEliminar = in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []);
 $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Admin
+
+// Determinar el título según permisos
+$tituloMascotas = (function_exists('verificarPermiso') && verificarPermiso('ver_todas_mascotas')) ? 'Todas las Mascotas' : 'Mis Mascotas';
 ?>
 <!-- Page Content -->
 <div class="container-fluid">
@@ -18,7 +21,13 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="http://localhost/proyecto-2/assets/css/app.css" rel="stylesheet">
 
-    <h1 class="mb-4">Mis Mascotas</h1>
+    <!-- Sustituir por estructura de títulos tipo monitor/device -->
+    <div class="mb-2">
+        <div class="text-secondary small mb-1">Gestión de Mascotas</div>
+        <?php if ($tituloMascotas === 'Todas las Mascotas'): ?>
+            <h1 class="fw-bold mb-0">Todas las Mascotas</h1>
+        <?php endif; ?>
+    </div>
     <!-- Tabla de mascotas -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -44,32 +53,29 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
                             <th>Propietario</th>
                             <th>Edad</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($mascotas as $mascota): ?>
-                        <tr>
-                            <td class="id-azul"><?= $mascota['id'] ?></td>
-                            <td><?= htmlspecialchars($mascota['nombre']) ?></td>
-                            <td><?= htmlspecialchars($mascota['especie']) ?></td>
-                            <td><?= htmlspecialchars($mascota['tamano']) ?></td>
-                            <td><?= htmlspecialchars($mascota['genero'] ?? '-') ?></td>
-                            <td>
-                                <?php
-                                $propietario = '';
-                                if (!empty($mascota['propietario_id'])) {
-                                    foreach ($usuarios as $usuario) {
-                                        if ($usuario['id'] == $mascota['propietario_id']) {
-                                            $propietario = htmlspecialchars($usuario['nombre']);
-                                            break;
-                                        }
+                        <?php
+                            $propietario = '';
+                            if (!empty($mascota['propietario_id']) && !empty($usuarios)) {
+                                foreach ($usuarios as $usuario) {
+                                    if ($usuario['id'] == $mascota['propietario_id']) {
+                                        $propietario = htmlspecialchars($usuario['nombre']);
+                                        break;
                                     }
                                 }
-                                echo $propietario ?: '-';
-                                ?>
-                            </td>
-                            <td>
+                            }
+                        ?>
+                        <tr class="fila-mascota" data-id="<?= $mascota['id'] ?>">
+                            <td style="width: 48px;"><?= $mascota['id'] ?></td>
+                            <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?= htmlspecialchars($mascota['nombre']) ?>"><?= htmlspecialchars($mascota['nombre']) ?></td>
+                            <td style="width: 80px;"><?= htmlspecialchars($mascota['especie']) ?></td>
+                            <td style="width: 80px;"><?= htmlspecialchars($mascota['tamano']) ?></td>
+                            <td style="width: 60px;"><?= htmlspecialchars($mascota['genero'] ?? '-') ?></td>
+                            <td style="max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?= $propietario ?>"><?= $propietario ?: '-' ?></td>
+                            <td style="width: 60px; text-align:center;">
                                 <?php
                                 if (!empty($mascota['fecha_nacimiento'])) {
                                     $nacimiento = new DateTime($mascota['fecha_nacimiento']);
@@ -81,7 +87,7 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
                                 }
                                 ?>
                             </td>
-                            <td>
+                            <td style="width: 110px;">
                                 <div class="form-check form-switch d-flex align-items-center mb-0">
                                     <input class="form-check-input cambiar-estado-mascota <?= $mascota['estado'] === 'inactivo' ? 'switch-inactivo' : '' ?>"
                                         type="checkbox"
@@ -91,18 +97,6 @@ $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]); // 1: Superadmin, 2: Ad
                                         <?= ucfirst($mascota['estado']) ?>
                                     </label>
                                 </div>
-                            </td>
-                            <td>
-                                <?php if ($puedeEditar): ?>
-                                <button class="btn-accion btn-info btnEditarMascota" data-id="<?= $mascota['id'] ?>" title="Editar mascota">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <?php endif; ?>
-                                <?php if ($puedeEliminar): ?>
-                                <button class="btn-accion btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>" title="Eliminar mascota">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -224,8 +218,71 @@ if (typeof jQuery === 'undefined') {
             $.ajax({
                 url: '/proyecto-2/mascotas/tabla?' + formData,
                 type: 'GET',
-                success: function(data) {
-                    $('#tablaMascotas tbody').html(data);
+                dataType: 'json',
+                success: function(response) {
+                    const mascotas = response.mascotas;
+                    const usuarios = response.usuarios;
+                    const permisos = response.permisos;
+                    let filas = '';
+                    if (mascotas.length > 0) {
+                        mascotas.forEach(function(mascota) {
+                            let propietario = '-';
+                            if (mascota.propietario_id && usuarios.length > 0) {
+                                const usuario = usuarios.find(u => u.id == mascota.propietario_id);
+                                if (usuario) propietario = usuario.nombre;
+                            }
+                            let edad = '-';
+                            if (mascota.fecha_nacimiento) {
+                                const nacimiento = new Date(mascota.fecha_nacimiento);
+                                const hoy = new Date();
+                                let anios = hoy.getFullYear() - nacimiento.getFullYear();
+                                const m = hoy.getMonth() - nacimiento.getMonth();
+                                if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+                                    anios--;
+                                }
+                                edad = anios + ' año' + (anios !== 1 ? 's' : '');
+                            }
+                            let bateria = (mascota.bateria !== undefined && mascota.bateria !== null && mascota.bateria !== '') ? `<span style='color:#222;font-weight:500;'>${mascota.bateria}%</span>` : '-';
+                            let estadoSwitch = `<div class='form-check form-switch d-flex align-items-center mb-0'>
+                                <input class='form-check-input cambiar-estado-mascota ${(mascota.estado === 'inactivo' ? 'switch-inactivo' : '')}'
+                                    type='checkbox'
+                                    data-id='${mascota.id}'
+                                    ${(mascota.estado === 'activo') ? 'checked' : ''} >
+                                <label class='form-check-label ms-2'>${mascota.estado.charAt(0).toUpperCase() + mascota.estado.slice(1)}</label>
+                            </div>`;
+                            filas += `<tr class='fila-mascota' data-id='${mascota.id}'>
+                                <td style='width: 48px;'>${mascota.id}</td>
+                                <td style='max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='${mascota.nombre}'>${mascota.nombre}</td>
+                                <td style='width: 80px;'>${mascota.especie}</td>
+                                <td style='width: 80px;'>${mascota.tamano}</td>
+                                <td style='width: 60px;'>${mascota.genero || '-'}</td>
+                                <td style='max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' title='${propietario}'>${propietario}</td>
+                                <td style='width: 60px; text-align:center;'>${edad}</td>
+                                <td style='width: 110px;'>${estadoSwitch}</td>
+                            </tr>`;
+                        });
+                    } else {
+                        filas = `<tr><td colspan='10' class='text-center text-muted py-4'>No hay mascotas registradas.</td></tr>`;
+                    }
+                    $('#tablaMascotas tbody').html(filas);
+                    // Reinicializar el evento de click en las filas para mostrar/ocultar botones
+                    $('#tablaMascotas tbody').off('click', 'tr.fila-mascota');
+                    $('#tablaMascotas tbody').on('click', 'tr.fila-mascota', function (e) {
+                        if ($(e.target).closest('.btnEditarMascota, .btnEliminarMascota').length) return;
+                        var tr = $(this);
+                        var row = table.row(tr);
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            table.rows('.shown').every(function() {
+                                this.child.hide();
+                                $(this.node()).removeClass('shown');
+                            });
+                            row.child(formatMascota(row.data())).show();
+                            tr.addClass('shown');
+                        }
+                    });
                 },
                 error: function() {
                     Swal.fire('Error', 'No se pudo recargar la tabla de mascotas.', 'error');
@@ -357,8 +414,12 @@ if (typeof jQuery === 'undefined') {
 
         // Cambiar estado de mascota vía AJAX (ahora con switch)
         $('#tablaMascotas').on('change', '.cambiar-estado-mascota', function() {
-            var id = $(this).data('id');
-            var nuevoEstado = $(this).is(':checked') ? 'activo' : 'inactivo';
+            var $switch = $(this);
+            var $label = $switch.closest('.form-switch').find('.form-check-label');
+            var id = $switch.data('id');
+            var nuevoEstado = $switch.is(':checked') ? 'activo' : 'inactivo';
+            $switch.prop('disabled', true);
+
             $.ajax({
                 url: '/proyecto-2/mascotas/cambiarEstado/' + id,
                 type: 'POST',
@@ -366,7 +427,16 @@ if (typeof jQuery === 'undefined') {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        recargarTablaMascotas();
+                        // Actualiza solo el switch y la etiqueta
+                        if (nuevoEstado === 'activo') {
+                            $switch.removeClass('switch-inactivo');
+                            $switch.prop('checked', true);
+                            $label.text('Activo');
+                        } else {
+                            $switch.addClass('switch-inactivo');
+                            $switch.prop('checked', false);
+                            $label.text('Inactivo');
+                        }
                         Swal.fire({
                             title: '¡Actualizado!',
                             text: response.message || 'Estado actualizado correctamente',
@@ -375,6 +445,8 @@ if (typeof jQuery === 'undefined') {
                             buttonsStyling: false
                         });
                     } else {
+                        // Revertir el cambio visual si falla
+                        $switch.prop('checked', !$switch.is(':checked'));
                         Swal.fire({
                             title: 'Error',
                             text: response.error || 'No se pudo actualizar el estado',
@@ -385,6 +457,7 @@ if (typeof jQuery === 'undefined') {
                     }
                 },
                 error: function() {
+                    $switch.prop('checked', !$switch.is(':checked'));
                     Swal.fire({
                         title: 'Error',
                         text: 'No se pudo actualizar el estado. Intenta de nuevo.',
@@ -392,6 +465,9 @@ if (typeof jQuery === 'undefined') {
                         customClass: { confirmButton: 'btn btn-primary' },
                         buttonsStyling: false
                     });
+                },
+                complete: function() {
+                    $switch.prop('disabled', false);
                 }
             });
         });
@@ -406,6 +482,35 @@ if (typeof jQuery === 'undefined') {
             if (modal) modal.hide();
             // Aquí puedes agregar la lógica para filtrar la tabla según los valores seleccionados
         });
+
+        var table = $('#tablaMascotas').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+            },
+            responsive: false,
+            scrollCollapse: true,
+            paging: false,
+            info: false,
+            searching: false,
+            dom: 't',
+            order: [[0, 'asc']]
+        });
+
+        function formatMascota(rowData) {
+            var id = $(rowData[0]).text() || rowData[0];
+            return `
+                <div style=\"padding:0.5rem 1rem;\">
+                    <div class=\"btn-group\" role=\"group\">
+                        <?php if ($puedeEditarCualquiera || $puedeEditarPropias): ?>
+                        <button class=\"btn btn-sm btn-info me-1 btnEditarMascota\" data-id=\"${id}\"><i class=\"fas fa-edit\"></i> Editar</button>
+                        <?php endif; ?>
+                        <?php if ($puedeEliminar): ?>
+                        <button class=\"btn btn-sm btn-danger btnEliminarMascota\" data-id=\"${id}\"><i class=\"fas fa-trash-alt\"></i> Eliminar</button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            `;
+        }
     });
 }
 </script>
