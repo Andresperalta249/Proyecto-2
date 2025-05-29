@@ -52,12 +52,12 @@ $puedeEliminar = in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []);
                     $puedeEditarCualquiera ||
                     ($puedeEditarPropias && $mascota['usuario_id'] == $_SESSION['propietario_id'])
                 ): ?>
-                <button class="btn btn-sm btn-info me-1 btnEditarMascota" data-id="<?= $mascota['id'] ?>">
+                <button class="btn-accion btn-info me-1 btnEditarMascota" data-id="<?= $mascota['id'] ?>" title="Editar" data-bs-toggle="tooltip">
                     <i class="fas fa-edit"></i>
                 </button>
                 <?php endif; ?>
                 <?php if ($puedeEliminar): ?>
-                <button class="btn btn-sm btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>">
+                <button class="btn-accion btn-danger btnEliminarMascota" data-id="<?= $mascota['id'] ?>" title="Eliminar" data-bs-toggle="tooltip">
                     <i class="fas fa-trash-alt"></i>
                 </button>
                 <?php endif; ?>

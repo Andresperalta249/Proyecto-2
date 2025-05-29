@@ -8,16 +8,16 @@ class Alerta extends Model {
 
     public function getAlertasByUser($userId) {
         try {
-            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre 
+            $sql = "SELECT a.*, d.nombre as dispositivo_nombre, m.nombre as mascota_nombre,
+                    d.propietario_id, d.estado as dispositivo_estado
                     FROM {$this->table} a 
-                    LEFT JOIN dispositivos d ON a.dispositivo_id = d.id 
+                    INNER JOIN dispositivos d ON a.dispositivo_id = d.id 
                     LEFT JOIN mascotas m ON d.mascota_id = m.id 
-                    WHERE a.usuario_id = ? 
+                    WHERE d.propietario_id = :user_id 
                     ORDER BY a.fecha DESC";
-            $result = $this->query($sql, [$userId]);
+            $result = $this->query($sql, [':user_id' => $userId]);
             return $result ?: [];
         } catch (Exception $e) {
-            error_log("Error en getAlertasByUser: " . $e->getMessage());
             return [];
         }
     }
@@ -105,14 +105,24 @@ class Alerta extends Model {
 
     public function getEstadisticas($usuario_id) {
         try {
-            $sql = "SELECT 
-                        COUNT(DISTINCT a.id) as total,
-                        SUM(CASE WHEN a.leida = 0 THEN 1 ELSE 0 END) as no_leidas,
-                        SUM(CASE WHEN a.leida = 0 AND a.prioridad = 'alta' THEN 1 ELSE 0 END) as alertas_altas
-                    FROM {$this->table} a
-                    LEFT JOIN dispositivos d ON a.dispositivo_id = d.id
-                    WHERE d.propietario_id = :usuario_id";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            // Verificar si el usuario tiene permiso para ver todas las alertas
+            if (function_exists('verificarPermiso') && verificarPermiso('ver_todas_alertas')) {
+                $sql = "SELECT 
+                            COUNT(DISTINCT a.id) as total,
+                            SUM(CASE WHEN a.leida = 0 THEN 1 ELSE 0 END) as no_leidas,
+                            SUM(CASE WHEN a.leida = 0 AND a.prioridad = 'alta' THEN 1 ELSE 0 END) as alertas_altas
+                        FROM {$this->table} a";
+                $result = $this->query($sql);
+            } else {
+                $sql = "SELECT 
+                            COUNT(DISTINCT a.id) as total,
+                            SUM(CASE WHEN a.leida = 0 THEN 1 ELSE 0 END) as no_leidas,
+                            SUM(CASE WHEN a.leida = 0 AND a.prioridad = 'alta' THEN 1 ELSE 0 END) as alertas_altas
+                        FROM {$this->table} a
+                        LEFT JOIN dispositivos d ON a.dispositivo_id = d.id
+                        WHERE d.propietario_id = :usuario_id";
+                $result = $this->query($sql, [':usuario_id' => $usuario_id]);
+            }
             if (!$result || !isset($result[0])) {
                 return [
                     'total' => 0,
@@ -238,6 +248,21 @@ class Alerta extends Model {
             error_log("Error en getAlertasPorFecha: " . $e->getMessage());
             return [];
         }
+    }
+
+    public function getAllAlertas() {
+        $sql = "SELECT a.*, 
+               d.nombre AS dispositivo_nombre, 
+               m.nombre AS mascota_nombre, 
+               u.nombre AS propietario_nombre
+                FROM {$this->table} a
+                LEFT JOIN dispositivos d ON a.dispositivo_id = d.id
+                LEFT JOIN mascotas m ON d.mascota_id = m.id
+                LEFT JOIN usuarios u ON m.propietario_id = u.id
+                ORDER BY a.fecha_creacion DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?> 

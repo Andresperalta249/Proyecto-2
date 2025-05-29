@@ -1,9 +1,5 @@
 <?php
-$header_buttons = '<div class="d-flex gap-2">
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDispositivo">
-        <i class="fas fa-plus"></i> Gestionar Dispositivo
-    </button>
-</div>';
+// Eliminar encabezados y subtítulos, incluyendo el include del header_titulo.php
 ?>
 <!-- Botón flotante para agregar dispositivo -->
 <?php if (verificarPermiso('crear_dispositivos')): ?>
@@ -44,6 +40,13 @@ $header_buttons = '<div class="d-flex gap-2">
                             </tr>
                         </thead>
                         <tbody id="tbodyDispositivos">
+                            <?php
+                            // Paginación
+                            $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+                            $perPage = isset($perPage) ? $perPage : 10;
+                            $totalDispositivos = isset($totalDispositivos) ? $totalDispositivos : count($dispositivos);
+                            $totalPages = ceil($totalDispositivos / $perPage);
+                            ?>
                             <?php foreach ($dispositivos as $dispositivo): ?>
                             <tr class="fila-dispositivo" data-id="<?= $dispositivo['id'] ?>">
                                 <!-- <td class="dt-control" style="cursor:pointer;"></td> -->
@@ -80,10 +83,26 @@ $header_buttons = '<div class="d-flex gap-2">
                 </div>
             </div>
         </div>
+        <!-- Controles de paginación -->
+        <nav aria-label="Paginación de dispositivos">
+          <ul class="pagination justify-content-center mt-3">
+            <li class="page-item<?= $page <= 1 ? ' disabled' : '' ?>">
+              <a class="page-link" href="?page=<?= $page - 1 ?>">Anterior</a>
+            </li>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+              <li class="page-item<?= $i == $page ? ' active' : '' ?>">
+                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+              </li>
+            <?php endfor; ?>
+            <li class="page-item<?= $page >= $totalPages ? ' disabled' : '' ?>">
+              <a class="page-link" href="?page=<?= $page + 1 ?>">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
     </div>
 </div>
 <!-- Aquí irá el modal unificado Gestionar Dispositivo -->
-<div class="modal fade" id="modalDispositivo" tabindex="-1">
+<div class="modal fade" id="modalDispositivo" tabindex="-1" data-bs-backdrop="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -782,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <!-- Modal de Filtros Avanzados (solo para dispositivos: disponible, estado, batería) -->
-<div class="modal fade" id="modalFiltrosDispositivosPHP" tabindex="-1" aria-labelledby="modalFiltrosDispositivosPHPLabel" aria-hidden="true">
+<div class="modal fade" id="modalFiltrosDispositivosPHP" tabindex="-1" aria-labelledby="modalFiltrosDispositivosPHPLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

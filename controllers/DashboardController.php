@@ -60,13 +60,11 @@ class DashboardController extends Controller {
                 $promedioTemp = $rowTemp && $rowTemp['promedio'] !== null ? $rowTemp['promedio'] : 0;
 
                 // Obtener dispositivos activos con información del propietario
-                $dispositivosActivos = $db->query('
-                    SELECT d.*, u.nombre as propietario_nombre, m.nombre as mascota_nombre 
-                    FROM dispositivos d 
-                    LEFT JOIN usuarios u ON d.propietario_id = u.id 
-                    LEFT JOIN mascotas m ON d.mascota_id = m.id 
-                    WHERE d.estado = "activo"
-                ')->resultSet();
+                $dispositivosActivos = array_slice($db->query('SELECT d.*, u.nombre as propietario_nombre, m.nombre as mascota_nombre 
+                        FROM dispositivos d 
+                        LEFT JOIN usuarios u ON d.propietario_id = u.id 
+                        LEFT JOIN mascotas m ON d.mascota_id = m.id 
+                        WHERE d.estado = "activo"')->resultSet(), 0, 5);
             } else {
                 $totalMascotas = $this->mascotaModel->count(['propietario_id' => $_SESSION['user_id']]);
                 $totalDispositivos = $this->dispositivoModel->count(['propietario_id' => $_SESSION['user_id']]);
@@ -88,6 +86,15 @@ class DashboardController extends Controller {
                 ')->resultSet();
             }
 
+            // Obtener el rol como string
+            $rol_id = $_SESSION['user_role'] ?? 3;
+            $rol = 'usuario';
+            if ($rol_id == 1) {
+                $rol = 'superadministrador';
+            } elseif ($rol_id == 2) {
+                $rol = 'administrador';
+            }
+
             // Obtener estadísticas
             $stats = [
                 'mascotas' => $totalMascotas,
@@ -100,11 +107,11 @@ class DashboardController extends Controller {
             $this->logger->info("Estadísticas obtenidas: " . print_r($stats, true));
 
             // Obtener últimas alertas
-            $ultimasAlertas = $this->alertaModel->getAlertasNoLeidas($_SESSION['user_id']);
+            $ultimasAlertas = array_slice($this->alertaModel->getAlertasNoLeidas($_SESSION['user_id']), 0, 5);
             $this->logger->info("Últimas alertas obtenidas: " . count($ultimasAlertas));
 
             // Obtener actividad reciente
-            $actividadReciente = $this->logModel->getActividadReciente($_SESSION['user_id']);
+            $actividadReciente = array_slice($this->logModel->getActividadReciente($_SESSION['user_id']), 0, 5);
             $this->logger->info("Actividad reciente obtenida: " . count($actividadReciente));
 
             $title = 'Panel de Control';

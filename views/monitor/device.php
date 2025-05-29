@@ -334,7 +334,7 @@
 </div>
 
 <!-- Modales para gráficas y tabla ampliadas -->
-<div class="modal fade" id="modalGraficaAmpliada" tabindex="-1" aria-labelledby="modalGraficaAmpliadaLabel" aria-hidden="true">
+<div class="modal fade" id="modalGraficaAmpliada" tabindex="-1" aria-labelledby="modalGraficaAmpliadaLabel" aria-hidden="true" data-bs-backdrop="false">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -379,7 +379,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalHistorialCompleto" tabindex="-1" aria-labelledby="modalHistorialCompletoLabel" aria-hidden="true">
+<div class="modal fade" id="modalHistorialCompleto" tabindex="-1" aria-labelledby="modalHistorialCompletoLabel" aria-hidden="true" data-bs-backdrop="false">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">

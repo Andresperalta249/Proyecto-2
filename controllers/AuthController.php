@@ -683,5 +683,33 @@ class AuthController extends Controller {
         }
         exit;
     }
+
+    public function register() {
+        try {
+            $userData = [
+                'nombre' => $_POST['nombre'],
+                'email' => $_POST['email'],
+                'password' => $_POST['password'],
+                'rol_id' => $_POST['rol_id'] ?? null,
+                'estado' => 'activo'
+            ];
+
+            $userId = $this->userModel->insertUsuario($userData);
+            
+            if ($userId) {
+                $_SESSION['user_id'] = $userId;
+                $_SESSION['user_name'] = $userData['nombre'];
+                $_SESSION['user_role'] = $userData['rol_id'];
+                
+                header('Location: ' . BASE_URL . 'dashboard');
+                exit;
+            } else {
+                throw new Exception('Error al crear el usuario');
+            }
+        } catch (Exception $e) {
+            $errorMsg = "Error al registrar usuario: " . $e->getMessage();
+            $this->view('auth/register', ['error' => $errorMsg]);
+        }
+    }
 }
 ?> 

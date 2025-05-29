@@ -23,6 +23,7 @@ class Logger {
             $logMessage = "[$timestamp][$type] " . print_r($message, true) . PHP_EOL;
         }
         
+        // Solo guardar en archivo, nunca imprimir en pantalla
         error_log($logMessage, 3, $this->logFile);
     }
     

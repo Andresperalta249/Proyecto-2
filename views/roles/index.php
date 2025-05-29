@@ -1,5 +1,6 @@
 <?php
-// No header_buttons, solo botón flotante
+$subtitulo = "Gestión de Roles y Permisos";
+$titulo = "Roles y Permisos";
 ?>
 <?php if (verificarPermiso('crear_roles')): ?>
 <button class="fab-crear" id="btnNuevoRolFlotante">
@@ -94,7 +95,7 @@
 </div>
 
 <!-- Modal Rol -->
-<div class="modal fade" id="modalRol" tabindex="-1">
+<div class="modal fade" id="modalRol" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -172,7 +173,7 @@
 </div>
 
 <!-- Modal Detalles -->
-<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -207,7 +208,7 @@
 </div>
 
 <!-- Modal de Filtros Avanzados para roles -->
-<div class="modal fade" id="modalFiltrosRolesPHP" tabindex="-1" aria-labelledby="modalFiltrosRolesPHPLabel" aria-hidden="true">
+<div class="modal fade" id="modalFiltrosRolesPHP" tabindex="-1" aria-labelledby="modalFiltrosRolesPHPLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

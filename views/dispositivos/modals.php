@@ -1,5 +1,5 @@
 <!-- Modal de Detalles -->
-<div class="modal fade" id="modalDetallesDispositivo" tabindex="-1" aria-labelledby="modalDetallesDispositivoLabel" aria-hidden="true">
+<div class="modal fade" id="modalDetallesDispositivo" tabindex="-1" aria-labelledby="modalDetallesDispositivoLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -38,7 +38,7 @@
 </div>
 
 <!-- Modal de Edición -->
-<div class="modal fade" id="modalEditarDispositivo" tabindex="-1" aria-labelledby="modalEditarDispositivoLabel" aria-hidden="true">
+<div class="modal fade" id="modalEditarDispositivo" tabindex="-1" aria-labelledby="modalEditarDispositivoLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -74,7 +74,7 @@
 </div>
 
 <!-- Modal de Asignar/Reasignar -->
-<div class="modal fade" id="modalAsignarDispositivo" tabindex="-1" aria-labelledby="modalAsignarDispositivoLabel" aria-hidden="true">
+<div class="modal fade" id="modalAsignarDispositivo" tabindex="-1" aria-labelledby="modalAsignarDispositivoLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

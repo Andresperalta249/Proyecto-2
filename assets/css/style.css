@@ -27,7 +27,7 @@ body {
     background: linear-gradient(180deg, #233876 0%, #224abe 100%);
     color: #fff;
     transition: all 0.3s;
-    z-index: 1000;
+    z-index: 1030;
 }
 
 .sidebar-brand {
@@ -92,9 +92,11 @@ body {
 
 /* Contenido Principal */
 .main-content {
-    margin-left: var(--sidebar-width);
-    padding: 1.5rem;
+    margin-left: var(--sidebar-width) !important;
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
     min-height: 100vh;
+    position: relative;
+    z-index: 1020;
 }
 
 /* Header */
@@ -238,11 +240,11 @@ body {
     }
     
     .main-content {
-        margin-left: 0;
+        margin-left: 0 !important;
     }
     
     .main-content.active {
-        margin-left: var(--sidebar-width);
+        margin-left: var(--sidebar-width) !important;
     }
     
     .card .display-6 {

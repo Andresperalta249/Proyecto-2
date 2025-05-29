@@ -54,9 +54,52 @@
         .list-group-item:hover {
             border-left-color: var(--bs-primary);
         }
+        .user-dropdown-toggle {
+            transition: background 0.2s, box-shadow 0.2s;
+            border-radius: 0.7rem;
+        }
+        .user-dropdown-toggle:hover, .user-dropdown-toggle:focus {
+            background: #f5f6fa;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            text-decoration: none;
+        }
+        .user-dropdown .dropdown-toggle::after {
+            display: none !important;
+        }
+        .user-dropdown-toggle:hover .chevron-user {
+            color: #2563eb;
+        }
+        .user-dropdown .badge {
+            margin-top: 2px;
+        }
+        .topbar {
+            padding-top: 0.3rem !important;
+            padding-bottom: 0.3rem !important;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .main-content {
+            padding-top: 0.5rem !important;
+        }
     </style>
 </head>
 <body>
+<?php
+if (!isset($rolNombre)) {
+    $rolNombre = $_SESSION['rol_nombre'] ?? 'Usuario';
+}
+if (!isset($badgeColor)) {
+    switch (strtolower($rolNombre)) {
+        case 'superadministrador': $badgeColor = 'primary'; break;
+        case 'administrador': $badgeColor = 'success'; break;
+        case 'usuario': $badgeColor = 'info'; break;
+        default: $badgeColor = 'secondary'; break;
+    }
+}
+if (!isset($content)) {
+    $content = '';
+}
+?>
     <?php if (isset($_SESSION['user_id'])): ?>
         <!-- Sidebar -->
         <nav class="sidebar">
@@ -168,26 +211,23 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     
-                    <div class="d-flex align-items-center">
-                        <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i>
-                                <?= $_SESSION['user']['nombre'] ?? 'Usuario' ?>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="<?= APP_URL ?>/perfil">
-                                        <i class="fas fa-user-cog"></i>
-                                        Mi Perfil
-                                    </a>
-                                </li>
+                    <div class="d-flex justify-content-end align-items-center w-100">
+                        <div class="dropdown user-dropdown">
+                            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle px-3 py-2 user-dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle fa-2x me-2 text-secondary"></i>
+                                <div class="text-end me-2">
+                                    <div class="fw-bold" style="font-size:1.1rem;">
+                                        <?= htmlspecialchars($_SESSION['user']['nombre_real'] ?? $_SESSION['user']['nombre'] ?? 'Usuario') ?>
+                                    </div>
+                                    <span class="badge bg-<?= $badgeColor ?> mt-1" style="font-size:0.95em;"><?= $rolNombre ?></span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-2 chevron-user" style="font-size:1.3em; transition:color 0.2s;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="<?= APP_URL ?>/perfil"><i class="fas fa-user me-2"></i>Ver perfil</a></li>
+                                <li><a class="dropdown-item" href="<?= APP_URL ?>/usuarios/cambiarPassword"><i class="fas fa-key me-2"></i>Cambiar contraseña</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="<?= APP_URL ?>/auth/logout">
-                                        <i class="fas fa-sign-out-alt"></i>
-                                        Cerrar Sesión
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item text-danger" href="<?= APP_URL ?>/auth/logout"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
                             </ul>
                         </div>
                     </div>

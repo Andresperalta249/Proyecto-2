@@ -16,22 +16,28 @@ class ApiController extends Controller {
     public function authenticateAction() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->jsonResponse(['error' => 'Método no permitido'], 405);
+            return;
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
         
-        if (!isset($data['device_id']) || !isset($data['api_key'])) {
-            $this->jsonResponse(['error' => 'Credenciales incompletas'], 400);
+        if (!isset($data['device_id']) || empty($data['device_id'])) {
+            $this->jsonResponse(['error' => 'ID de dispositivo requerido'], 400);
+            return;
         }
 
         $dispositivo = $this->dispositivoModel->findByDeviceId($data['device_id']);
         
-        if (!$dispositivo || $dispositivo['api_key'] !== $data['api_key']) {
-            $this->jsonResponse(['error' => 'Credenciales inválidas'], 401);
+        if (!$dispositivo) {
+            $this->jsonResponse(['error' => 'Dispositivo no encontrado'], 401);
+            return;
         }
 
         // Generar token JWT
-        $token = $this->generateJWT($dispositivo);
+        $token = $this->generateJWT([
+            'device_id' => $dispositivo['identificador'],
+            'id' => $dispositivo['id']
+        ]);
         
         $this->jsonResponse([
             'token' => $token,

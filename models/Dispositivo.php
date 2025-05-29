@@ -262,12 +262,16 @@ class Dispositivo extends Model {
 
     public function getDispositivosConAlertas($propietario_id) {
         try {
-            $sql = "SELECT DISTINCT d.*, m.nombre as mascota_nombre
+            $sql = "SELECT DISTINCT d.*, m.nombre as mascota_nombre,
+                    (SELECT COUNT(*) FROM alertas a WHERE a.dispositivo_id = d.id AND a.leida = 0) as alertas_pendientes
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    JOIN alertas a ON d.id = a.dispositivo_id
                     WHERE d.propietario_id = :propietario_id 
-                    AND a.leida = 0
+                    AND EXISTS (
+                        SELECT 1 FROM alertas a 
+                        WHERE a.dispositivo_id = d.id 
+                        AND a.leida = 0
+                    )
                     ORDER BY d.ultima_conexion DESC";
             $result = $this->query($sql, [':propietario_id' => $propietario_id]);
             return $result ?: [];
@@ -420,6 +424,60 @@ class Dispositivo extends Model {
         } catch (Exception $e) {
             error_log("Error en getHistorialCompleto: " . $e->getMessage());
             return [];
+        }
+    }
+
+    /**
+     * Obtiene la última fecha de lectura para varios dispositivos en una sola consulta
+     */
+    public function getUltimasLecturasPorDispositivos($ids) {
+        if (empty($ids)) return [];
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "SELECT dispositivo_id, MAX(creado_en) as ultima_lectura
+                FROM datos_sensores
+                WHERE dispositivo_id IN ($placeholders)
+                GROUP BY dispositivo_id";
+        $result = $this->query($sql, $ids);
+        $lecturas = [];
+        foreach ($result as $row) {
+            $lecturas[$row['dispositivo_id']] = $row['ultima_lectura'];
+        }
+        return $lecturas;
+    }
+
+    public function create($data) {
+        try {
+            $sql = "INSERT INTO {$this->table} (nombre, mac, identificador, tipo, propietario_id, mascota_id, estado, bateria, ultima_conexion) 
+                    VALUES (:nombre, :mac, :identificador, :tipo, :propietario_id, :mascota_id, :estado, :bateria, NOW())";
+            return $this->query($sql, $data);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    // Obtener dispositivos con paginación real
+    public function getDispositivosPaginados($offset, $limit) {
+        $sql = "SELECT d.*, m.nombre as mascota_nombre, u.nombre as propietario_nombre
+                FROM {$this->table} d
+                LEFT JOIN mascotas m ON d.mascota_id = m.id
+                LEFT JOIN usuarios u ON d.propietario_id = u.id
+                ORDER BY d.ultima_conexion DESC
+                LIMIT :offset, :limit";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function findByDeviceId($device_id) {
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE identificador = :device_id";
+            $result = $this->query($sql, [':device_id' => $device_id]);
+            return $result ? $result[0] : null;
+        } catch (Exception $e) {
+            error_log("Error en findByDeviceId: " . $e->getMessage());
+            return null;
         }
     }
 }

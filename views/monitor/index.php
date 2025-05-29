@@ -1,6 +1,13 @@
+<?php
+$subtitulo = "Gestión de Monitor";
+$titulo = "Monitor en Vivo";
+?>
 <div class="container">
-    <h1 class="mb-4">Monitor en Vivo</h1>
-
+    <div class="card shadow-lg border-0 rounded-lg mb-4">
+        <div class="card-body">
+            <!-- Eliminar encabezados y subtítulos, incluyendo el include del header_titulo.php -->
+        </div>
+    </div>
     <div class="row">
         <?php foreach ($dispositivos as $dispositivo): ?>
         <div class="col-md-6 mb-4">

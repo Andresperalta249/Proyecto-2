@@ -1,3 +1,7 @@
+<?php
+$subtitulo = "Gestión de Usuarios";
+$titulo = $tituloUsuarios;
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,15 +32,6 @@
 <!-- Barra de búsqueda y filtros -->
 <div class="card mb-4">
     <div class="card-body">
-        <form id="formBuscarUsuarios" class="form-filtros d-flex align-items-end gap-2 mb-3">
-            <div class="flex-grow-1">
-                <input type="text" class="form-control" id="buscarNombreUsuario" name="nombre" placeholder="Buscar por nombre o email...">
-            </div>
-            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalFiltrosUsuariosPHP">
-                <i class="fas fa-filter"></i> Filtros
-            </button>
-            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar</button>
-        </form>
         <div class="card shadow-sm">
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -99,7 +94,7 @@
 </div>
 
 <!-- Modal Usuario -->
-<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -225,7 +220,7 @@
 </div>
 
 <!-- Modal Crear Usuario -->
-<div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-labelledby="modalCrearUsuarioLabel" aria-hidden="true">
+<div class="modal fade" id="modalCrearUsuario" tabindex="-1" aria-labelledby="modalCrearUsuarioLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -289,7 +284,7 @@
 </div>
 
 <!-- Modal de Filtros Avanzados para usuarios -->
-<div class="modal fade" id="modalFiltrosUsuariosPHP" tabindex="-1" aria-labelledby="modalFiltrosUsuariosPHPLabel" aria-hidden="true">
+<div class="modal fade" id="modalFiltrosUsuariosPHP" tabindex="-1" aria-labelledby="modalFiltrosUsuariosPHPLabel" aria-hidden="true" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

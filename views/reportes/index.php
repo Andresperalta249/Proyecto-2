@@ -1,10 +1,13 @@
+<?php
+$subtitulo = "Gestión de Reportes";
+$titulo = "Reportes";
+?>
 <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4">Generar Reportes</h1>
+    <div class="card shadow-lg border-0 rounded-lg mb-4">
+        <div class="card-body">
+            <?php include __DIR__ . '/../partials/header_titulo.php'; ?>
         </div>
     </div>
-
     <!-- Reporte de Mascotas -->
     <div class="card shadow-lg border-0 rounded-lg mb-4">
         <div class="card-header">

@@ -112,28 +112,19 @@ class Mascota extends Model {
                     AVG(TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE())) as edad_promedio,
                     MAX(TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE())) as edad_maxima,
                     MIN(TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE())) as edad_minima,
-                    (SELECT COUNT(*) FROM dispositivos d WHERE d.mascota_id IN 
-                        (SELECT id FROM {$this->table} WHERE propietario_id = :propietario_id)) as total_dispositivos,
-                    (SELECT COUNT(*) FROM historial_medico hm WHERE hm.mascota_id IN 
-                        (SELECT id FROM {$this->table} WHERE propietario_id = :propietario_id)) as total_registros_medicos
-                FROM {$this->table} 
-                WHERE propietario_id = :propietario_id";
+                    COUNT(DISTINCT d.id) as total_dispositivos,
+                    COUNT(DISTINCT hm.id) as total_registros_medicos
+                FROM {$this->table} m
+                LEFT JOIN dispositivos d ON d.mascota_id = m.id
+                LEFT JOIN historial_medico hm ON hm.mascota_id = m.id
+                WHERE m.propietario_id = :propietario_id";
         
-        $estadisticas = $this->query($sql, [
-            ':propietario_id' => $propietario_id,
-            ':propietario_id' => $propietario_id,
-            ':propietario_id' => $propietario_id
-        ])[0];
+        $estadisticas = $this->query($sql, [':propietario_id' => $propietario_id])[0];
         
         // Agregar distribución por edad
         $estadisticas['edad_0_1'] = $this->getMascotasPorRangoEdad($propietario_id, 0, 1);
         $estadisticas['edad_1_3'] = $this->getMascotasPorRangoEdad($propietario_id, 1, 3);
         $estadisticas['edad_3_5'] = $this->getMascotasPorRangoEdad($propietario_id, 3, 5);
-        $estadisticas['edad_5_10'] = $this->getMascotasPorRangoEdad($propietario_id, 5, 10);
-        $estadisticas['edad_10_plus'] = $this->getMascotasPorRangoEdad($propietario_id, 10, 999);
-        
-        // Agregar distribución por especie
-        $estadisticas['distribucion_especies'] = $this->getDistribucionPorEspecie($propietario_id);
         
         return $estadisticas;
     }
@@ -194,33 +185,52 @@ class Mascota extends Model {
         return $this->find($id);
     }
 
-    public function getMascotasFiltradas($filtros = []) {
-        $sql = "SELECT m.*
+    public function buscarMascotasPorTermino($termino, $userId, $soloPropias = false) {
+        $sql = "SELECT m.*, u.nombre as propietario_nombre
                 FROM {$this->table} m
-                WHERE 1=1";
-        $params = [];
-
-        if (!empty($filtros['nombre'])) {
-            $sql .= " AND m.nombre LIKE :nombre";
-            $params[':nombre'] = "%{$filtros['nombre']}%";
+                LEFT JOIN usuarios u ON m.propietario_id = u.id
+                WHERE (
+                    LOWER(m.nombre) LIKE :t1
+                    OR LOWER(m.especie) LIKE :t2
+                    OR LOWER(u.nombre) LIKE :t3
+                    OR LOWER(m.estado) LIKE :t4
+                )";
+        $params = [
+            ':t1' => '%' . strtolower($termino) . '%',
+            ':t2' => '%' . strtolower($termino) . '%',
+            ':t3' => '%' . strtolower($termino) . '%',
+            ':t4' => '%' . strtolower($termino) . '%'
+        ];
+        if ($soloPropias) {
+            $sql .= " AND m.propietario_id = :uid";
+            $params[':uid'] = $userId;
         }
-
-        if (!empty($filtros['especie'])) {
-            $sql .= " AND m.especie = :especie";
-            $params[':especie'] = $filtros['especie'];
-        }
-
-        if (!empty($filtros['estado'])) {
-            $sql .= " AND m.estado = :estado";
-            $params[':estado'] = $filtros['estado'];
-        }
-
-        if (!empty($filtros['usuario_id'])) {
-            $sql .= " AND m.propietario_id = :usuario_id";
-            $params[':usuario_id'] = $filtros['usuario_id'];
-        }
-
         $sql .= " ORDER BY m.nombre ASC";
+        // Log temporal para depuración
+        error_log('SQL Mascotas: ' . $sql);
+        error_log('PARAMS Mascotas: ' . json_encode($params));
+        return $this->query($sql, $params);
+    }
+
+    public function findAll($conditions = [], $orderBy = '') {
+        $sql = "SELECT m.*, u.nombre as propietario_nombre
+                FROM {$this->table} m
+                LEFT JOIN usuarios u ON m.propietario_id = u.id";
+        $params = [];
+        if (!empty($conditions)) {
+            $sql .= " WHERE ";
+            $condiciones = [];
+            foreach ($conditions as $campo => $valor) {
+                $condiciones[] = "m.$campo = :$campo";
+                $params[":$campo"] = $valor;
+            }
+            $sql .= implode(' AND ', $condiciones);
+        }
+        if ($orderBy) {
+            $sql .= " ORDER BY $orderBy";
+        } else {
+            $sql .= " ORDER BY m.nombre ASC";
+        }
         return $this->query($sql, $params);
     }
 }

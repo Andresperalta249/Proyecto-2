@@ -17,19 +17,34 @@ class DispositivosController extends Controller {
         }
         $propietario_id = $_SESSION['propietario_id'];
         $puedeVerTodos = verificarPermiso('ver_todos_dispositivo');
-        // LOG TEMPORAL PARA DEPURACIÓN
-        error_log('Usuario logueado: ' . $propietario_id);
-        error_log('¿Puede ver todos?: ' . ($puedeVerTodos ? 'SÍ' : 'NO'));
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
         if ($puedeVerTodos) {
-            $dispositivos = $this->dispositivoModel->getTodosDispositivosConMascotas();
-            error_log('Dispositivos (admin): ' . json_encode($dispositivos));
+            $dispositivos = $this->dispositivoModel->getDispositivosPaginados($offset, $perPage);
+            $totalDispositivos = $this->dispositivoModel->count();
         } else {
-            $dispositivos = $this->dispositivoModel->getDispositivosWithMascotas($propietario_id);
-            error_log('Dispositivos (usuario): ' . json_encode($dispositivos));
+            // Para usuarios normales, solo sus dispositivos
+            $sql = "SELECT d.*, m.nombre as mascota_nombre, u.nombre as propietario_nombre
+                    FROM dispositivos d
+                    LEFT JOIN mascotas m ON d.mascota_id = m.id
+                    LEFT JOIN usuarios u ON d.propietario_id = u.id
+                    WHERE d.propietario_id = :propietario_id
+                    ORDER BY d.ultima_conexion DESC
+                    LIMIT :offset, :limit";
+            $stmt = Database::getInstance()->prepare($sql);
+            $stmt->bindValue(':propietario_id', $propietario_id, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$perPage, PDO::PARAM_INT);
+            $stmt->execute();
+            $dispositivos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $totalDispositivos = $this->dispositivoModel->count(['propietario_id' => $propietario_id]);
         }
-        // Agregar última lectura real de sensores
+        // Optimización: obtener todas las últimas lecturas en una sola consulta
+        $ids = array_column($dispositivos, 'id');
+        $ultimasLecturas = $this->dispositivoModel->getUltimasLecturasPorDispositivos($ids);
         foreach ($dispositivos as &$dispositivo) {
-            $dispositivo['ultima_lectura'] = $this->dispositivoModel->getUltimaLectura($dispositivo['id']);
+            $dispositivo['ultima_lectura'] = $ultimasLecturas[$dispositivo['id']] ?? null;
         }
         unset($dispositivo);
         // Filtrar solo usuarios con rol 'Usuario'
@@ -42,7 +57,9 @@ class DispositivosController extends Controller {
         $content = $this->render('dispositivos/index', [
             'dispositivos' => $dispositivos,
             'usuarios' => $usuarios,
-            'mascotas' => $mascotas
+            'mascotas' => $mascotas,
+            'totalDispositivos' => $totalDispositivos,
+            'perPage' => $perPage
         ]);
         $menuActivo = 'dispositivos';
         require_once 'views/layouts/main.php';

@@ -136,7 +136,7 @@
 </div>
 
 <!-- Modal para Agregar Historial -->
-<div class="modal fade" id="addHistorialModal" tabindex="-1">
+<div class="modal fade" id="addHistorialModal" tabindex="-1" data-bs-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

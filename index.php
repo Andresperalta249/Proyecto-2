@@ -2,8 +2,8 @@
 ob_start();
 session_start();
 // Configuración de errores
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 // Configurar el log de errores
@@ -71,7 +71,7 @@ try {
     error_log("Controlador: $controller, Acción: $action");
 
     // Formatear nombres de controlador y acción
-    $controller_name = ucfirst($controller) . 'Controller';
+    $controller_name = str_replace(' ', '', ucwords(str_replace('-', ' ', $controller))) . 'Controller';
     $action_name = $action . 'Action';
 
     // Verificar si el controlador existe

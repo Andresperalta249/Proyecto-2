@@ -3,6 +3,7 @@ class Database {
     private static $instance = null;
     private $conn;
     private $stmt;
+    private $cache = [];
 
     private function __construct() {
         try {
@@ -10,7 +11,10 @@ class Database {
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
+                PDO::ATTR_PERSISTENT => true, // Conexiones persistentes
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true, // Consultas en buffer
             ];
             
             $this->conn = new PDO($dsn, DB_USER, DB_PASS, $options);
@@ -73,13 +77,25 @@ class Database {
     }
 
     public function resultSet() {
+        $cacheKey = md5($this->stmt->queryString);
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
         $this->execute();
-        return $this->stmt->fetchAll();
+        $results = $this->stmt->fetchAll();
+        $this->cache[$cacheKey] = $results;
+        return $results;
     }
 
     public function single() {
+        $cacheKey = md5($this->stmt->queryString);
+        if (isset($this->cache[$cacheKey])) {
+            return $this->cache[$cacheKey];
+        }
         $this->execute();
-        return $this->stmt->fetch();
+        $result = $this->stmt->fetch();
+        $this->cache[$cacheKey] = $result;
+        return $result;
     }
 
     public function rowCount() {
@@ -104,6 +120,27 @@ class Database {
 
     public function prepare($sql) {
         return $this->conn->prepare($sql);
+    }
+
+    // Método para limpiar la caché
+    public function clearCache() {
+        $this->cache = [];
+    }
+
+    // Método para establecer el tiempo de vida de la caché
+    public function setCacheTTL($ttl) {
+        $this->cacheTTL = $ttl;
+    }
+
+    // Método para optimizar consultas
+    public function optimizeQuery($sql) {
+        // Eliminar espacios innecesarios
+        $sql = preg_replace('/\s+/', ' ', trim($sql));
+        
+        // Convertir a minúsculas para mejor caché
+        $sql = strtolower($sql);
+        
+        return $sql;
     }
 
     // Prevenir la clonación del objeto

@@ -7,13 +7,9 @@
     <div class="mb-3">
         <label for="especie" class="form-label">Especie</label>
         <select class="form-select" id="especie" name="especie" required>
-            <option value="">Seleccione una especie</option>
-            <option value="Perro" <?= ($mascota['especie'] ?? '') === 'Perro' ? 'selected' : '' ?>>Perro</option>
-            <option value="Gato" <?= ($mascota['especie'] ?? '') === 'Gato' ? 'selected' : '' ?>>Gato</option>
-            <option value="Ave" <?= ($mascota['especie'] ?? '') === 'Ave' ? 'selected' : '' ?>>Ave</option>
-            <option value="Roedor" <?= ($mascota['especie'] ?? '') === 'Roedor' ? 'selected' : '' ?>>Roedor</option>
-            <option value="Reptil" <?= ($mascota['especie'] ?? '') === 'Reptil' ? 'selected' : '' ?>>Reptil</option>
-            <option value="Otro" <?= ($mascota['especie'] ?? '') === 'Otro' ? 'selected' : '' ?>>Otro</option>
+            <option value="">Seleccione especie</option>
+            <option value="perro" <?= ($mascota['especie'] ?? '') === 'perro' ? 'selected' : '' ?>>Perro</option>
+            <option value="gato" <?= ($mascota['especie'] ?? '') === 'gato' ? 'selected' : '' ?>>Gato</option>
         </select>
     </div>
     <div class="mb-3">

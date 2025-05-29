@@ -47,6 +47,7 @@ ini_set('error_log', ROOT_PATH . '/logs/error.log');
 // Configuración de seguridad
 define('HASH_COST', 12); // Costo para password_hash
 define('TOKEN_EXPIRY', 3600); // 1 hora para tokens de recuperación
+define('JWT_SECRET', 'tu_clave_secreta_muy_segura_aqui'); // Clave secreta para JWT
 
 // Iniciar sesión con configuración personalizada
 if (session_status() === PHP_SESSION_NONE) {
