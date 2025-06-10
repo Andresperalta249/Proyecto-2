@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 ob_start();
 session_start();
 // Configuración de errores
@@ -70,9 +74,19 @@ try {
 
     error_log("Controlador: $controller, Acción: $action");
 
+    // Verificar autenticación para rutas protegidas
+    $public_routes = ['auth', 'api'];
+    if (!in_array($controller, $public_routes) && !isset($_SESSION['user_id'])) {
+        header('Location: ' . APP_URL . '/auth/login');
+        exit;
+    }
+
+    // Convertir kebab-case a camelCase para la acción
+    $action = preg_replace_callback('/-([a-z])/', function($m) { return strtoupper($m[1]); }, $action);
+    $action_name = $action . 'Action';
+
     // Formatear nombres de controlador y acción
     $controller_name = str_replace(' ', '', ucwords(str_replace('-', ' ', $controller))) . 'Controller';
-    $action_name = $action . 'Action';
 
     // Verificar si el controlador existe
     $controller_file = ROOT_PATH . '/controllers/' . $controller_name . '.php';

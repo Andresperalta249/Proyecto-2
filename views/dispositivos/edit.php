@@ -6,7 +6,7 @@
                     <h3 class="text-center font-weight-light my-4">Editar Dispositivo</h3>
                 </div>
                 <div class="card-body">
-                    <form id="editDispositivoForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id'] ?>')">
+                    <form id="editDispositivoForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id_dispositivo'] ?>')">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
@@ -33,7 +33,7 @@
                                     <select class="form-control" id="mascota_id" name="mascota_id" required>
                                         <option value="">Seleccione una mascota...</option>
                                         <?php foreach ($mascotas as $mascota): ?>
-                                            <option value="<?= $mascota['id'] ?>" <?= $dispositivo['mascota_id'] == $mascota['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $mascota['id_mascota'] ?>" <?= $dispositivo['mascota_id'] == $mascota['id_mascota'] ? 'selected' : '' ?> >
                                                 <?= $mascota['nombre'] ?>
                                             </option>
                                         <?php endforeach; ?>

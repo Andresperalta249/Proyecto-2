@@ -1,248 +1,212 @@
 <?php
 class RolesController {
-    private $rolModel;
+    private $model;
     
     public function __construct() {
-        // Verificar si el usuario tiene permiso para gestionar roles
-        if (!(
-            verificarPermiso('ver_roles') ||
-            verificarPermiso('crear_roles') ||
-            verificarPermiso('editar_roles') ||
-            verificarPermiso('eliminar_roles')
-        )) {
-            header('Location: ' . APP_URL . '/dashboard');
+        $this->model = new Rol();
+    }
+    
+    public function indexAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_ver')) {
+            header('Location: ' . APP_URL . '/error/403');
             exit;
         }
         
-        $this->rolModel = new Rol();
-    }
-    
-    /**
-     * Muestra la lista de roles
-     */
-    public function indexAction() {
-        $roles = $this->rolModel->getAll();
-        $permisos = $this->rolModel->getPermisos();
-        
-        extract(['roles' => $roles, 'permisos' => $permisos]);
+        $title = 'Administrador de roles';
         ob_start();
         require 'views/roles/index.php';
-        $content = ob_get_clean();
-        
-        $title = 'Gestión de Roles';
-        $menuActivo = 'roles';
+        $GLOBALS['content'] = ob_get_clean();
+        $GLOBALS['title'] = $title;
+        $GLOBALS['menuActivo'] = 'roles';
         require_once 'views/layouts/main.php';
     }
     
-    /**
-     * Crea un nuevo rol
-     */
-    public function createAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                $nombre = trim($_POST['nombre'] ?? '');
-                $descripcion = trim($_POST['descripcion'] ?? '');
-                $estado = $_POST['estado'] ?? 'activo';
-                $permisos = json_decode($_POST['permisos'] ?? '[]', true);
-                
-                // Validaciones
-                if (empty($nombre)) {
-                    echo json_encode(['success' => false, 'error' => 'El nombre del rol es obligatorio']);
-                    return;
-                }
-                
-                if ($this->rolModel->nombreExiste($nombre)) {
-                    echo json_encode(['success' => false, 'error' => 'Ya existe un rol con ese nombre']);
-                    return;
-                }
-                
-                if (empty($permisos)) {
-                    echo json_encode(['success' => false, 'error' => 'Debe seleccionar al menos un permiso']);
-                    return;
-                }
-                
-                if ($this->rolModel->createRol($nombre, $permisos, $descripcion, $estado)) {
-                    echo json_encode(['success' => true, 'message' => 'Rol creado correctamente']);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Error al crear el rol']);
-                }
-            } catch (Exception $e) {
-                error_log("Error en createAction: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => 'Error al procesar la solicitud: ' . $e->getMessage()]);
-            }
-        }
-    }
-    
-    /**
-     * Actualiza un rol existente
-     */
-    public function updateAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = (int)$_POST['id'];
-            $nombre = trim($_POST['nombre'] ?? '');
-            $descripcion = trim($_POST['descripcion'] ?? '');
-            $estado = $_POST['estado'] ?? 'activo';
-            $permisos = json_decode($_POST['permisos'] ?? '[]', true);
-            
-            // Validaciones
-            if (empty($nombre)) {
-                echo json_encode(['success' => false, 'error' => 'El nombre del rol es obligatorio']);
-                return;
-            }
-            
-            if ($this->rolModel->nombreExiste($nombre, $id)) {
-                echo json_encode(['success' => false, 'error' => 'Ya existe un rol con ese nombre']);
-                return;
-            }
-            
-            if (empty($permisos)) {
-                echo json_encode(['success' => false, 'error' => 'Debe seleccionar al menos un permiso']);
-                return;
-            }
-            
-            try {
-                if ($this->rolModel->updateRol($id, $nombre, $permisos, $descripcion, $estado)) {
-                    echo json_encode(['success' => true, 'message' => 'Rol actualizado correctamente']);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Error al actualizar el rol']);
-                }
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-        }
-    }
-    
-    /**
-     * Devuelve la cantidad de usuarios asociados a un rol
-     */
-    public function usuariosAsociadosAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = (int)$_POST['id'];
-            $cantidad = $this->rolModel->countUsuariosAsociados($id);
-            echo json_encode(['success' => true, 'cantidad' => $cantidad]);
-        }
-    }
-    
-    /**
-     * Elimina un rol
-     */
-    public function deleteAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                $id = (int)$_POST['id'];
-                if ($id <= 3) {
-                    echo json_encode(['success' => false, 'error' => 'No se pueden eliminar los roles predeterminados']);
-                    return;
-                }
-                $cantidad = $this->rolModel->countUsuariosAsociados($id);
-                if ($cantidad > 0 && empty($_POST['forzar'])) {
-                    echo json_encode(['success' => false, 'usuarios_asociados' => $cantidad, 'error' => 'Hay usuarios asociados a este rol']);
-                    return;
-                }
-                // Si se fuerza la eliminación, primero dejar a los usuarios sin rol
-                if ($cantidad > 0 && !empty($_POST['forzar'])) {
-                    $this->rolModel->quitarRolAUsuarios($id);
-                }
-                if ($this->rolModel->delete($id)) {
-                    echo json_encode(['success' => true, 'message' => 'Rol eliminado correctamente']);
-                } else {
-                    echo json_encode(['success' => false, 'error' => 'Error al eliminar el rol']);
-                }
-            } catch (Exception $e) {
-                error_log("Error en deleteAction: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => 'Error al eliminar el rol: ' . $e->getMessage()]);
-            }
-        }
-    }
-    
-    /**
-     * Obtiene los datos de un rol
-     */
     public function getAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            $id = (int)$_GET['id'];
-            $rol = $this->rolModel->getById($id);
-            
+        // Verificar permisos
+        if (!verificarPermiso('roles_editar')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para editar roles']);
+            exit;
+        }
+        
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            $rol = $this->model->getById($id);
             if ($rol) {
                 echo json_encode(['success' => true, 'data' => $rol]);
             } else {
                 echo json_encode(['success' => false, 'error' => 'Rol no encontrado']);
             }
+        } else {
+            // Cargar formulario para nuevo rol, pasando permisos
+            $permisos = $this->model->getPermisos();
+            $data = [
+                'rol' => null,
+                'permisos' => $permisos
+            ];
+            require_once 'views/roles/form.php';
         }
+    }
+    
+    public function createAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_crear')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para crear roles']);
+            exit;
+        }
+        $data = [
+            'nombre' => $_POST['nombre'] ?? '',
+            'descripcion' => $_POST['descripcion'] ?? '',
+            'estado' => $_POST['estado'] ?? 'activo',
+            'permisos' => $_POST['permisos'] ?? []
+        ];
+        // Validar que al menos un permiso esté seleccionado
+        if (empty($data['permisos'])) {
+            echo json_encode(['success' => false, 'error' => 'Debes asignar al menos un permiso al rol.']);
+            exit;
+        }
+        if ($this->model->create($data)) {
+            echo json_encode(['success' => true, 'message' => 'Rol creado exitosamente']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al crear el rol']);
+        }
+    }
+    
+    public function updateAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_editar')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para editar roles']);
+            exit;
+        }
+        $id = $_POST['id_rol'] ?? null;
+        if (!$id) {
+            echo json_encode(['success' => false, 'error' => 'ID de rol no proporcionado']);
+            exit;
+        }
+        $data = [
+            'nombre' => $_POST['nombre'] ?? '',
+            'descripcion' => $_POST['descripcion'] ?? '',
+            'estado' => $_POST['estado'] ?? 'activo',
+        ];
+        // Si se envían permisos, usarlos. Si no, mantener los actuales.
+        if (isset($_POST['permisos'])) {
+            $data['permisos'] = $_POST['permisos'];
+            // Si explícitamente no hay ninguno seleccionado, mostrar error
+            if (empty($data['permisos'])) {
+                echo json_encode(['success' => false, 'error' => 'Debes asignar al menos un permiso al rol.']);
+                exit;
+            }
+        } else {
+            // Mantener los permisos actuales
+            $rolActual = $this->model->getById($id);
+            $data['permisos'] = $rolActual['permiso_ids'] ?? [];
+        }
+        if ($this->model->update($id, $data)) {
+            echo json_encode(['success' => true, 'message' => 'Rol actualizado exitosamente']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al actualizar el rol']);
+        }
+    }
+    
+    public function deleteAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_eliminar')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para eliminar roles']);
+            exit;
+        }
+        
+        $id = $_POST['id'] ?? null;
+        if (!$id) {
+            echo json_encode(['success' => false, 'error' => 'ID de rol no proporcionado']);
+            exit;
+        }
+        
+        if ($this->model->delete($id)) {
+            echo json_encode(['success' => true, 'message' => 'Rol eliminado exitosamente']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al eliminar el rol']);
+        }
+    }
+    
+    public function cambiarEstadoAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_editar')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para editar roles']);
+            exit;
+        }
+        
+        $id = $_POST['id'] ?? null;
+        $estado = $_POST['estado'] ?? null;
+        
+        if (!$id || !$estado) {
+            echo json_encode(['success' => false, 'error' => 'Datos incompletos']);
+            exit;
+        }
+        
+        if ($this->model->cambiarEstado($id, $estado)) {
+            echo json_encode(['success' => true, 'message' => 'Estado actualizado exitosamente']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al cambiar el estado']);
+        }
+    }
+    
+    public function getPermisosAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_ver')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para ver roles']);
+            exit;
+        }
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            echo json_encode(['success' => false, 'error' => 'ID de rol no proporcionado']);
+            exit;
+        }
+        $permisos = $this->model->getPermisosPorRol($id);
+        if ($permisos !== false) {
+            echo json_encode(['success' => true, 'permisos' => $permisos]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al obtener los permisos']);
+        }
+    }
+    
+    public function tablaAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_ver')) {
+            header('Location: ' . APP_URL . '/error/403');
+            exit;
+        }
+        
+        require_once 'views/roles/tabla.php';
+    }
+    
+    public function formAction() {
+        // Verificar permisos
+        if (!verificarPermiso('roles_editar')) {
+            header('Location: ' . APP_URL . '/error/403');
+            exit;
+        }
+        
+        $id = $_GET['id'] ?? null;
+        $rol = null;
+        if ($id) {
+            $rol = $this->model->getById($id);
+        }
+        $permisos = $this->model->getPermisos();
+        $data = [
+            'rol' => $rol,
+            'permisos' => $permisos
+        ];
+        require 'views/roles/form.php';
     }
     
     public function listAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            try {
-                $roles = $this->rolModel->getAll();
-                $data = array_map(function($rol) {
-                    return [
-                        'id' => $rol['id'],
-                        'nombre' => $rol['nombre'],
-                        'descripcion' => $rol['descripcion'] ?? '',
-                        'estado' => $rol['estado'] ?? 'activo',
-                        'permisos' => $rol['permisos'] ?? []
-                    ];
-                }, $roles);
-                
-                // Filtrar solo roles activos
-                $data = array_filter($data, function($rol) {
-                    return $rol['estado'] === 'activo';
-                });
-                
-                echo json_encode(['success' => true, 'data' => array_values($data)]);
-            } catch (Exception $e) {
-                error_log("Error en listAction: " . $e->getMessage());
-                echo json_encode(['success' => false, 'error' => 'Error al obtener los roles']);
-            }
+        // Verificar permisos
+        if (!verificarPermiso('roles_ver')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para ver roles']);
+            exit;
         }
-    }
-    
-    /**
-     * Cambia el estado de un rol (activo/inactivo) vía AJAX
-     */
-    public function cambiarEstadoAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (!verificarPermiso('editar_roles')) {
-                echo json_encode(['success' => false, 'error' => 'No tiene permiso para cambiar el estado de roles']);
-                return;
-            }
-            $id = (int)($_POST['id'] ?? 0);
-            $estado = $_POST['estado'] ?? '';
-            if ($id <= 3) {
-                echo json_encode(['success' => false, 'error' => 'No se puede cambiar el estado de roles predeterminados']);
-                return;
-            }
-            if (!in_array($estado, ['activo', 'inactivo'])) {
-                echo json_encode(['success' => false, 'error' => 'Estado inválido']);
-                return;
-            }
-            $rolModel = $this->rolModel;
-            $ok = $rolModel->update($id, ['estado' => $estado]);
-            if ($ok) {
-                echo json_encode(['success' => true, 'message' => 'Estado actualizado correctamente']);
-            } else {
-                echo json_encode(['success' => false, 'error' => 'Error al actualizar el estado']);
-            }
-        }
-    }
-
-    /**
-     * Obtiene los detalles de un rol específico
-     */
-    public function getByIdAction() {
-        if (!isset($_POST['id'])) {
-            echo json_encode(['success' => false, 'message' => 'ID no proporcionado']);
-            return;
-        }
-
-        $id = (int)$_POST['id'];
-        $rol = $this->rolModel->getById($id);
-
-        if ($rol) {
-            echo json_encode(['success' => true, 'data' => $rol]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Rol no encontrado']);
-        }
+        $roles = $this->model->getAll();
+        echo json_encode(['success' => true, 'data' => $roles]);
+        exit;
     }
 } 

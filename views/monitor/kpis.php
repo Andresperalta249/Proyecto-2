@@ -40,8 +40,8 @@
         <div class="card text-center <?= kpiColor($bat, 'bat') ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Batería óptima: &gt;40%">
             <div class="card-body">
                 <span class="display-6">🔋</span>
-                <h6 class="card-title">Batería</h6>
-                <p class="fs-2 mb-0"><?= $bat !== null ? number_format($bat, 1) . '%' : '-' ?></p>
+                <h6 class="card-title text-md">Batería</h6>
+                <p class="text-lg mb-0 fw-bold"><?= $bat !== null ? number_format($bat, 1) . '%' : '-' ?></p>
             </div>
         </div>
     </div>
@@ -49,8 +49,8 @@
         <div class="card text-center <?= kpiColor($bpm, 'bpm') ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="Ritmo normal: 80-150 bpm">
             <div class="card-body">
                 <span class="display-6">❤️</span>
-                <h6 class="card-title">Ritmo Cardíaco</h6>
-                <p class="fs-2 mb-0"><?= $bpm !== null ? intval($bpm) . ' bpm' : '-' ?></p>
+                <h6 class="card-title text-md">Ritmo Cardíaco</h6>
+                <p class="text-lg mb-0 fw-bold"><?= $bpm !== null ? intval($bpm) . ' bpm' : '-' ?></p>
             </div>
         </div>
     </div>

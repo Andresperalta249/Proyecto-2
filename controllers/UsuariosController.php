@@ -1,7 +1,6 @@
 <?php
 class UsuariosController extends Controller {
     private $userModel;
-    private $logModel;
 
     public function __construct() {
         parent::__construct();
@@ -10,258 +9,326 @@ class UsuariosController extends Controller {
             exit;
         }
         $this->userModel = $this->loadModel('User');
-        $this->logModel = $this->loadModel('Log');
     }
 
     public function indexAction() {
-        try {
-            $usuarios = $this->userModel->getUsuarios();
-            $roles = $this->userModel->getRolesDisponibles();
-            
-            $title = 'Gestión de Usuarios';
-            $content = $this->render('usuarios/index', [
-                'usuarios' => $usuarios,
-                'roles' => $roles
-            ]);
-            
-            require_once 'views/layouts/main.php';
-        } catch (Exception $e) {
-            $_SESSION['message'] = [
-                'type' => 'error',
-                'text' => 'Error al cargar la página de usuarios: ' . $e->getMessage()
-            ];
-            header('Location: ' . APP_URL . '/dashboard');
-            exit;
-        }
+        $roles = $this->userModel->getRoles();
+        
+        // Obtener parámetros de paginación y altura de pantalla
+        $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $alturaPantalla = isset($_GET['altura']) ? (int)$_GET['altura'] : null;
+        
+        // Obtener usuarios con paginación dinámica
+        $resultado = $this->userModel->getAll([], $pagina, $alturaPantalla);
+        $usuarios = $resultado['usuarios'];
+        $totalUsuarios = $resultado['total'];
+        $totalPaginas = $resultado['paginas'];
+        $porPagina = $resultado['por_pagina'];
+        
+        ob_start();
+        require 'views/usuarios/index.php';
+        $content = ob_get_clean();
+        $title = 'Administración de usuarios';
+        $GLOBALS['content'] = $content;
+        $GLOBALS['title'] = $title;
+        $GLOBALS['menuActivo'] = 'usuarios';
+        require_once 'views/layouts/main.php';
     }
 
     public function buscarAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                $nombre = $_POST['nombre'] ?? '';
-                $rol = $_POST['rol'] ?? '';
-                $estado = $_POST['estado'] ?? '';
-
-                $usuarios = $this->userModel->buscarUsuarios($nombre, $rol, $estado);
-                echo $this->render('usuarios/tabla', ['usuarios' => $usuarios], true);
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-        }
-    }
-
-    public function createAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                if (!verificarPermiso('crear_usuarios')) {
-                    throw new Exception('No tiene permiso para crear usuarios');
-                }
-
-                $data = $_POST;
-                
-                // Log temporal para depuración
-                file_put_contents('logs/error.log', print_r($data, true), FILE_APPEND);
-                
-                // Validaciones básicas
-                if (empty($data['nombre']) || empty($data['email']) || empty($data['password']) || empty($data['rol_id'])) {
-                    throw new Exception('Todos los campos obligatorios deben estar completos');
-                }
-
-                if ($data['password'] !== $data['confirm_password']) {
-                    throw new Exception('Las contraseñas no coinciden');
-                }
-
-                // Eliminar confirm_password antes de guardar en la base de datos
-                unset($data['confirm_password']);
-
-                if ($this->userModel->insertUsuario($data)) {
-                    $this->logModel->crearLog($_SESSION['user_id'], 'Creó un usuario: ' . $data['email']);
-                    echo json_encode(['success' => true, 'message' => 'Usuario creado correctamente']);
-                } else {
-                    throw new Exception('Error al crear el usuario');
-                }
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-        }
-    }
-
-    public function updateAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                if (!verificarPermiso('editar_usuarios')) {
-                    throw new Exception('No tiene permiso para editar usuarios');
-                }
-
-                $id = (int)($_POST['id'] ?? 0);
-                if ($id <= 0) {
-                    throw new Exception('ID de usuario inválido');
-                }
-
-                $data = $_POST;
-                // Log de depuración para password y confirm_password
-                file_put_contents('logs/error.log', "[".date('Y-m-d H:i:s')."] password: " . ($data['password'] ?? 'NO SET') . " | confirm_password: " . ($data['confirm_password'] ?? 'NO SET') . "\n", FILE_APPEND);
-                // Validar coincidencia antes de eliminar confirm_password
-                if (!empty($data['password'])) {
-                    if ($data['password'] !== $data['confirm_password']) {
-                        throw new Exception('Las contraseñas no coinciden');
-                    }
-                }
-                unset($data['confirm_password']);
-                
-                // Validaciones básicas
-                if (empty($data['nombre']) || empty($data['email'])) {
-                    throw new Exception('Todos los campos obligatorios deben estar completos');
-                }
-
-                if ($this->userModel->updateUsuario($id, $data)) {
-                    $this->logModel->crearLog($_SESSION['user_id'], 'Actualizó el usuario ID: ' . $id);
-                    echo json_encode(['success' => true, 'message' => 'Usuario actualizado correctamente']);
-                } else {
-                    throw new Exception('Error al actualizar el usuario');
-                }
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-        }
-    }
-
-    public function deleteAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                if (!verificarPermiso('eliminar_usuarios')) {
-                    throw new Exception('No tiene permiso para eliminar usuarios');
-                }
-
-                $id = (int)($_POST['id'] ?? 0);
-                if ($id <= 0) {
-                    throw new Exception('ID de usuario inválido');
-                }
-
-                if ($this->userModel->deleteUsuario($id)) {
-                    $this->logModel->crearLog($_SESSION['user_id'], 'Eliminó el usuario ID: ' . $id);
-                    echo json_encode(['success' => true, 'message' => 'Usuario eliminado correctamente']);
-                } else {
-                    throw new Exception('Error al eliminar el usuario');
-                }
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
-        }
-    }
-
-    public function estadoAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                if (!verificarPermiso('cambiar_estado_usuarios')) {
-                    throw new Exception('No tiene permiso para cambiar el estado de usuarios');
-                }
-
-                $id = (int)($_POST['id'] ?? 0);
-                $estado = $_POST['estado'] ?? '';
-                
-                if ($id <= 0) {
-                    throw new Exception('ID de usuario inválido');
-                }
-
-                if ($this->userModel->cambiarEstadoUsuario($id, $estado)) {
-                    $this->logModel->crearLog($_SESSION['user_id'], 'Cambió el estado del usuario ID: ' . $id . ' a ' . $estado);
-                    echo json_encode(['success' => true, 'message' => 'Estado actualizado correctamente']);
-                } else {
-                    throw new Exception('Error al actualizar el estado');
-                }
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-            }
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $termino = $_GET['q'] ?? '';
+            $rol_id = $_GET['rol_id'] ?? '';
+            $estado = $_GET['estado'] ?? '';
+            $usuarios = $this->userModel->buscar($termino, [
+                'rol_id' => $rol_id,
+                'estado' => $estado
+            ]);
+            require_once 'views/usuarios/tabla.php';
         }
     }
 
     public function getAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            try {
-                if (!verificarPermiso('editar_usuarios')) {
-                    throw new Exception('No tiene permiso para ver detalles de usuarios');
-                }
-
-                $id = (int)($_GET['id'] ?? 0);
-                if ($id <= 0) {
-                    throw new Exception('ID de usuario inválido');
-                }
-
-                $usuario = $this->userModel->find($id);
-                if (!$usuario) {
-                    throw new Exception('Usuario no encontrado');
-                }
-
-                // Asegurarse de que los datos sensibles no se envían
-                unset($usuario['password']);
-                
-                // Formatear los datos si es necesario
-                $usuario['estado'] = $usuario['estado'] ?? 'activo';
-                $usuario['rol_id'] = (int)$usuario['rol_id'];
-
-                $this->jsonResponse([
-                    'success' => true,
-                    'data' => $usuario
-                ]);
-            } catch (Exception $e) {
-                $this->jsonResponse([
-                    'success' => false,
-                    'error' => $e->getMessage()
-                ]);
-            }
-        } else {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'Método no permitido'
-            ], 405);
+        if (!verificarPermiso('editar_usuarios')) {
+            echo '<div class="alert alert-danger">No tienes permiso para esta acción</div>';
+            return;
         }
+
+        $id = $_GET['id_usuario'] ?? null;
+        $roles = $this->userModel->getRoles();
+        if (empty($roles)) {
+            echo '<div class="alert alert-danger">No se encontraron roles disponibles. Por favor, revisa la configuración de roles en el sistema.</div>';
+            return;
+        }
+        $usuario = null;
+        if ($id) {
+            $usuario = $this->userModel->findById($id);
+            if (!$usuario) {
+                echo '<div class="alert alert-danger">Usuario no encontrado</div>';
+                return;
+            }
+        }
+        require 'views/usuarios/form.php';
     }
 
-    public function cambiarEstadoAction($id) {
+    public function crearAction() {
+        if (!verificarPermiso('crear_usuarios')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para esta acción']);
+            return;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                if (!verificarPermiso('cambiar_estado_usuarios')) {
-                    throw new Exception('No tiene permiso para cambiar el estado de usuarios');
+            $datos = [
+                'nombre' => $_POST['nombre'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'password' => $_POST['password'] ?? '',
+                'confirm_password' => $_POST['confirm_password'] ?? '',
+                'telefono' => $_POST['telefono'] ?? '',
+                'direccion' => $_POST['direccion'] ?? '',
+                'rol_id' => $_POST['rol_id'] ?? '',
+                'estado' => $_POST['estado'] ?? 'activo'
+            ];
+
+            // Validar datos
+            if (empty($datos['nombre']) || empty($datos['email']) || empty($datos['password'])) {
+                echo json_encode(['success' => false, 'error' => 'Todos los campos requeridos deben estar completos']);
+                return;
+            }
+
+            if ($datos['password'] !== $datos['confirm_password']) {
+                echo json_encode(['success' => false, 'error' => 'Las contraseñas no coinciden']);
+                return;
+            }
+
+            // Validar que el email no exista
+            if ($this->userModel->findByEmail($datos['email'])) {
+                echo json_encode(['success' => false, 'error' => 'El email ya está registrado']);
+                return;
+            }
+
+            // Validar rol (solo superadmin puede asignar roles de superadmin y admin)
+            $rolUsuarioActual = $_SESSION['user_role'] ?? 0;
+            if (($datos['rol_id'] == 1 || $datos['rol_id'] == 2) && $rolUsuarioActual != 1) {
+                echo json_encode(['success' => false, 'error' => 'No tienes permiso para asignar este rol']);
+                return;
+            }
+
+            // Crear usuario
+            $resultado = $this->userModel->crear($datos);
+            echo json_encode($resultado);
+        }
+    }
+
+    public function editarAction() {
+        if (!verificarPermiso('editar_usuarios')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para esta acción']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id_usuario'] ?? null;
+            if (!$id) {
+                echo json_encode(['success' => false, 'error' => 'ID de usuario no proporcionado']);
+                return;
+            }
+
+            $usuario = $this->userModel->findById($id);
+            if (!$usuario) {
+                echo json_encode(['success' => false, 'error' => 'Usuario no encontrado']);
+                return;
+            }
+
+            $datos = [
+                'id_usuario' => $id,
+                'nombre' => $_POST['nombre'] ?? '',
+                'telefono' => $_POST['telefono'] ?? '',
+                'direccion' => $_POST['direccion'] ?? '',
+                'rol_id' => $_POST['rol_id'] ?? '',
+                'estado' => $_POST['estado'] ?? 'activo'
+            ];
+
+            // Validar datos requeridos
+            if (empty($datos['nombre'])) {
+                echo json_encode(['success' => false, 'error' => 'El nombre es requerido']);
+                return;
+            }
+
+            // Validar rol (solo superadmin puede asignar roles de superadmin y admin)
+            $rolUsuarioActual = $_SESSION['user_role'] ?? 0;
+            if (($datos['rol_id'] == 1 || $datos['rol_id'] == 2) && $rolUsuarioActual != 1) {
+                echo json_encode(['success' => false, 'error' => 'No tienes permiso para asignar este rol']);
+                return;
+            }
+
+            // Si se proporcionó una nueva contraseña
+            if (!empty($_POST['password'])) {
+                if ($_POST['password'] !== $_POST['confirm_password']) {
+                    echo json_encode(['success' => false, 'error' => 'Las contraseñas no coinciden']);
+                    return;
                 }
-                $estado = $_POST['estado'] ?? '';
-                if ($this->userModel->cambiarEstadoUsuario($id, $estado)) {
-                    $this->logModel->crearLog($_SESSION['user_id'], 'Cambió el estado del usuario ID: ' . $id . ' a ' . $estado);
-                    echo json_encode(['success' => true, 'message' => 'Estado actualizado correctamente']);
-                } else {
-                    throw new Exception('Error al actualizar el estado');
+                $datos['password'] = $_POST['password'];
+            }
+
+            // Actualizar usuario
+            $resultado = $this->userModel->actualizar($datos);
+            echo json_encode($resultado);
+        }
+    }
+
+    public function cambiarEstadoAction() {
+        if (!verificarPermiso('editar_usuarios')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para esta acción']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id_usuario'] ?? null;
+            $estado = $_POST['estado'] ?? '';
+
+            if (!$id || !in_array($estado, ['activo', 'inactivo'])) {
+                echo json_encode(['success' => false, 'error' => 'Datos inválidos']);
+                return;
+            }
+
+            // Verificar mascotas asociadas
+            $mascotas = $this->userModel->getMascotasAsociadas($id);
+            if (!empty($mascotas)) {
+                $mensaje = "Este usuario tiene " . count($mascotas) . " mascota(s) asociada(s). ";
+                $mensaje .= "Al cambiar el estado a " . ($estado === 'inactivo' ? 'inactivo' : 'activo') . ", ";
+                $mensaje .= "las mascotas y sus dispositivos también cambiarán su estado. ¿Desea continuar?";
+                
+                echo json_encode([
+                    'success' => false,
+                    'needsConfirmation' => true,
+                    'message' => $mensaje,
+                    'data' => [
+                        'id_usuario' => $id,
+                        'estado' => $estado,
+                        'mascotas' => $mascotas
+                    ]
+                ]);
+                return;
+            }
+
+            $resultado = $this->userModel->cambiarEstado($id, $estado);
+            echo json_encode($resultado);
+        }
+    }
+
+    public function confirmarCambioEstadoAction() {
+        if (!verificarPermiso('editar_usuarios')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para esta acción']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id_usuario'] ?? null;
+            $estado = $_POST['estado'] ?? '';
+
+            if (!$id || !in_array($estado, ['activo', 'inactivo'])) {
+                echo json_encode(['success' => false, 'error' => 'Datos inválidos']);
+                return;
+            }
+
+            // Cambiar estado del usuario y sus mascotas/dispositivos
+            $resultado = $this->userModel->cambiarEstadoEnCascada($id, $estado);
+            echo json_encode($resultado);
+        }
+    }
+
+    public function eliminarAction() {
+        if (!verificarPermiso('eliminar_usuarios')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para esta acción']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id_usuario'] ?? null;
+            if (!$id) {
+                echo json_encode(['success' => false, 'error' => 'ID de usuario no proporcionado']);
+                return;
+            }
+
+            // No permitir eliminar el propio usuario
+            if ($id == $_SESSION['user_id']) {
+                echo json_encode(['success' => false, 'error' => 'No puedes eliminar tu propia cuenta']);
+                return;
+            }
+
+            // Verificar mascotas y dispositivos asociados
+            $mascotas = $this->userModel->getMascotasAsociadas($id);
+            $dispositivos = $this->userModel->getDispositivosAsociados($id);
+
+            if (!empty($mascotas) || !empty($dispositivos)) {
+                $mensaje = "Este usuario tiene ";
+                if (!empty($mascotas)) {
+                    $mensaje .= count($mascotas) . " mascota(s) ";
                 }
-            } catch (Exception $e) {
-                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+                if (!empty($mascotas) && !empty($dispositivos)) {
+                    $mensaje .= "y ";
+                }
+                if (!empty($dispositivos)) {
+                    $mensaje .= count($dispositivos) . " dispositivo(s) ";
+                }
+                $mensaje .= "asociado(s). Al eliminar el usuario, también se eliminarán todas sus mascotas y dispositivos. ¿Desea continuar?";
+                
+                echo json_encode([
+                    'success' => false,
+                    'needsConfirmation' => true,
+                    'message' => $mensaje,
+                    'data' => [
+                        'id_usuario' => $id,
+                        'mascotas' => $mascotas,
+                        'dispositivos' => $dispositivos
+                    ]
+                ]);
+                return;
+            }
+
+            $resultado = $this->userModel->eliminar($id);
+            echo json_encode($resultado);
+        }
+    }
+
+    public function confirmarEliminacionAction() {
+        if (!verificarPermiso('eliminar_usuarios')) {
+            echo json_encode(['success' => false, 'error' => 'No tienes permiso para esta acción']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id_usuario'] ?? null;
+            if (!$id) {
+                echo json_encode(['success' => false, 'error' => 'ID de usuario no proporcionado']);
+                return;
+            }
+
+            // Eliminar usuario y sus mascotas/dispositivos
+            $resultado = $this->userModel->eliminarEnCascada($id);
+            echo json_encode($resultado);
+        }
+    }
+
+    public function getAsociacionesAction() {
+        $id = $_GET['id_usuario'] ?? null;
+        if (!$id) {
+            echo json_encode(['mascotas' => 0, 'dispositivos' => 0]);
+            return;
+        }
+        // Mascotas asociadas
+        $mascotas = $this->userModel->getMascotasAsociadas($id);
+        $numMascotas = is_array($mascotas) ? count($mascotas) : 0;
+        // Dispositivos asociados a las mascotas
+        $numDispositivos = 0;
+        if ($numMascotas > 0) {
+            $mascotaIds = array_column($mascotas, 'id_mascota');
+            if (!empty($mascotaIds)) {
+                $numDispositivos = $this->userModel->contarDispositivosPorMascotas($mascotaIds);
             }
         }
-    }
-
-    public function tablaAction() {
-        if (!verificarPermiso('ver_usuarios')) {
-            http_response_code(403);
-            exit;
-        }
-        $nombre = $_GET['nombre'] ?? '';
-        $rol = $_GET['rol'] ?? '';
-        $estado = $_GET['estado'] ?? '';
-        $usuarios = $this->userModel->buscarUsuarios($nombre, $rol, $estado);
-        echo $this->render('usuarios/tabla', ['usuarios' => $usuarios], true);
-        exit;
-    }
-
-    public function verificarAsociacionesAction($id) {
-        if (!verificarPermiso('eliminar_usuarios')) {
-            http_response_code(403);
-            exit;
-        }
-        $mascotas = $this->userModel->getMascotasPorUsuario($id);
-        $dispositivos = $this->userModel->getDispositivosPorUsuario($id);
         echo json_encode([
-            'success' => true,
-            'mascotas' => $mascotas,
-            'dispositivos' => $dispositivos
+            'mascotas' => $numMascotas,
+            'dispositivos' => $numDispositivos
         ]);
-        exit;
     }
 } 

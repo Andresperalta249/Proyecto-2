@@ -6,7 +6,7 @@
                     <h3 class="text-center font-weight-light my-4">Editar Mascota</h3>
                 </div>
                 <div class="card-body">
-                    <form id="editMascotaForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>mascotas/edit/<?= $mascota['id'] ?>')" enctype="multipart/form-data">
+                    <form id="editMascotaForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>mascotas/edit/<?= $mascota['id_mascota'] ?>')" enctype="multipart/form-data">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
@@ -67,11 +67,11 @@
                         </div>
                         <?php if (in_array('gestionar_mascotas', $_SESSION['permisos'] ?? [])): ?>
                         <div class="mb-3">
-                            <label for="propietario_id" class="form-label">Propietario</label>
-                            <select class="form-select select2" id="propietario_id" name="propietario_id" required>
+                            <label for="usuario_id" class="form-label">Propietario</label>
+                            <select class="form-select select2" id="usuario_id" name="usuario_id" required>
                                 <option value="">Seleccione un propietario</option>
                                 <?php foreach ($usuarios as $usuario): ?>
-                                    <option value="<?= $usuario['id'] ?>" <?= $mascota['propietario_id'] == $usuario['id'] ? 'selected' : '' ?>><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
+                                    <option value="<?= $usuario['id'] ?>" <?= $mascota['usuario_id'] == $usuario['id'] ? 'selected' : '' ?>><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

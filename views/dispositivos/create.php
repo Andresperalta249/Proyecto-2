@@ -49,7 +49,7 @@ $puedeAsignarUsuario = verificarPermiso('ver_todos_dispositivo');
                                     <select class="form-control" id="mascota_id" name="mascota_id" required>
                                         <option value="">Seleccione una mascota...</option>
                                         <?php foreach ($mascotas as $mascota): ?>
-                                            <option value="<?= $mascota['id'] ?>" data-usuario="<?= $mascota['usuario_id'] ?? $mascota['propietario_id'] ?>">
+                                            <option value="<?= $mascota['id_mascota'] ?>" data-usuario="<?= $mascota['usuario_id'] ?? $mascota['propietario_id'] ?>">
                                                 <?= htmlspecialchars($mascota['nombre']) ?>
                                             </option>
                                         <?php endforeach; ?>

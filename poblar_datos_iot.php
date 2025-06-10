@@ -1,6 +1,6 @@
 <?php
 // Script para poblar dispositivos y datos de sensores
-require_once 'config/database.php';
+require_once 'core/Database.php';
 
 function getDb() {
     static $db = null;
@@ -13,7 +13,7 @@ function getDb() {
 
 function getMascotas() {
     $db = getDb();
-    return $db->query('SELECT id, usuario_id, nombre FROM mascotas')->fetchAll(PDO::FETCH_ASSOC);
+    return $db->getConnection()->query('SELECT id, usuario_id, nombre FROM mascotas')->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function crearDispositivo($mascota, $index) {
@@ -23,21 +23,21 @@ function crearDispositivo($mascota, $index) {
     $tipo = 'collar';
     $identificador = 'DEV-' . strtoupper(uniqid());
     $descripcion = 'Dispositivo IoT para mascota';
-    $mascota_id = $mascota['id'];
+    $mascota_id = $mascota['id_mascota'];
     $usuario_id = $mascota['usuario_id'];
     $estado = 'activo';
     $bateria = rand(50, 100);
     $creado_en = date('Y-m-d H:i:s');
     $ultima_conexion = $creado_en;
-    $stmt = $db->prepare('INSERT INTO dispositivos (nombre, mac, tipo, identificador, descripcion, mascota_id, usuario_id, estado, bateria, creado_en, ultima_conexion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt = $db->getConnection()->prepare('INSERT INTO dispositivos (nombre, mac, tipo, identificador, descripcion, mascota_id, usuario_id, estado, bateria, creado_en, ultima_conexion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $stmt->execute([$nombre, $mac, $tipo, $identificador, $descripcion, $mascota_id, $usuario_id, $estado, $bateria, $creado_en, $ultima_conexion]);
-    return $db->lastInsertId();
+    return $db->getConnection()->lastInsertId();
 }
 
 function crearDatosSensores($dispositivo_id, $cantidad = 700) {
     $db = getDb();
     $fecha_base = strtotime('-29 days');
-    $stmt = $db->prepare('INSERT INTO datos_sensores (dispositivo_id, fecha, latitude, longitude, altitude, speed, bpm, temperatura, bateria, ultima_conexion, creado_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $stmt = $db->getConnection()->prepare('INSERT INTO datos_sensores (dispositivo_id, fecha, latitude, longitude, altitude, speed, bpm, temperatura, bateria, ultima_conexion, creado_en) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     for ($i = 0; $i < $cantidad; $i++) {
         $fecha = date('Y-m-d H:i:s', $fecha_base + ($i * 60 * 60)); // 1 registro por hora
         $latitude = 4.6 + (rand(-1000, 1000) / 10000);
@@ -62,16 +62,16 @@ if (!$mascotas) {
 foreach ($mascotas as $i => $mascota) {
     // Verificar si ya tiene dispositivo
     $db = getDb();
-    $stmt = $db->prepare('SELECT id FROM dispositivos WHERE mascota_id = ?');
-    $stmt->execute([$mascota['id']]);
+    $stmt = $db->getConnection()->prepare('SELECT id_dispositivo FROM dispositivos WHERE mascota_id = ?');
+    $stmt->execute([$mascota['id_mascota']]);
     $dispositivo = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($dispositivo) {
-        $dispositivo_id = $dispositivo['id'];
+        $dispositivo_id = $dispositivo['id_dispositivo'];
     } else {
         $dispositivo_id = crearDispositivo($mascota, $i);
     }
     crearDatosSensores($dispositivo_id, 700);
-    echo "Mascota {$mascota['nombre']} (ID {$mascota['id']}) - Dispositivo ID: $dispositivo_id - Datos generados.\n";
+    echo "Mascota {$mascota['nombre']} (ID {$mascota['id_mascota']}) - Dispositivo ID: $dispositivo_id - Datos generados.\n";
 }
 
 echo "\n¡Proceso completado!\n"; 

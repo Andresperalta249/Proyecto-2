@@ -52,7 +52,7 @@ class LimpiadorNotificaciones {
                     SUM(CASE WHEN leida = 0 THEN 1 ELSE 0 END) as no_leidas
                 FROM notificaciones";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

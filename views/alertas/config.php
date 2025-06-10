@@ -9,7 +9,7 @@
             <?php
             $especies = [
                 'gato' => 'Gato',
-                'perro_pequeno' => 'Perro Pequeño',
+                'perro_pequeño' => 'Perro Pequeño',
                 'perro_mediano' => 'Perro Mediano',
                 'perro_grande' => 'Perro Grande',
             ];
@@ -19,7 +19,7 @@
                     'temp_min' => 38, 'temp_max' => 39.2,
                     'bateria_min' => 20, 'frecuencia' => 10
                 ],
-                'perro_pequeno' => [
+                'perro_pequeño' => [
                     'ritmo_min' => 100, 'ritmo_max' => 160,
                     'temp_min' => 37.5, 'temp_max' => 39.2,
                     'bateria_min' => 20, 'frecuencia' => 10

@@ -1,7 +1,10 @@
 <?php
-$subtitulo = "Gestión de Reportes";
+$subtitulo = isset($subtitulo) ? $subtitulo : 'Genera y descarga reportes detallados del sistema.';
 $titulo = "Reportes";
 ?>
+<p class="subtitle text-md" style="margin-top: 0; margin-bottom: 0;">
+  <?= htmlspecialchars($subtitulo) ?>
+</p>
 <div class="container">
     <div class="card shadow-lg border-0 rounded-lg mb-4">
         <div class="card-body">

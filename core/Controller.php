@@ -16,7 +16,7 @@ class Controller {
         }
         
         // Cargar la clase Database
-        require_once ROOT_PATH . '/config/database.php';
+        require_once ROOT_PATH . '/core/Database.php';
         
         // Inicializar la base de datos
         try {
@@ -25,6 +25,10 @@ class Controller {
             error_log("Error al inicializar la base de datos: " . $e->getMessage());
             throw new Exception("Error al inicializar la base de datos");
         }
+
+        // Inicializar la vista
+        require_once ROOT_PATH . '/core/View.php';
+        $this->view = new View();
     }
 
     protected function loadModel($model) {
@@ -72,7 +76,6 @@ class Controller {
                 $this->jsonResponse(['error' => "El campo {$field} es requerido"], 400);
             }
         }
-
         return $data;
     }
 
@@ -81,6 +84,11 @@ class Controller {
             return array_map([$this, 'sanitizeInput'], $data);
         }
         return htmlspecialchars(strip_tags($data));
+    }
+
+    protected function redirect($url) {
+        header('Location: ' . BASE_URL . $url);
+        exit;
     }
 }
 ?> 

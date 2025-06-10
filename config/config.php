@@ -11,8 +11,9 @@ define('DB_PASS', '');
 // Configuración de la aplicación
 define('APP_NAME', 'Sistema de Monitoreo de Mascotas');
 define('SITE_NAME', 'Sistema de Monitoreo de Mascotas');
-define('APP_URL', 'http://localhost/proyecto-2');
+define('APP_URL', '/proyecto-2');
 define('APP_VERSION', '1.0.0');
+define('APP_EMAIL', 'noreply@petcare.com');
 
 // Configuración de correo electrónico
 define('MAIL_HOST', 'smtp.gmail.com');

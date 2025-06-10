@@ -1,5 +1,5 @@
 <?php
-require_once 'models/Model.php';
+require_once __DIR__ . '/../core/Model.php';
 
 class Notificacion extends Model {
     public function __construct() {
@@ -10,7 +10,7 @@ class Notificacion extends Model {
         $sql = "INSERT INTO notificaciones (usuario_id, titulo, mensaje, tipo, enlace, fecha_creacion) 
                 VALUES (:usuario_id, :titulo, :mensaje, :tipo, :enlace, NOW())";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         return $stmt->execute([
             'usuario_id' => $usuarioId,
             'titulo' => $titulo,
@@ -26,7 +26,7 @@ class Notificacion extends Model {
                 ORDER BY fecha_creacion DESC 
                 LIMIT :limite";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
         $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
         $stmt->execute();
@@ -39,7 +39,7 @@ class Notificacion extends Model {
                 SET leida = 1, fecha_lectura = NOW() 
                 WHERE id = :id AND usuario_id = :usuario_id";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         return $stmt->execute([
             'id' => $notificacionId,
             'usuario_id' => $usuarioId
@@ -51,7 +51,7 @@ class Notificacion extends Model {
                 SET leida = 1, fecha_lectura = NOW() 
                 WHERE usuario_id = :usuario_id AND leida = 0";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         return $stmt->execute(['usuario_id' => $usuarioId]);
     }
 
@@ -59,7 +59,7 @@ class Notificacion extends Model {
         $sql = "DELETE FROM notificaciones 
                 WHERE id = :id AND usuario_id = :usuario_id";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         return $stmt->execute([
             'id' => $notificacionId,
             'usuario_id' => $usuarioId
@@ -70,7 +70,7 @@ class Notificacion extends Model {
         $sql = "DELETE FROM notificaciones 
                 WHERE fecha_creacion < DATE_SUB(NOW(), INTERVAL :dias DAY)";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         return $stmt->execute(['dias' => $dias]);
     }
 
@@ -79,7 +79,7 @@ class Notificacion extends Model {
                 FROM notificaciones 
                 WHERE usuario_id = :usuario_id AND leida = 0";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->execute(['usuario_id' => $usuarioId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -92,7 +92,7 @@ class Notificacion extends Model {
                 ORDER BY fecha_creacion DESC 
                 LIMIT :limite";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->bindValue(':usuario_id', $usuarioId, PDO::PARAM_INT);
         $stmt->bindValue(':tipo', $tipo, PDO::PARAM_STR);
         $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
@@ -107,7 +107,7 @@ class Notificacion extends Model {
                 AND fecha_creacion BETWEEN :fecha_inicio AND :fecha_fin 
                 ORDER BY fecha_creacion DESC";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->execute([
             'usuario_id' => $usuarioId,
             'fecha_inicio' => $fechaInicio,
@@ -127,7 +127,7 @@ class Notificacion extends Model {
                 FROM notificaciones 
                 WHERE usuario_id = :usuario_id";
         
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->execute(['usuario_id' => $usuarioId]);
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -136,7 +136,7 @@ class Notificacion extends Model {
     public function enviarNotificacionEmail($usuarioId, $titulo, $mensaje) {
         // Obtener información del usuario
         $sql = "SELECT email, nombre FROM usuarios WHERE id = :id";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->execute(['id' => $usuarioId]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -188,7 +188,7 @@ class Notificacion extends Model {
     public function enviarNotificacionPush($usuarioId, $titulo, $mensaje) {
         // Obtener el token de FCM del usuario
         $sql = "SELECT fcm_token FROM usuarios WHERE id = :id AND fcm_token IS NOT NULL";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->getConnection()->prepare($sql);
         $stmt->execute(['id' => $usuarioId]);
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 

@@ -1,182 +1,283 @@
 <?php
+require_once 'core/Controller.php';
+require_once 'models/Dispositivo.php';
+require_once 'models/Mascota.php';
+require_once 'models/Alerta.php';
+require_once 'models/User.php';
+
 class DashboardController extends Controller {
-    private $mascotaModel;
     private $dispositivoModel;
+    private $mascotaModel;
     private $alertaModel;
-    private $logModel;
-    private $logger;
 
     public function __construct() {
-        try {
-            $this->logger = Logger::getInstance();
-            $this->logger->info("Iniciando DashboardController");
-            
-            parent::__construct();
-            $this->logger->info("Constructor padre completado");
-            
-            $this->logger->info("Cargando modelos...");
-            $this->mascotaModel = $this->loadModel('Mascota');
-            $this->logger->info("Modelo Mascota cargado");
-            
-            $this->dispositivoModel = $this->loadModel('Dispositivo');
-            $this->logger->info("Modelo Dispositivo cargado");
-            
-            $this->alertaModel = $this->loadModel('Alerta');
-            $this->logger->info("Modelo Alerta cargado");
-            
-            $this->logModel = $this->loadModel('Log');
-            $this->logger->info("Modelo Log cargado");
-        } catch (Exception $e) {
-            $this->logger->error("Error en constructor: " . $e->getMessage());
-            $this->logger->error("Trace: " . $e->getTraceAsString());
-            throw $e;
+        parent::__construct();
+        
+        // Verificar autenticación
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /proyecto-2/auth/login');
+            exit;
         }
+
+        $this->dispositivoModel = new Dispositivo();
+        $this->mascotaModel = new Mascota();
+        $this->alertaModel = new Alerta();
     }
 
     public function indexAction() {
         try {
-            $this->logger->info("Iniciando indexAction");
-            $this->logger->debug("SESSION: " . print_r($_SESSION, true));
-            
-            if (!isset($_SESSION['user_id'])) {
-                $this->logger->warning("Usuario no autenticado");
-                redirect('auth/login');
-            }
-
-            $this->logger->info("Usuario autenticado, ID: " . $_SESSION['user_id']);
-
-            // Verificar si es admin/superadmin y tiene permiso para ver todos los dispositivos
-            $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1, 2]);
-            $tienePermiso = function_exists('verificarPermiso') ? verificarPermiso('ver_todas_mascotas') : false;
-
-            if ($esAdmin && $tienePermiso) {
-                $totalMascotas = $this->mascotaModel->count();
-                $totalDispositivos = $this->dispositivoModel->count();
-                // Estadísticas de sensores globales
-                $db = Database::getInstance();
-                $rowSensores = $db->query('SELECT COUNT(*) as total FROM datos_sensores')->single();
-                $totalSensores = $rowSensores ? $rowSensores['total'] : 0;
-                $rowTemp = $db->query('SELECT AVG(temperatura) as promedio FROM datos_sensores')->single();
-                $promedioTemp = $rowTemp && $rowTemp['promedio'] !== null ? $rowTemp['promedio'] : 0;
-
-                // Obtener dispositivos activos con información del propietario
-                $dispositivosActivos = array_slice($db->query('SELECT d.*, u.nombre as propietario_nombre, m.nombre as mascota_nombre 
-                        FROM dispositivos d 
-                        LEFT JOIN usuarios u ON d.propietario_id = u.id 
-                        LEFT JOIN mascotas m ON d.mascota_id = m.id 
-                        WHERE d.estado = "activo"')->resultSet(), 0, 5);
-            } else {
-                $totalMascotas = $this->mascotaModel->count(['propietario_id' => $_SESSION['user_id']]);
-                $totalDispositivos = $this->dispositivoModel->count(['propietario_id' => $_SESSION['user_id']]);
-                // Estadísticas de sensores por usuario
-                $db = Database::getInstance();
-                $rowSensores = $db->query('SELECT COUNT(*) as total FROM datos_sensores ds JOIN dispositivos d ON ds.dispositivo_id = d.id WHERE d.propietario_id = ' . intval($_SESSION['user_id']))->single();
-                $totalSensores = $rowSensores ? $rowSensores['total'] : 0;
-                $rowTemp = $db->query('SELECT AVG(ds.temperatura) as promedio FROM datos_sensores ds JOIN dispositivos d ON ds.dispositivo_id = d.id WHERE d.propietario_id = ' . intval($_SESSION['user_id']))->single();
-                $promedioTemp = $rowTemp && $rowTemp['promedio'] !== null ? $rowTemp['promedio'] : 0;
-
-                // Obtener dispositivos activos con información del propietario para el usuario actual
-                $dispositivosActivos = $db->query('
-                    SELECT d.*, u.nombre as propietario_nombre, m.nombre as mascota_nombre 
-                    FROM dispositivos d 
-                    LEFT JOIN usuarios u ON d.propietario_id = u.id 
-                    LEFT JOIN mascotas m ON d.mascota_id = m.id 
-                    WHERE d.propietario_id = ' . intval($_SESSION['user_id']) . ' 
-                    AND d.estado = "activo"
-                ')->resultSet();
-            }
-
-            // Obtener el rol como string
-            $rol_id = $_SESSION['user_role'] ?? 3;
-            $rol = 'usuario';
-            if ($rol_id == 1) {
-                $rol = 'superadministrador';
-            } elseif ($rol_id == 2) {
-                $rol = 'administrador';
-            }
-
-            // Obtener estadísticas
-            $stats = [
-                'mascotas' => $totalMascotas,
-                'dispositivos' => $totalDispositivos,
-                'dispositivos_activos' => count($dispositivosActivos),
-                'alertas' => $this->alertaModel->getEstadisticas($_SESSION['user_id']),
-                'total_sensores' => $totalSensores,
-                'promedio_temperatura' => round($promedioTemp, 2)
+            $totalConectados = $this->dispositivoModel->getTotalConectados();
+            $totalDispositivos = $this->dispositivoModel->getTotalDispositivos();
+            $data = [
+                'totalDispositivos' => [
+                    'conectados' => $totalConectados,
+                    'total' => $totalDispositivos
+                ],
+                'totalMascotas' => $this->mascotaModel->getTotalRegistradas(),
+                'totalAlertas' => [
+                    'activas' => $this->alertaModel->getTotalActivas(),
+                    'resueltas' => $this->alertaModel->getTotalResueltas()
+                ],
+                'distribucionEspecies' => $this->mascotaModel->getDistribucionEspecies()
             ];
-            $this->logger->info("Estadísticas obtenidas: " . print_r($stats, true));
+            $content = $this->render('dashboard/index', $data);
+            $GLOBALS['content'] = $content;
+            $GLOBALS['title'] = 'Dashboard';
+            $GLOBALS['menuActivo'] = 'dashboard';
+            require_once 'views/layouts/main.php';
+        } catch (Exception $e) {
+            error_log("Error en DashboardController::indexAction: " . $e->getMessage());
+            echo '<h1>Error 500</h1><p>Error al cargar el dashboard.</p>';
+        }
+    }
 
-            // Obtener últimas alertas
-            $ultimasAlertas = array_slice($this->alertaModel->getAlertasNoLeidas($_SESSION['user_id']), 0, 5);
-            $this->logger->info("Últimas alertas obtenidas: " . count($ultimasAlertas));
+    public function getKPIDataAction() {
+        error_log('Entrando a getKPIDataAction');
+        try {
+            $userModel = new User();
+            
+            // Validar que los modelos estén disponibles
+            if (!$this->dispositivoModel || !$this->mascotaModel || !$this->alertaModel) {
+                throw new Exception('Error de inicialización de modelos');
+            }
 
-            // Obtener actividad reciente
-            $actividadReciente = array_slice($this->logModel->getActividadReciente($_SESSION['user_id']), 0, 5);
-            $this->logger->info("Actividad reciente obtenida: " . count($actividadReciente));
+            // Obtener datos con validación
+            $usuarios_registrados = $userModel->getTotalUsuariosNormales();
+            if ($usuarios_registrados === false) {
+                throw new Exception('Error al obtener total de usuarios');
+            }
 
-            $title = 'Panel de Control';
-            $menuActivo = 'dashboard';
-            $this->logger->info("Renderizando vista");
+            $dispositivos_conectados = $this->dispositivoModel->getTotalConectados();
+            if ($dispositivos_conectados === false) {
+                throw new Exception('Error al obtener dispositivos conectados');
+            }
+
+            $dispositivos_total = $this->dispositivoModel->getTotalDispositivos();
+            if ($dispositivos_total === false) {
+                throw new Exception('Error al obtener total de dispositivos');
+            }
+
+            $mascotas_total = $this->mascotaModel->getTotalRegistradas();
+            if ($mascotas_total === false) {
+                throw new Exception('Error al obtener total de mascotas');
+            }
+
+            $alertas_activas = $this->alertaModel->getTotalActivas();
+            if ($alertas_activas === false) {
+                throw new Exception('Error al obtener alertas activas');
+            }
+
+            $alertas_resueltas = $this->alertaModel->getTotalResueltas();
+            if ($alertas_resueltas === false) {
+                throw new Exception('Error al obtener alertas resueltas');
+            }
+
+            $especies = $this->mascotaModel->getDistribucionEspecies();
+            if ($especies === false) {
+                throw new Exception('Error al obtener distribución de especies');
+            }
+
+            $response = [
+                'dispositivos' => [
+                    'conectados' => (int)$dispositivos_conectados,
+                    'total' => (int)$dispositivos_total
+                ],
+                'mascotas' => (int)$mascotas_total,
+                'alertas' => [
+                    'activas' => (int)$alertas_activas,
+                    'resueltas' => (int)$alertas_resueltas
+                ],
+                'especies' => $especies,
+                'usuarios_registrados' => (int)$usuarios_registrados
+            ];
+
+            $this->sendJsonResponse($response);
+        } catch (Exception $e) {
+            error_log("Error en DashboardController::getKPIDataAction: " . $e->getMessage());
+            $this->sendJsonError('Error al obtener datos KPI: ' . $e->getMessage());
+        }
+    }
+
+    public function getAlertasPorDiaAction() {
+        try {
+            $dias = isset($_GET['dias']) ? (int)$_GET['dias'] : 7;
+            $dias = max(1, min($dias, 30)); // Limitar entre 1 y 30 días
+            
+            $alertas = $this->alertaModel->getAlertasPorDia($dias);
+            if ($alertas === false) {
+                throw new Exception('Error al obtener alertas por día');
+            }
+            $this->sendJsonResponse($alertas);
+        } catch (Exception $e) {
+            error_log("Error en DashboardController::getAlertasPorDiaAction: " . $e->getMessage());
+            $this->sendJsonError('Error al obtener alertas por día: ' . $e->getMessage());
+        }
+    }
+
+    public function getDistribucionEspeciesAction() {
+        try {
+            $distribucion = $this->mascotaModel->getDistribucionEspecies();
+            if ($distribucion === false) {
+                throw new Exception('Error al obtener distribución de especies');
+            }
+            $this->sendJsonResponse($distribucion);
+        } catch (Exception $e) {
+            error_log("Error en DashboardController::getDistribucionEspeciesAction: " . $e->getMessage());
+            $this->sendJsonError('Error al obtener distribución de especies: ' . $e->getMessage());
+        }
+    }
+
+    public function getActividadRecienteAction() {
+        try {
+            $limite = isset($_GET['limite']) ? (int)$_GET['limite'] : 10;
+            $limite = max(1, min($limite, 50)); // Limitar entre 1 y 50 registros
+            
+            $actividad = $this->alertaModel->getActividadReciente($limite);
+            if ($actividad === false) {
+                throw new Exception('Error al obtener actividad reciente');
+            }
+            $this->sendJsonResponse($actividad);
+        } catch (Exception $e) {
+            error_log("Error en DashboardController::getActividadRecienteAction: " . $e->getMessage());
+            $this->sendJsonError('Error al obtener actividad reciente: ' . $e->getMessage());
+        }
+    }
+
+    public function getHistorialUsuariosAction() {
+        try {
+            $dias = isset($_GET['dias']) ? (int)$_GET['dias'] : 7;
+            $dias = max(1, min($dias, 30)); // Limitar entre 1 y 30 días
+            
+            // Obtener las fechas de los últimos N días
+            $fechas = [];
+            for ($i = $dias - 1; $i >= 0; $i--) {
+                $fechas[] = date('Y-m-d', strtotime("-$i days"));
+            }
+            $desde = $fechas[0];
+            $hasta = $fechas[count($fechas)-1];
+            
+            // Consulta para usuarios y mascotas
+            $sql = "SELECT 
+                    fecha,
+                    SUM(usuarios) as usuarios,
+                    SUM(mascotas) as mascotas
+                FROM (
+                    SELECT DATE(creado_en) as fecha, COUNT(*) as usuarios, 0 as mascotas
+                    FROM usuarios 
+                    WHERE DATE(creado_en) BETWEEN ? AND ?
+                    GROUP BY DATE(creado_en)
+                    UNION ALL
+                    SELECT DATE(creado_en) as fecha, 0 as usuarios, COUNT(*) as mascotas
+                    FROM mascotas 
+                    WHERE DATE(creado_en) BETWEEN ? AND ?
+                    GROUP BY DATE(creado_en)
+                ) as combined
+                GROUP BY fecha
+                ORDER BY fecha";
             
             try {
-                $content = $this->render('dashboard/index', [
-                    'stats' => $stats,
-                    'ultimasAlertas' => $ultimasAlertas,
-                    'dispositivosActivos' => $dispositivosActivos,
-                    'actividadReciente' => $actividadReciente
-                ]);
-                $this->logger->info("Vista renderizada correctamente");
+                $stmt = $this->db->getConnection()->prepare($sql);
+                if (!$stmt) {
+                    throw new Exception("Error al preparar la consulta SQL");
+                }
                 
-                $this->logger->info("Cargando layout");
-                $layoutFile = ROOT_PATH . '/views/layouts/main.php';
-                $this->logger->debug("Layout file exists: " . file_exists($layoutFile));
+                // Vincular los parámetros en el orden correcto
+                $stmt->bindValue(1, $desde, PDO::PARAM_STR);
+                $stmt->bindValue(2, $hasta, PDO::PARAM_STR);
+                $stmt->bindValue(3, $desde, PDO::PARAM_STR);
+                $stmt->bindValue(4, $hasta, PDO::PARAM_STR);
                 
-                require_once $layoutFile;
-                $this->logger->info("Layout cargado correctamente");
-            } catch (Exception $e) {
-                $this->logger->error("Error al renderizar vista/layout: " . $e->getMessage());
-                $this->logger->error("Trace: " . $e->getTraceAsString());
-                throw $e;
+                if (!$stmt->execute()) {
+                    throw new Exception("Error al ejecutar la consulta SQL: " . implode(" ", $stmt->errorInfo()));
+                }
+                
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if ($result === false) {
+                    throw new Exception("Error al obtener los resultados");
+                }
+
+                // Asegurar que todos los días tengan un valor, incluso si es 0
+                $registros = [];
+                foreach ($fechas as $fecha) {
+                    $encontrado = false;
+                    foreach ($result as $row) {
+                        if ($row['fecha'] === $fecha) {
+                            $registros[] = [
+                                'fecha' => $fecha,
+                                'usuarios' => (int)$row['usuarios'],
+                                'mascotas' => (int)$row['mascotas']
+                            ];
+                            $encontrado = true;
+                            break;
+                        }
+                    }
+                    if (!$encontrado) {
+                        $registros[] = [
+                            'fecha' => $fecha,
+                            'usuarios' => 0,
+                            'mascotas' => 0
+                        ];
+                    }
+                }
+
+                // Agregar datos de prueba para visualización
+                if (empty($registros)) {
+                    foreach ($fechas as $fecha) {
+                        $registros[] = [
+                            'fecha' => $fecha,
+                            'usuarios' => 1,
+                            'mascotas' => 1
+                        ];
+                    }
+                }
+                
+                $this->sendJsonResponse($registros);
+            } catch (PDOException $e) {
+                error_log("Error SQL en getHistorialUsuariosAction: " . $e->getMessage());
+                throw new Exception("Error en la base de datos: " . $e->getMessage());
             }
         } catch (Exception $e) {
-            $this->logger->error("Error en indexAction: " . $e->getMessage());
-            $this->logger->error("Trace: " . $e->getTraceAsString());
-            throw $e;
+            error_log("Error en getHistorialUsuariosAction: " . $e->getMessage());
+            $this->sendJsonError('Error al obtener historial de usuarios y mascotas: ' . $e->getMessage());
         }
     }
 
-    public function getStatsAction() {
-        if (!isset($_SESSION['user_id'])) {
-            $this->logger->warning("Intento de acceso no autorizado a getStatsAction");
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'Acceso denegado'
-            ], 403);
-        }
-
-        try {
-            $stats = [
-                'mascotas' => $this->mascotaModel->count(['propietario_id' => $_SESSION['user_id']]),
-                'dispositivos' => $this->dispositivoModel->count(['propietario_id' => $_SESSION['user_id']]),
-                'dispositivos_activos' => $this->dispositivoModel->count([
-                    'propietario_id' => $_SESSION['user_id'],
-                    'estado' => 'activo'
-                ]),
-                'alertas' => $this->alertaModel->getEstadisticas($_SESSION['user_id'])
-            ];
-
-            $this->logger->info("Estadísticas obtenidas para usuario " . $_SESSION['user_id']);
-            $this->jsonResponse([
-                'success' => true,
-                'data' => $stats
-            ]);
-        } catch (Exception $e) {
-            $this->logger->error("Error al obtener estadísticas: " . $e->getMessage());
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'Error al obtener estadísticas'
-            ], 500);
-        }
+    private function sendJsonResponse($data) {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'data' => $data
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
-}
-?> 
+
+    private function sendJsonError($message, $code = 500) {
+        header('Content-Type: application/json');
+        http_response_code($code);
+        echo json_encode([
+            'success' => false,
+            'error' => $message
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+} 

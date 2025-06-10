@@ -12,48 +12,48 @@ class DispositivosController extends Controller {
     }
 
     public function indexAction() {
-        if (!isset($_SESSION['propietario_id'])) {
+        if (!isset($_SESSION['user_id'])) {
             redirect('auth/login');
         }
-        $propietario_id = $_SESSION['propietario_id'];
+        $user_id = $_SESSION['user_id'];
         $puedeVerTodos = verificarPermiso('ver_todos_dispositivo');
         $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
         $perPage = 10;
         $offset = ($page - 1) * $perPage;
         if ($puedeVerTodos) {
             $dispositivos = $this->dispositivoModel->getDispositivosPaginados($offset, $perPage);
-            $totalDispositivos = $this->dispositivoModel->count();
+            $totalDispositivos = $this->dispositivoModel->getTotalDispositivos();
         } else {
             // Para usuarios normales, solo sus dispositivos
             $sql = "SELECT d.*, m.nombre as mascota_nombre, u.nombre as propietario_nombre
                     FROM dispositivos d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id
                     LEFT JOIN usuarios u ON d.propietario_id = u.id
-                    WHERE d.propietario_id = :propietario_id
+                    WHERE d.propietario_id = :user_id
                     ORDER BY d.ultima_conexion DESC
                     LIMIT :offset, :limit";
-            $stmt = Database::getInstance()->prepare($sql);
-            $stmt->bindValue(':propietario_id', $propietario_id, PDO::PARAM_INT);
+            $stmt = Database::getInstance()->getConnection()->prepare($sql);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
             $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
             $stmt->bindValue(':limit', (int)$perPage, PDO::PARAM_INT);
             $stmt->execute();
             $dispositivos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $totalDispositivos = $this->dispositivoModel->count(['propietario_id' => $propietario_id]);
+            $totalDispositivos = $this->dispositivoModel->getTotalDispositivos();
         }
         // Optimización: obtener todas las últimas lecturas en una sola consulta
-        $ids = array_column($dispositivos, 'id');
+        $ids = array_column($dispositivos, 'id_dispositivo');
         $ultimasLecturas = $this->dispositivoModel->getUltimasLecturasPorDispositivos($ids);
         foreach ($dispositivos as &$dispositivo) {
-            $dispositivo['ultima_lectura'] = $ultimasLecturas[$dispositivo['id']] ?? null;
+            $dispositivo['ultima_lectura'] = $ultimasLecturas[$dispositivo['id_dispositivo']] ?? null;
         }
         unset($dispositivo);
         // Filtrar solo usuarios con rol 'Usuario'
         $userModel = $this->loadModel('User');
-        $usuarios = array_filter($userModel->getUsuarios(), function($u) {
+        $usuarios = array_filter($userModel->getAll(), function($u) {
             return isset($u['rol_nombre']) && strtolower($u['rol_nombre']) === 'usuario';
         });
         $mascotas = $this->mascotaModel->findAll();
-        $title = $puedeVerTodos ? 'Todos los Dispositivos' : 'Mis Dispositivos';
+        $title = 'Administrador de dispositivos';
         $content = $this->render('dispositivos/index', [
             'dispositivos' => $dispositivos,
             'usuarios' => $usuarios,
@@ -61,12 +61,14 @@ class DispositivosController extends Controller {
             'totalDispositivos' => $totalDispositivos,
             'perPage' => $perPage
         ]);
-        $menuActivo = 'dispositivos';
+        $GLOBALS['content'] = $content;
+        $GLOBALS['title'] = $title;
+        $GLOBALS['menuActivo'] = 'dispositivos';
         require_once 'views/layouts/main.php';
     }
 
     public function createAction() {
-        if (!isset($_SESSION['propietario_id'])) {
+        if (!isset($_SESSION['user_id'])) {
             redirect('auth/login');
         }
 
@@ -96,7 +98,7 @@ class DispositivosController extends Controller {
                     'nombre' => $_POST['nombre'],
                     'mac' => $_POST['mac'],
                     'estado' => $_POST['estado'],
-                    'propietario_id' => $_SESSION['propietario_id']
+                    'user_id' => $_SESSION['user_id']
                 ];
                 
                 // Validar usuario_id si se proporciona
@@ -109,7 +111,7 @@ class DispositivosController extends Controller {
                         ], 400);
                         return;
                     }
-                    $data['propietario_id'] = $_POST['usuario_id'];
+                    $data['user_id'] = $_POST['usuario_id'];
                 }
                 
                 // Validar mascota_id si se proporciona
@@ -156,7 +158,7 @@ class DispositivosController extends Controller {
                     error_log('Resultado de createDispositivo: ' . ($resultado ? 'éxito' : 'fallo'));
                     
                     if ($resultado) {
-                        $this->logModel->crearLog($_SESSION['propietario_id'], 'Creación de dispositivo: ' . $data['nombre']);
+                        $this->logModel->crearLog($_SESSION['user_id'], 'Creación de dispositivo: ' . $data['nombre']);
                         $this->jsonResponse([
                             'success' => true,
                             'message' => 'Dispositivo registrado correctamente',
@@ -192,21 +194,25 @@ class DispositivosController extends Controller {
             'usuarios' => $usuarios,
             'mascotas' => $mascotas
         ]);
+        $GLOBALS['content'] = $content;
+        $GLOBALS['title'] = $title;
+        $GLOBALS['menuActivo'] = 'dispositivos';
         require_once 'views/layouts/main.php';
     }
 
     public function editAction($id = null) {
-        if (!isset($_SESSION['propietario_id']) || !$id) {
+        if (!isset($_SESSION['user_id'])) {
             redirect('auth/login');
         }
 
         $dispositivo = $this->dispositivoModel->getDispositivoById($id);
-        if (!$dispositivo || $dispositivo['propietario_id'] != $_SESSION['propietario_id']) {
+        if (!$dispositivo) {
+            $_SESSION['error'] = 'Dispositivo no encontrado';
             redirect('dispositivos');
         }
 
         // Obtener mascotas sin dispositivo + la mascota actualmente asignada
-        $mascotas = $this->mascotaModel->getMascotasSinDispositivos($_SESSION['propietario_id']);
+        $mascotas = $this->mascotaModel->getMascotasSinDispositivos($_SESSION['user_id']);
         if ($dispositivo['mascota_id']) {
             $mascotaActual = $this->mascotaModel->findById($dispositivo['mascota_id']);
             if ($mascotaActual) {
@@ -254,50 +260,31 @@ class DispositivosController extends Controller {
             'dispositivo' => $dispositivo,
             'mascotas' => $mascotas
         ]);
+        $GLOBALS['content'] = $content;
+        $GLOBALS['title'] = $title;
+        $GLOBALS['menuActivo'] = 'dispositivos';
         require_once 'views/layouts/main.php';
     }
 
     public function deleteAction($id = null) {
-        if (!isset($_SESSION['propietario_id']) || !$id) {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'Acceso denegado'
-            ], 403);
-            return;
+        if (!isset($_SESSION['user_id'])) {
+            redirect('auth/login');
         }
 
-        // Verificar que el dispositivo pertenezca al usuario
         $dispositivo = $this->dispositivoModel->getDispositivoById($id);
         if (!$dispositivo) {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'Dispositivo no encontrado'
-            ], 404);
-            return;
+            $_SESSION['error'] = 'Dispositivo no encontrado';
+            redirect('dispositivos');
         }
 
-        // Verificar permisos
-        if ($dispositivo['propietario_id'] != $_SESSION['propietario_id'] && !verificarPermiso('eliminar_dispositivos')) {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'No tiene permiso para eliminar este dispositivo'
-            ], 403);
-            return;
-        }
-
-        if ($this->dispositivoModel->deleteDispositivo($id)) {
-            $this->logModel->crearLog($_SESSION['propietario_id'], 'Eliminación de dispositivo: ' . $dispositivo['nombre']);
-            
-            $this->jsonResponse([
-                'success' => true,
-                'message' => 'Dispositivo eliminado correctamente'
-            ]);
-        } else {
-            $this->jsonResponse([
-                'success' => false,
-                'error' => 'Error al eliminar el dispositivo'
-            ], 500);
-        }
+        $title = 'Eliminar Dispositivo';
+        $content = $this->render('dispositivos/delete', [
+            'dispositivo' => $dispositivo
+        ]);
+        $GLOBALS['content'] = $content;
+        $GLOBALS['title'] = $title;
+        $GLOBALS['menuActivo'] = 'dispositivos';
+        require_once 'views/layouts/main.php';
     }
 
     public function cambiarEstadoAction() {
@@ -460,7 +447,7 @@ class DispositivosController extends Controller {
         $this->jsonResponse([
             'success' => true,
             'data' => [
-                'id' => $dispositivo['id'],
+                'id' => $dispositivo['id_dispositivo'],
                 'nombre' => $dispositivo['nombre'],
                 'mac' => $dispositivo['mac'],
                 'estado' => $dispositivo['estado'],
@@ -486,7 +473,7 @@ class DispositivosController extends Controller {
             return;
         }
 
-        $data = $this->validateRequest(['id', 'nombre', 'mac', 'estado']);
+        $data = $this->validateRequest(['id_dispositivo', 'nombre', 'mac', 'estado']);
         
         // Validar formato de MAC
         if (!preg_match('/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/', $data['mac'])) {
@@ -495,13 +482,13 @@ class DispositivosController extends Controller {
         }
 
         // Validar unicidad de MAC
-        if ($this->dispositivoModel->existeMac($data['mac'], $data['id'])) {
+        if ($this->dispositivoModel->existeMac($data['mac'], $data['id_dispositivo'])) {
             $this->jsonResponse(['success' => false, 'error' => 'La MAC ya está registrada'], 400);
             return;
         }
 
         // Verificar permisos
-        $dispositivo = $this->dispositivoModel->getDispositivoById($data['id']);
+        $dispositivo = $this->dispositivoModel->getDispositivoById($data['id_dispositivo']);
         $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1,2]);
         if (
             !$dispositivo ||
@@ -511,7 +498,7 @@ class DispositivosController extends Controller {
             return;
         }
 
-        if ($this->dispositivoModel->updateDispositivo($data['id'], $data)) {
+        if ($this->dispositivoModel->updateDispositivo($data['id_dispositivo'], $data)) {
             $this->logModel->crearLog($_SESSION['user_id'], 'Actualización de dispositivo: ' . $data['nombre']);
             $this->jsonResponse(['success' => true, 'message' => 'Dispositivo actualizado correctamente']);
         } else {

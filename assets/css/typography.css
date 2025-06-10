@@ -1,0 +1,185 @@
+/* Tipografía y jerarquía centralizada para todo el proyecto */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-main: 'Poppins', 'Inter', 'Nunito', 'Roboto', 'Open Sans', Arial, sans-serif;
+    --font-size-base: 1rem;        /* 16px */
+    --font-size-h1: 2rem;          /* 32px */
+    --font-size-h2: 1.5rem;        /* 24px */
+    --font-size-h3: 1.25rem;       /* 20px */
+    --font-size-h4: 1.25rem;       /* 20px */
+    --font-size-h5: 1.1rem;        /* 17.6px */
+    --font-size-h6: 1rem;          /* 16px */
+    --font-size-lg: 1.125rem;      /* 18px */
+    --font-size-md: 1rem;          /* 16px */
+    --font-size-sm: 0.875rem;      /* 14px */
+    --font-size-xs: 0.75rem;       /* 12px */
+}
+
+body, button, input, select, textarea {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-base);
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .title-h1 {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    margin-top: 24px;
+    margin-bottom: 0.5em;
+}
+h2, .title-h2 {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-h2);
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+h3, .title-h3 {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-h3);
+    font-weight: 500;
+    margin-bottom: 0.4em;
+}
+h4, .title-h4 {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-h4);
+    font-weight: 500;
+    margin-bottom: 0.3em;
+}
+h5, .title-h5 {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-h5);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+}
+h6, .title-h6 {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-h6);
+    font-weight: 500;
+    margin-bottom: 0.2em;
+}
+
+.text-lg { font-size: var(--font-size-lg); }
+.text-md { font-size: var(--font-size-md); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-xs { font-size: var(--font-size-xs); }
+
+.bold, .fw-bold { font-weight: 700 !important; }
+.semibold, .fw-semibold { font-weight: 600 !important; }
+.normal, .fw-normal { font-weight: 400 !important; }
+
+small, .small, .text-sm, .text-xs {
+    font-family: var(--font-main) !important;
+    opacity: 0.85;
+}
+
+/* Botones y elementos interactivos */
+button, .btn {
+    font-family: var(--font-main) !important;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+/* Eliminar reglas innecesarias o solapadas */
+/* No se definen estilos de color, sombra, ni layout aquí. Solo tipografía y tamaños. */
+
+/* Botón flotante tipo FAB para controles de mapa */
+.btn-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  color: #2563eb;
+  border: 1.5px solid #2563eb;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 0 8px 0;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.12s;
+  outline: none;
+  position: relative;
+  z-index: 10;
+}
+.btn-fab:hover, .btn-fab:focus {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+  transform: translateY(-2px) scale(1.06);
+}
+
+/* Popover de rangos de historial */
+.popover-rangos {
+  display: none;
+  position: absolute;
+  top: 44px;
+  right: 0;
+  min-width: 120px;
+  background: #fff;
+  border: 1.5px solid #2563eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.13);
+  padding: 8px 10px;
+  z-index: 100;
+  flex-direction: column;
+  gap: 6px;
+}
+.popover-rangos.show {
+  display: flex;
+}
+
+.btn-rango-pop {
+  width: 100%;
+  padding: 5px 0;
+  border: none;
+  border-radius: 8px;
+  background: #f3f6fa;
+  color: #2563eb;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-rango-pop:hover, .btn-rango-pop:focus {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Ajuste para el contenedor de controles flotantes en el mapa */
+.leaflet-control.custom-map-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.dashboard-compact {
+    margin-top: 24px;
+}
+
+table th, table td {
+    padding: 1rem;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.table, .table th, .table td {
+    font-size: 0.95rem !important;
+    font-family: var(--font-main) !important;
+}
+.search-input, .filter-select {
+    font-size: 0.95rem !important;
+    font-family: var(--font-main) !important;
+} 

@@ -24,10 +24,10 @@
                     </div>
                     
                     <div class="mt-4">
-                        <a href="<?= BASE_URL ?>mascotas/edit/<?= $mascota['id'] ?>" class="btn btn-primary">
+                        <a href="<?= BASE_URL ?>mascotas/edit/<?= $mascota['id_mascota'] ?>" class="btn btn-primary">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <button onclick="deleteMascota(<?= $mascota['id'] ?>)" class="btn btn-danger">
+                        <button onclick="deleteMascota(<?= $mascota['id_mascota'] ?>)" class="btn btn-danger">
                             <i class="fas fa-trash"></i> Eliminar
                         </button>
                     </div>
@@ -40,7 +40,7 @@
             <div class="card shadow-lg border-0 rounded-lg mt-5">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="font-weight-light my-4">Dispositivos Asociados</h3>
-                    <a href="<?= BASE_URL ?>dispositivos/create/<?= $mascota['id'] ?>" class="btn btn-primary">
+                    <a href="<?= BASE_URL ?>dispositivos/create/<?= $mascota['id_mascota'] ?>" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Asociar Dispositivo
                     </a>
                 </div>
@@ -143,7 +143,7 @@
                 <h5 class="modal-title">Agregar Registro Médico</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id="addHistorialForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>mascotas/addHistorial/<?= $mascota['id'] ?>')" enctype="multipart/form-data">
+            <form id="addHistorialForm" onsubmit="return handleFormSubmit(this, '<?= BASE_URL ?>mascotas/addHistorial/<?= $mascota['id_mascota'] ?>')" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="tipo" class="form-label">Tipo de Registro</label>

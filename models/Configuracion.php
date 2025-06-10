@@ -7,7 +7,7 @@ class Configuracion extends Model {
     }
 
     public function getConfiguracion() {
-        $sql = "SELECT * FROM configuracion WHERE id = 1";
+        $sql = "SELECT * FROM configuracion WHERE id_configuracion = 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,7 +25,7 @@ class Configuracion extends Model {
                 notificaciones_push = :notificaciones_push,
                 tema_oscuro = :tema_oscuro,
                 fecha_actualizacion = NOW()
-                WHERE id = 1";
+                WHERE id_configuracion = 1";
 
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($data);

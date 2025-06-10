@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../core/Database.php';
 
 /**
  * Verifica si un usuario tiene un permiso específico
@@ -11,11 +11,11 @@ function tienePermiso($usuario_id, $permiso_codigo) {
     $db = Database::getInstance();
     $sql = "SELECT COUNT(*) as tiene_permiso 
             FROM usuarios u 
-            JOIN roles r ON u.rol_id = r.id 
-            JOIN roles_permisos rp ON r.id = rp.rol_id 
-            JOIN permisos p ON rp.permiso_id = p.id 
-            WHERE u.id = ? AND p.codigo = ?";
-    $stmt = $db->prepare($sql);
+            JOIN roles r ON u.rol_id = r.id_rol 
+            JOIN roles_permisos rp ON r.id_rol = rp.rol_id 
+            JOIN permisos p ON rp.permiso_id = p.id_permiso 
+            WHERE u.id_usuario = ? AND p.codigo = ?";
+    $stmt = $db->getConnection()->prepare($sql);
     $stmt->execute([$usuario_id, $permiso_codigo]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row && $row['tiene_permiso'] > 0;
@@ -27,20 +27,25 @@ function tienePermiso($usuario_id, $permiso_codigo) {
  * @return array Array con los códigos de los permisos
  */
 function obtenerPermisosUsuario($usuario_id) {
-    $db = Database::getInstance();
-    $sql = "SELECT p.codigo 
-            FROM usuarios u 
-            JOIN roles r ON u.rol_id = r.id 
-            JOIN roles_permisos rp ON r.id = rp.rol_id 
-            JOIN permisos p ON rp.permiso_id = p.id 
-            WHERE u.id = ?";
-    $stmt = $db->prepare($sql);
-    $stmt->execute([$usuario_id]);
-    $permisos = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $permisos[] = $row['codigo'];
+    try {
+        $db = Database::getInstance();
+        $sql = "SELECT p.codigo 
+                FROM usuarios u 
+                JOIN roles r ON u.rol_id = r.id_rol 
+                JOIN roles_permisos rp ON r.id_rol = rp.rol_id 
+                JOIN permisos p ON rp.permiso_id = p.id_permiso 
+                WHERE u.id_usuario = :usuario_id";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute(['usuario_id' => $usuario_id]);
+        $permisos = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $permisos[] = $row['codigo'];
+        }
+        return $permisos;
+    } catch (Exception $e) {
+        error_log("Error al obtener permisos del usuario: " . $e->getMessage());
+        return [];
     }
-    return $permisos;
 }
 
 /**

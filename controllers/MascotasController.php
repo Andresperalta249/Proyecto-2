@@ -24,16 +24,20 @@ class MascotasController extends Controller {
             $usuarios = $usuariosModel->getActiveUsers();
             
             if ($puedeVerTodos) {
-                $mascotas = $this->mascotaModel->findAll();
+                $mascotas = $this->mascotaModel->getMascotasConDispositivo();
             } else {
-                $mascotas = $this->mascotaModel->getMascotasByUser($propietario_id);
+                $mascotas = $this->mascotaModel->getMascotasConDispositivo(); // Para todos, ya que el método filtra por usuario si es necesario
             }
+            error_log('Mascotas obtenidas: ' . print_r($mascotas, true));
             
-            $title = 'Mascotas';
+            $title = 'Administrador de mascotas';
             $content = $this->render('mascotas/index', [
                 'mascotas' => $mascotas,
                 'usuarios' => $usuarios
             ]);
+            $GLOBALS['content'] = $content;
+            $GLOBALS['title'] = $title;
+            $GLOBALS['menuActivo'] = 'mascotas';
             require_once 'views/layouts/main.php';
         } catch (Exception $e) {
             $title = 'Error';
@@ -41,6 +45,9 @@ class MascotasController extends Controller {
                 'error' => $e->getMessage(),
                 'usuarios' => []
             ]);
+            $GLOBALS['content'] = $content;
+            $GLOBALS['title'] = $title;
+            $GLOBALS['menuActivo'] = 'mascotas';
             require_once 'views/layouts/main.php';
         }
     }
@@ -487,21 +494,21 @@ class MascotasController extends Controller {
             exit;
         }
 
-        // Obtener el ID de la mascota de la URL o del POST
+        // Obtener el ID de la mascota de la URL o del GET
         $id = $id ?? $_GET['id'] ?? null;
-        
+        $usuariosModel = $this->loadModel('User');
+        $usuarios = $usuariosModel->getActiveUsers();
+
         if (!$id) {
-            header('Content-Type: application/json');
-            http_response_code(400);
-            echo json_encode([
-                'success' => false,
-                'error' => 'ID de mascota no proporcionado.'
-            ]);
+            // Crear nueva mascota: renderizar el formulario vacío
+            echo $this->render('mascotas/edit_modal', [
+                'mascota' => [],
+                'usuarios' => $usuarios
+            ], true);
             exit;
         }
 
         $mascota = $this->mascotaModel->findById($id);
-        
         if (!$mascota) {
             header('Content-Type: application/json');
             http_response_code(404);
@@ -528,8 +535,6 @@ class MascotasController extends Controller {
         }
 
         $dispositivos = $this->dispositivoModel->getDispositivosByMascota($id);
-        $usuariosModel = $this->loadModel('User');
-        $usuarios = $usuariosModel->getActiveUsers();
 
         // Renderizar el formulario de edición
         echo $this->render('mascotas/edit_modal', [

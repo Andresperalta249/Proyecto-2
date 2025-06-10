@@ -1,6 +1,10 @@
 <?php
 // Eliminar encabezados y subtítulos, incluyendo el include del header_titulo.php
+$subtitulo = isset($subtitulo) ? $subtitulo : 'Gestiona, busca y administra los dispositivos IoT del sistema.';
 ?>
+<p class="subtitle text-md" style="margin-top: 0; margin-bottom: 0;">
+  <?= htmlspecialchars($subtitulo) ?>
+</p>
 <!-- Botón flotante para agregar dispositivo -->
 <?php if (verificarPermiso('crear_dispositivos')): ?>
 <button class="fab-crear" id="btnNuevoDispositivoFlotante" data-bs-toggle="modal" data-bs-target="#modalDispositivo">

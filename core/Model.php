@@ -16,34 +16,21 @@ class Model {
 
     protected function query($sql, $params = []) {
         try {
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->execute($params);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             $this->lastError = $e->getMessage();
             error_log("Error en la consulta SQL: " . $e->getMessage() . "\nSQL: " . $sql . "\nParams: " . print_r($params, true));
-            return false;
+            throw $e;
         }
     }
 
     public function find($id) {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-        $result = $this->query($sql, [':id' => $id]);
-        return $result ? $result[0] : null;
-    }
-
-    public function findAll($conditions = []) {
-        $sql = "SELECT * FROM {$this->table}";
-        
-        if (!empty($conditions)) {
-            $whereClauses = [];
-            foreach ($conditions as $key => $value) {
-                $whereClauses[] = "$key = :$key";
-            }
-            $sql .= " WHERE " . implode(' AND ', $whereClauses);
-        }
-        
-        return $this->query($sql, $conditions);
+        $idField = ($this->table === 'mascotas') ? 'id_mascota' : (($this->table === 'dispositivos') ? 'id_dispositivo' : 'id');
+        $sql = "SELECT * FROM {$this->table} WHERE $idField = :$idField";
+        $result = $this->query($sql, [":$idField" => $id])->fetch();
+        return $result ?: null;
     }
 
     public function create($data) {
@@ -56,9 +43,9 @@ class Model {
             error_log("SQL de inserción: " . $sql);
             error_log("Datos a insertar: " . print_r($data, true));
             
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->getConnection()->prepare($sql);
             if (!$stmt) {
-                $error = $this->db->errorInfo();
+                $error = $this->db->getConnection()->errorInfo();
                 error_log("Error al preparar la consulta: " . print_r($error, true));
                 throw new PDOException("Error al preparar la consulta: " . $error[2]);
             }
@@ -70,12 +57,12 @@ class Model {
                 throw new PDOException("Error al ejecutar la consulta: " . $error[2]);
             }
             
-            return $this->db->lastInsertId();
+            return $this->db->getConnection()->lastInsertId();
         } catch (PDOException $e) {
             $this->lastError = $e->getMessage();
             error_log("Error al crear registro: " . $e->getMessage());
             error_log("Stack trace: " . $e->getTraceAsString());
-            return false;
+            throw $e;
         }
     }
 
@@ -84,28 +71,27 @@ class Model {
         foreach ($data as $key => $value) {
             $setClauses[] = "$key = :$key";
         }
-        
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE id = :id";
-        $data['id'] = $id;
-        
+        $idField = ($this->table === 'mascotas') ? 'id_mascota' : (($this->table === 'dispositivos') ? 'id_dispositivo' : 'id');
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE $idField = :$idField";
+        $data[$idField] = $id;
         try {
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->getConnection()->prepare($sql);
             return $stmt->execute($data);
         } catch (PDOException $e) {
             error_log("Error al actualizar registro: " . $e->getMessage());
-            return false;
+            throw $e;
         }
     }
 
     public function delete($id) {
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
-        
+        $idField = ($this->table === 'mascotas') ? 'id_mascota' : (($this->table === 'dispositivos') ? 'id_dispositivo' : 'id');
+        $sql = "DELETE FROM {$this->table} WHERE $idField = :$idField";
         try {
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute([':id' => $id]);
+            $stmt = $this->db->getConnection()->prepare($sql);
+            return $stmt->execute([":$idField" => $id]);
         } catch (PDOException $e) {
             error_log("Error al eliminar registro: " . $e->getMessage());
-            return false;
+            throw $e;
         }
     }
 

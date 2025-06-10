@@ -19,7 +19,10 @@ class ConfiguracionController extends Controller {
         }
 
         $configuracion = $this->configuracionModel->getConfiguracion();
-        $this->render('configuracion/index', ['configuracion' => $configuracion]);
+        $GLOBALS['content'] = $this->render('configuracion/index', ['configuracion' => $configuracion]);
+        $GLOBALS['title'] = 'Configuración del Sistema';
+        $GLOBALS['menuActivo'] = 'configuracion';
+        require_once 'views/layouts/main.php';
     }
 
     public function updateAction() {

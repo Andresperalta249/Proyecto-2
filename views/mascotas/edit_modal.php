@@ -1,5 +1,5 @@
 <form id="formMascota" autocomplete="off">
-    <input type="hidden" name="id" value="<?= htmlspecialchars($mascota['id'] ?? '') ?>">
+    <input type="hidden" name="id_mascota" value="<?= htmlspecialchars($mascota['id_mascota'] ?? '') ?>">
     <div class="mb-3">
         <label for="nombre" class="form-label">Nombre</label>
         <input type="text" class="form-control" id="nombre" name="nombre" value="<?= htmlspecialchars($mascota['nombre'] ?? '') ?>" required>
@@ -39,11 +39,11 @@
     if ($esAdmin || $puedeEditarCualquiera): 
     ?>
     <div class="mb-3">
-        <label for="propietario_id" class="form-label">Propietario</label>
-        <select class="form-select select2" id="propietario_id" name="propietario_id" required>
+        <label for="usuario_id" class="form-label">Propietario</label>
+        <select class="form-select select2" id="usuario_id" name="usuario_id" required>
             <option value="">Seleccione un propietario</option>
             <?php foreach ($usuarios as $usuario): ?>
-                <option value="<?= $usuario['id'] ?>" <?= ($mascota['propietario_id'] ?? '') == $usuario['id'] ? 'selected' : '' ?>><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
+                <option value="<?= $usuario['id_usuario'] ?>" <?= ($mascota['usuario_id'] ?? '') == $usuario['id_usuario'] ? 'selected' : '' ?>><?= htmlspecialchars($usuario['nombre']) ?> (<?= htmlspecialchars($usuario['email']) ?>)</option>
             <?php endforeach; ?>
         </select>
     </div>
