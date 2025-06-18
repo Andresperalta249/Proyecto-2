@@ -3,26 +3,26 @@ $roles = $this->model->getAll();
 ?>
 
 <div class="table-responsive">
-    <table class="table" id="tablaRoles">
+    <table class="table tabla-app" id="tablaRoles">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Estado</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
+                <th class="fw-medium">ID</th>
+                <th class="fw-medium">Nombre</th>
+                <th class="fw-medium">Estado</th>
+                <th class="fw-medium">Descripción</th>
+                <th class="fw-medium">Acciones</th>
             </tr>
         </thead>
         <tbody id="tbodyRoles">
             <?php if (empty($roles)): ?>
             <tr>
-                <td colspan="5">No hay roles disponibles</td>
+                <td colspan="5" class="text-center">No hay roles disponibles</td>
             </tr>
             <?php else: ?>
                 <?php foreach ($roles as $rol): ?>
                 <tr>
-                    <td><?= $rol['id_rol'] ?></td>
-                    <td><?= htmlspecialchars($rol['nombre']) ?></td>
+                    <td class="text-md"><?= $rol['id_rol'] ?></td>
+                    <td class="text-md"><?= htmlspecialchars($rol['nombre']) ?></td>
                     <td>
                         <?php if ($rol['id_rol'] > 3 && verificarPermiso('roles_editar')): ?>
                         <label class="status-switch">
@@ -30,22 +30,22 @@ $roles = $this->model->getAll();
                             <span class="switch-slider"></span>
                         </label>
                         <?php else: ?>
-                        <span><?= ucfirst($rol['estado']) ?></span>
+                        <span class="text-md"><?= ucfirst($rol['estado']) ?></span>
                         <?php endif; ?>
                     </td>
-                    <td><?= htmlspecialchars($rol['descripcion'] ?? 'Sin descripción') ?></td>
+                    <td class="text-md"><?= htmlspecialchars($rol['descripcion'] ?? 'Sin descripción') ?></td>
                     <td data-label="Acciones">
                         <div class="action-buttons">
-                            <button class="btn-action btn-edit" title="Ver permisos" onclick="verPermisos(<?= $rol['id_rol'] ?>)">
+                            <button class="btn-accion btn-info" title="Ver permisos" onclick="verPermisos(<?= $rol['id_rol'] ?>)">
                                 <i class="fas fa-eye"></i>
                             </button>
                             <?php if (verificarPermiso('roles_editar')): ?>
-                            <button class="btn-action btn-edit" data-id="<?= $rol['id_rol'] ?>" title="Editar">
+                            <button class="btn-accion btn-info" data-id="<?= $rol['id_rol'] ?>" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <?php endif; ?>
                             <?php if (verificarPermiso('roles_eliminar') && $rol['id_rol'] > 3): ?>
-                            <button class="btn-action btn-delete" data-id="<?= $rol['id_rol'] ?>" title="Eliminar">
+                            <button class="btn-accion btn-danger" data-id="<?= $rol['id_rol'] ?>" title="Eliminar">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                             <?php endif; ?>

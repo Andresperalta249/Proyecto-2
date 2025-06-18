@@ -1,0 +1,53 @@
+/* =============================================
+   ESTILOS DE ACORDEÓN
+   ============================================= */
+
+.accordion-item {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--spacing-2);
+    box-shadow: var(--shadow-sm);
+}
+
+.accordion-header {
+    margin-bottom: 0;
+}
+
+.accordion-button {
+    background-color: var(--color-gray-100);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-3) var(--spacing-4);
+    color: var(--color-gray-700);
+    border: none;
+    border-radius: var(--border-radius-lg);
+    width: 100%;
+    text-align: left;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.accordion-button:hover {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-900);
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.125);
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+    outline: none;
+}
+
+.accordion-body {
+    background-color: var(--color-white);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-top: var(--border-width) solid var(--color-gray-200);
+} 

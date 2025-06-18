@@ -59,7 +59,7 @@ $puedeAsignarUsuario = verificarPermiso('ver_todos_dispositivo');
                             </div>
                         </div>
                         <div class="form-floating mb-3">
-                            <textarea class="form-control" id="descripcion" name="descripcion" style="height: 100px"></textarea>
+                            <textarea class="form-control form-control--textarea-height" id="descripcion" name="descripcion"></textarea>
                             <label for="descripcion">Descripción</label>
                         </div>
                         <div class="mt-4 mb-0">

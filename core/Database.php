@@ -33,6 +33,24 @@ class Database {
         return $this->connection;
     }
 
+    public function query($sql) {
+        try {
+            $stmt = $this->connection->prepare($sql);
+            return $stmt;
+        } catch (PDOException $e) {
+            error_log("Error en la consulta SQL: " . $e->getMessage());
+            throw new Exception("Error en la consulta SQL");
+        }
+    }
+
+    public function prepare($sql) {
+        return $this->connection->prepare($sql);
+    }
+
+    public function lastInsertId() {
+        return $this->connection->lastInsertId();
+    }
+
     // Prevenir la clonación del objeto
     private function __clone() {}
 

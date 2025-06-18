@@ -1,0 +1,216 @@
+/* =============================================
+   ESTILOS DE FORMULARIOS
+   ============================================= */
+
+/* Campos de texto y selectores */
+.form-control {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-base);
+    color: var(--color-gray-700);
+    background-color: var(--color-white);
+    background-clip: padding-box;
+    border: var(--border-width) solid var(--color-gray-300);
+    appearance: none;
+    border-radius: var(--border-radius);
+    transition: var(--transition-base);
+}
+
+.form-control:focus {
+    color: var(--color-gray-700);
+    background-color: var(--color-white);
+    border-color: var(--color-auth-primary);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-auth-primary-rgb), .15);
+}
+
+.form-control::placeholder {
+    color: var(--color-gray-500);
+    opacity: 1;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: var(--color-gray-100);
+    opacity: 1;
+}
+
+.form-control--textarea-height {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: var(--spacing-4);
+}
+
+.form-label {
+    margin-bottom: var(--spacing-2);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-900);
+    display: block;
+}
+
+/* Checkboxes y radios */
+.form-check {
+    display: block;
+    min-height: var(--line-height-base);
+    padding-left: 1.5em;
+    margin-bottom: var(--spacing-2);
+}
+
+.form-check-input {
+    float: left;
+    margin-left: -1.5em;
+}
+
+.form-check-input[type="checkbox"] {
+    border-radius: 0.25em;
+}
+
+.form-check-input[type="radio"] {
+    border-radius: 50%;
+}
+
+.form-check-input:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.form-check-input:focus {
+    border-color: var(--color-primary);
+    outline: 0;
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.form-check-label {
+    color: var(--color-gray-700);
+}
+
+/* Selectores personalizados (si aplica) */
+.filter-select {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-base);
+    color: var(--color-gray-700);
+    background-color: var(--color-white);
+    border: var(--border-width) solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-3) center;
+    background-size: 1em 1em;
+    transition: var(--transition-base);
+}
+
+.filter-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+    outline: none;
+}
+
+/* Contenedor de búsqueda y filtros */
+.search-filters {
+    display: flex;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    padding: var(--spacing-2) var(--spacing-3);
+    border: var(--border-width) solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: var(--transition-base);
+}
+
+.search-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+    outline: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-filters {
+        flex-direction: column;
+    }
+
+    .search-input,
+    .filter-select {
+        width: 100%;
+    }
+}
+
+/* =============================================
+   ESTILOS DE INTERRUPTOR DE ESTADO (SWITCH)
+   ============================================= */
+.status-switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+}
+
+.status-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-gray-300);
+    transition: var(--transition-base);
+    border-radius: 22px;
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--color-white);
+    transition: var(--transition-base);
+    border-radius: 50%;
+}
+
+.status-switch input:checked + .switch-slider {
+    background-color: var(--color-success);
+}
+
+.status-switch input:focus + .switch-slider {
+    box-shadow: 0 0 0 3px var(--color-success-light);
+}
+
+.status-switch input:checked + .switch-slider:before {
+    transform: translateX(16px);
+}
+
+/* Round sliders */
+.switch-slider.round {
+    border-radius: 22px;
+}
+
+.switch-slider.round:before {
+    border-radius: 50%;
+} 

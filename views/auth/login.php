@@ -4,43 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - PetMonitoring IoT</title>
-    <link rel="stylesheet" href="/proyecto-2/assets/css/device-monitor.css">
-    <link rel="stylesheet" href="/proyecto-2/assets/css/typography.css">
-    <link rel="stylesheet" href="/proyecto-2/assets/css/sidebar.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Base CSS (Variables, Reset) -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/base/variables.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/base/reset.css">
+
+    <!-- Componentes CSS (Forms, Buttons) -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/components/forms.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/components/buttons.css">
+
+    <!-- Páginas CSS (Auth) -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/pages/auth-pages.css">
 </head>
 <body>
     <!-- Login Moderno PetMonitoring IoT -->
-    <div class="container d-flex align-items-center justify-content-center min-vh-100" style="background: #f6f8fc;">
-        <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; width: 100%;">
-            <div class="text-center mb-4">
-                <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo mascota" style="width: 80px;">
-                <h2 class="mt-3 mb-1" style="font-weight: 700; color: #0D47A1;">PetMonitoring IoT</h2>
-                <p class="text-muted mb-0">¡Bienvenido! Ingresa para continuar</p>
-            </div>
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger text-center py-2 mb-3"><?php echo $error; ?></div>
-            <?php endif; ?>
-            <form id="loginForm" method="POST" autocomplete="off" novalidate>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Correo electrónico" required autofocus>
-                    <label for="email"><i class="fas fa-envelope me-2"></i>Correo electrónico</label>
-                    <div class="invalid-feedback" id="emailError">Ingrese un correo válido</div>
-                </div>
-                <div class="form-floating mb-3 position-relative">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required>
-                    <label for="password"><i class="fas fa-lock me-2"></i>Contraseña</label>
-                    <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor:pointer;" id="togglePassword">
-                        <i class="fas fa-eye"></i>
-                    </span>
-                    <div class="invalid-feedback" id="passwordError">Ingrese su contraseña</div>
-                </div>
-                <button type="submit" class="btn btn-primary w-100 mb-2" style="font-weight:600;">Iniciar sesión</button>
-                <div class="d-flex justify-content-between">
-                    <a href="<?= APP_URL ?>/auth/forgot-password" class="small">¿Olvidaste tu contraseña?</a>
-                    <a href="<?= APP_URL ?>/auth/register" class="small">Regístrate</a>
-                </div>
-            </form>
+    <div class="card shadow-lg border-0 rounded-4 p-4 auth-card">
+        <div class="text-center mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo mascota" class="auth-logo">
+            <h2 class="mt-3 mb-1 auth-title">PetMonitoring IoT</h2>
+            <p class="text-muted mb-0">¡Bienvenido! Ingresa para continuar</p>
         </div>
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger text-center py-2 mb-3"><?php echo $error; ?></div>
+        <?php endif; ?>
+        <form id="loginForm" method="POST" autocomplete="off" novalidate>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Correo electrónico" required autofocus autocomplete="username">
+                <label for="email"><i class="fas fa-envelope me-2"></i>Correo electrónico</label>
+                <div class="invalid-feedback" id="emailError">Ingrese un correo válido</div>
+            </div>
+            <div class="form-floating mb-3 position-relative">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
+                <label for="password"><i class="fas fa-lock me-2"></i>Contraseña</label>
+                <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password-icon" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </span>
+                <div class="invalid-feedback" id="passwordError">Ingrese su contraseña</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-2 font-weight-semibold">Iniciar sesión</button>
+            <div class="d-flex justify-content-between">
+                <a href="<?= APP_URL ?>/auth/forgot-password" class="small">¿Olvidaste tu contraseña?</a>
+                <a href="<?= APP_URL ?>/auth/register" class="small">Regístrate</a>
+            </div>
+        </form>
     </div>
 
     <script>
@@ -57,25 +68,21 @@
 
         // Validación en tiempo real
         const emailInput = document.getElementById('email');
-        const emailError = document.getElementById('emailError');
         emailInput.addEventListener('input', function() {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!re.test(this.value)) {
                 this.classList.add('is-invalid');
-                emailError.style.display = 'block';
             } else {
                 this.classList.remove('is-invalid');
-                emailError.style.display = 'none';
             }
         });
-        const passwordError = document.getElementById('passwordError');
+
+        const passwordInput = document.getElementById('password');
         passwordInput.addEventListener('input', function() {
             if (!this.value) {
                 this.classList.add('is-invalid');
-                passwordError.style.display = 'block';
             } else {
                 this.classList.remove('is-invalid');
-                passwordError.style.display = 'none';
             }
         });
 
@@ -93,14 +100,5 @@
         }
     });
     </script>
-    <style>
-    body { background: #f6f8fc !important; }
-    .card { border-radius: 1.5rem !important; transition: none !important; }
-    .card:hover, .card:focus, .card:active { box-shadow: 0 2px 12px rgba(13,71,161,0.07) !important; transform: none !important; }
-    .form-control:focus { border-color: #0D47A1; box-shadow: 0 0 0 0.2rem rgba(13,71,161,.15); }
-    .btn-primary { background: #0D47A1; border: none; }
-    .btn-primary:hover { background: #1565C0; }
-    #togglePassword i { color: #888; }
-    </style>
 </body>
 </html> 

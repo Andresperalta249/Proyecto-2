@@ -1,0 +1,125 @@
+/* Reset CSS */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    min-width: 0; /* Asegura que ningún elemento imponga un ancho mínimo */
+}
+
+html {
+    height: 100vh; /* HTML ocupa el 100% de la altura del viewport */
+    width: 100%; /* Cambiado de 100vw a 100% para evitar scroll horizontal */
+    /* overflow-x: hidden; Oculta cualquier scroll horizontal en el html */
+    /* overflow-y: hidden; Oculta cualquier scroll vertical en el html */
+    font-size: 14px; /* Base para 1rem */
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+body {
+    height: 100%; /* Body ocupa el 100% del HTML (100vh) */
+    width: 100%; /* Cambiado de 100vw a 100% para evitar scroll horizontal */
+    display: flex; /* Convierte el body en un contenedor flex para el sidebar y el contenido principal */
+    /* overflow-x: hidden; Controla el scrollbar horizontal del navegador de forma global */
+    /* overflow-y: hidden; Controla el scrollbar vertical del navegador de forma global */
+    margin: 0;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-normal);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-base);
+    color: var(--color-gray-900);
+    text-align: left;
+    background-color: var(--color-white);
+    min-width: 0; /* Asegura que body no imponga un ancho mínimo */
+}
+
+/* Eliminar márgenes y padding por defecto */
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Eliminar estilos de lista por defecto */
+ul, ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Eliminar decoración de enlaces por defecto */
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    background-color: transparent;
+}
+
+a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Eliminar estilos de botones por defecto */
+button {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: normal;
+    -webkit-font-smoothing: inherit;
+    -moz-osx-font-smoothing: inherit;
+    -webkit-appearance: none;
+}
+
+/* Eliminar estilos de inputs por defecto */
+input,
+textarea,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+}
+
+/* Eliminar estilos de tablas por defecto */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Eliminar estilos de imágenes por defecto */
+img {
+    max-width: 100%;
+    height: auto;
+    border-style: none;
+}
+
+/* Eliminar estilos de formularios por defecto */
+fieldset {
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+/* Eliminar estilos de detalles por defecto */
+details {
+    display: block;
+}
+
+/* Eliminar estilos de summary por defecto */
+summary {
+    display: list-item;
+}
+
+/* Eliminar estilos de template por defecto */
+template {
+    display: none;
+}
+
+/* Eliminar estilos de hidden por defecto */
+[hidden] {
+    display: none !important;
+} 

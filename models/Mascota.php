@@ -89,15 +89,6 @@ class Mascota extends Model {
         return $this->query($sql, [':usuario_id' => $usuario_id]);
     }
 
-    public function getMascotasConAlertas($usuario_id) {
-        $sql = "SELECT DISTINCT m.* 
-                FROM {$this->table} m 
-                JOIN dispositivos d ON m.id_mascota = d.mascota_id 
-                JOIN alertas a ON d.id = a.dispositivo_id 
-                WHERE m.usuario_id = :usuario_id AND a.leida = 0";
-        return $this->query($sql, [':usuario_id' => $usuario_id]);
-    }
-
     public function getMascotasPorVeterinario($veterinario_id) {
         $sql = "SELECT m.*, u.nombre as dueno_nombre 
                 FROM {$this->table} m 
@@ -167,19 +158,6 @@ class Mascota extends Model {
                 LEFT JOIN alertas a ON d.id = a.dispositivo_id AND a.leida = 0
                 WHERE m.usuario_id = :usuario_id
                 GROUP BY m.id_mascota";
-        return $this->query($sql, [':usuario_id' => $usuario_id]);
-    }
-
-    public function getMascotasPorTipoAlerta($usuario_id) {
-        $sql = "SELECT 
-                    m.*,
-                    a.tipo as tipo_alerta,
-                    COUNT(a.id) as total_alertas
-                FROM {$this->table} m 
-                JOIN dispositivos d ON m.id_mascota = d.mascota_id 
-                JOIN alertas a ON d.id = a.dispositivo_id 
-                WHERE m.usuario_id = :usuario_id AND a.leida = 0
-                GROUP BY m.id_mascota, a.tipo";
         return $this->query($sql, [':usuario_id' => $usuario_id]);
     }
 
@@ -288,5 +266,102 @@ class Mascota extends Model {
                 ORDER BY m.nombre ASC";
         return $this->query($sql);
     }
+
+    /**
+     * Obtiene mascotas filtradas y paginadas para DataTables.
+     * @param array $params Parámetros de DataTables (draw, start, length, search, order, columns)
+     * @param int|null $usuario_id ID del usuario para filtrar por sus propias mascotas
+     * @param bool $verTodas Si se tienen permisos para ver todas las mascotas (admin)
+     * @return array
+     */
+    public function getMascotasFiltradas(array $params, ?int $usuario_id = null, bool $verTodas = false): array {
+        $draw = $params['draw'] ?? 0;
+        $start = $params['start'] ?? 0;
+        $length = $params['length'] ?? 10;
+        $searchValue = $params['search']['value'] ?? '';
+        $orderColumnIndex = $params['order'][0]['column'] ?? 0;
+        $orderDir = $params['order'][0]['dir'] ?? 'asc';
+        $columns = $params['columns'] ?? [];
+
+        // Nombres de columna válidos para ordenar (debe coincidir con las columnas de tu tabla y DataTables)
+        $columnMap = [
+            0 => 'm.id_mascota',
+            1 => 'm.nombre',
+            2 => 'm.especie',
+            3 => 'm.tamano',
+            4 => 'm.genero',
+            5 => 'u.nombre', // propietario_nombre
+            6 => 'm.fecha_nacimiento', // para calcular edad
+            7 => 'm.estado',
+            // 8 es Acciones, no es una columna de DB
+        ];
+
+        $orderColumn = $columnMap[$orderColumnIndex] ?? 'm.id_mascota';
+
+        // Consulta base para obtener las mascotas
+        $sql = "SELECT m.*, u.nombre as propietario_nombre
+                FROM {$this->table} m
+                LEFT JOIN usuarios u ON m.usuario_id = u.id_usuario";
+        $countSql = "SELECT COUNT(m.id_mascota) FROM {$this->table} m LEFT JOIN usuarios u ON m.usuario_id = u.id_usuario";
+
+        $whereClauses = [];
+        $queryParams = [];
+
+        // Filtro por usuario si no es admin o no tiene permiso de ver todas
+        if (!$verTodas && $usuario_id !== null) {
+            $whereClauses[] = "m.usuario_id = :usuario_id";
+            $queryParams[':usuario_id'] = $usuario_id;
+        }
+
+        // Búsqueda global (si hay un término de búsqueda)
+        if (!empty($searchValue)) {
+            $whereClauses[] = "(LOWER(m.nombre) LIKE :search1 OR 
+                                LOWER(m.especie) LIKE :search2 OR 
+                                LOWER(m.tamano) LIKE :search3 OR
+                                LOWER(m.genero) LIKE :search4 OR
+                                LOWER(u.nombre) LIKE :search5 OR
+                                LOWER(m.estado) LIKE :search6)";
+            $queryParams[':search1'] = '%' . strtolower($searchValue) . '%';
+            $queryParams[':search2'] = '%' . strtolower($searchValue) . '%';
+            $queryParams[':search3'] = '%' . strtolower($searchValue) . '%';
+            $queryParams[':search4'] = '%' . strtolower($searchValue) . '%';
+            $queryParams[':search5'] = '%' . strtolower($searchValue) . '%';
+            $queryParams[':search6'] = '%' . strtolower($searchValue) . '%';
+        }
+
+        // Aplicar WHERE si hay cláusulas
+        if (!empty($whereClauses)) {
+            $sql .= " WHERE " . implode(" AND ", $whereClauses);
+            $countSql .= " WHERE " . implode(" AND ", $whereClauses);
+        }
+
+        // Obtener el total de registros filtrados (después de aplicar filtros de búsqueda)
+        $totalFilteredResult = $this->query($countSql, $queryParams);
+        $totalFiltered = $totalFilteredResult[0]['COUNT(m.id_mascota)'] ?? 0;
+
+        // Añadir ordenamiento y paginación
+        $sql .= " ORDER BY {$orderColumn} {$orderDir} LIMIT :limit OFFSET :start";
+
+        // Ejecutar la consulta con bindValue para LIMIT y OFFSET
+        $stmt = $this->db->getConnection()->prepare($sql);
+        foreach ($queryParams as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->bindValue(':limit', (int)$length, PDO::PARAM_INT);
+        $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+        $stmt->execute();
+        $mascotas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Obtener el total de registros sin filtrar (para recordsTotal de DataTables)
+        $totalRecordsResult = $this->query("SELECT COUNT(*) FROM {$this->table}");
+        $totalRecords = $totalRecordsResult[0]['COUNT(*)'] ?? 0;
+
+        return [
+            'draw' => intval($draw),
+            'recordsTotal' => intval($totalRecords),
+            'recordsFiltered' => intval($totalFiltered),
+            'data' => $mascotas
+        ];
+    }
 }
-?> 
+?>

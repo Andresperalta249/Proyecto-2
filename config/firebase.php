@@ -1,4 +1,17 @@
 <?php
+// Configuración de Firebase
+define('FIREBASE_API_KEY', 'tu-api-key');
+define('FIREBASE_AUTH_DOMAIN', 'tu-proyecto.firebaseapp.com');
+define('FIREBASE_PROJECT_ID', 'tu-proyecto');
+define('FIREBASE_STORAGE_BUCKET', 'tu-proyecto.appspot.com');
+define('FIREBASE_MESSAGING_SENDER_ID', 'tu-sender-id');
+define('FIREBASE_APP_ID', 'tu-app-id');
+define('FIREBASE_MEASUREMENT_ID', 'tu-measurement-id');
+
+// Configuración de la base de datos
+define('FIREBASE_DATABASE_URL', 'https://tu-proyecto.firebaseio.com');
+define('FIREBASE_SERVICE_ACCOUNT', ROOT_PATH . '/config/firebase-service-account.json');
+
 // Configuración de Firebase Cloud Messaging
 define('FCM_SERVER_KEY', 'TU_SERVER_KEY_AQUI'); // Reemplazar con tu Server Key de Firebase
 

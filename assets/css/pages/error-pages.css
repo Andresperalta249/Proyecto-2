@@ -1,0 +1,53 @@
+/* =============================================
+   ESTILOS PARA PÁGINAS DE ERROR (404, 500)
+   ============================================= */
+
+body.error-page-body {
+    background-color: var(--color-gray-50);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-base);
+}
+
+.error-container {
+    padding: var(--spacing-5) 0;
+}
+
+.error-card {
+    background-color: var(--color-white);
+    padding: var(--spacing-6);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+}
+
+.error-image {
+    width: 120px;
+    margin-bottom: var(--spacing-4);
+    opacity: 0.85;
+}
+
+.error-title {
+    font-size: var(--font-size-6xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-3);
+}
+
+.error-subtitle {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--spacing-3);
+}
+
+.error-message {
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-4);
+}
+
+.error-actions .btn {
+    margin-top: var(--spacing-3);
+} 

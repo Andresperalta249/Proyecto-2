@@ -1,0 +1,244 @@
+/* =============================================
+   ESTILOS DEL MONITOR DE DISPOSITIVOS
+   ============================================= */
+
+.device-monitor {
+    padding: var(--spacing-4);
+}
+
+.device-monitor__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-4);
+}
+
+.device-monitor__title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+}
+
+.device-monitor__actions {
+    display: flex;
+    gap: var(--spacing-3);
+}
+
+.device-monitor__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.device-card {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: var(--transition-base);
+}
+
+.device-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.device-card__header {
+    padding: var(--spacing-4);
+    border-bottom: var(--border-width) solid var(--color-gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.device-card__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+}
+
+.device-card__status {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.device-card__status--online {
+    background-color: var(--color-success-light);
+    color: var(--color-success-dark);
+}
+
+.device-card__status--offline {
+    background-color: var(--color-danger-light);
+    color: var(--color-danger-dark);
+}
+
+.device-card__status--warning {
+    background-color: var(--color-warning-light);
+    color: var(--color-warning-dark);
+}
+
+.device-card__body {
+    padding: var(--spacing-4);
+}
+
+.device-card__info {
+    margin-bottom: var(--spacing-4);
+}
+
+.device-card__info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-2);
+}
+
+.device-card__info-label {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.device-card__info-value {
+    color: var(--color-gray-900);
+    font-weight: var(--font-weight-medium);
+}
+
+.device-card__chart {
+    height: 200px;
+    margin-bottom: var(--spacing-4);
+}
+
+.device-card__footer {
+    padding: var(--spacing-4);
+    border-top: var(--border-width) solid var(--color-gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.device-card__actions {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.device-card__action-btn {
+    padding: var(--spacing-2);
+    border-radius: var(--border-radius);
+    color: var(--color-gray-600);
+    transition: var(--transition-base);
+}
+
+.device-card__action-btn:hover {
+    color: var(--color-primary);
+    background-color: var(--color-gray-100);
+}
+
+.device-card__last-update {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-500);
+}
+
+/* Filtros y búsqueda */
+.device-monitor__filters {
+    display: flex;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.device-monitor__search {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.device-monitor__search-input {
+    width: 100%;
+    padding: var(--spacing-2) var(--spacing-3);
+    padding-left: var(--spacing-10);
+    border: var(--border-width) solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: var(--transition-base);
+}
+
+.device-monitor__search-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+    outline: none;
+}
+
+.device-monitor__search-icon {
+    position: absolute;
+    left: var(--spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-500);
+}
+
+.device-monitor__filter-group {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.device-monitor__filter-btn {
+    padding: var(--spacing-2) var(--spacing-3);
+    border: var(--border-width) solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    background-color: var(--color-white);
+    color: var(--color-gray-700);
+    font-size: var(--font-size-sm);
+    transition: var(--transition-base);
+}
+
+.device-monitor__filter-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.device-monitor__filter-btn--active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .device-monitor__grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .device-monitor__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-3);
+    }
+
+    .device-monitor__actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .device-monitor__filters {
+        flex-direction: column;
+    }
+
+    .device-monitor__search {
+        width: 100%;
+    }
+
+    .device-monitor__filter-group {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: var(--spacing-2);
+    }
+
+    .device-monitor__filter-btn {
+        white-space: nowrap;
+    }
+} 

@@ -4,14 +4,19 @@ class MascotasController extends Controller {
     private $mascotaModel;
     private $dispositivoModel;
     private $logModel;
-    private $notificacionModel;
 
     public function __construct() {
         parent::__construct();
+        
+        // Verificar autenticación
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /proyecto-2/auth/login');
+            exit;
+        }
+
         $this->mascotaModel = $this->loadModel('Mascota');
         $this->dispositivoModel = $this->loadModel('Dispositivo');
         $this->logModel = $this->loadModel('Log');
-        $this->notificacionModel = $this->loadModel('Notificacion');
     }
 
     public function indexAction() {
@@ -30,13 +35,17 @@ class MascotasController extends Controller {
             }
             error_log('Mascotas obtenidas: ' . print_r($mascotas, true));
             
-            $title = 'Administrador de mascotas';
+            $title = 'Gestión de Mascotas';
+            $description = 'Administración de mascotas y sus datos en el sistema.';
             $content = $this->render('mascotas/index', [
                 'mascotas' => $mascotas,
-                'usuarios' => $usuarios
+                'usuarios' => $usuarios,
+                'title' => $title,
+                'description' => $description
             ]);
             $GLOBALS['content'] = $content;
             $GLOBALS['title'] = $title;
+            $GLOBALS['description'] = $description;
             $GLOBALS['menuActivo'] = 'mascotas';
             require_once 'views/layouts/main.php';
         } catch (Exception $e) {
@@ -103,13 +112,6 @@ class MascotasController extends Controller {
 
             if ($this->mascotaModel->createMascota($data)) {
                 $this->logModel->crearLog($_SESSION['propietario_id'], 'Creación de mascota: ' . $data['nombre']);
-                $this->notificacionModel->crearNotificacion(
-                    $_SESSION['propietario_id'],
-                    'Nueva Mascota Registrada',
-                    'Has registrado exitosamente a ' . $data['nombre'],
-                    'exito',
-                    BASE_URL . 'mascotas/view/' . $this->mascotaModel->lastInsertId
-                );
                 $this->jsonResponse([
                     'success' => true,
                     'message' => 'Mascota registrada correctamente',
@@ -380,62 +382,41 @@ class MascotasController extends Controller {
             exit;
         }
 
-        // Verificar si es admin/superadmin y tiene permiso para ver todas las mascotas
+        // Parámetros de DataTables
+        $draw = $_POST['draw'] ?? 1;
+        $start = $_POST['start'] ?? 0;
+        $length = $_POST['length'] ?? 10;
+        $searchValue = $_POST['search']['value'] ?? '';
+        $order = $_POST['order'] ?? [];
+        $columns = $_POST['columns'] ?? [];
+
         $esAdmin = in_array($_SESSION['user_role'] ?? 0, [1, 2]);
-        $tienePermiso = function_exists('verificarPermiso') ? verificarPermiso('ver_todas_mascotas') : false;
+        $tienePermisoVerTodas = function_exists('verificarPermiso') ? verificarPermiso('ver_todas_mascotas') : false;
 
-        $filtros = [
-            'nombre' => $_GET['nombre'] ?? '',
-            'especie' => strtolower($_GET['especie'] ?? ''),
-            'estado' => $_GET['estado'] ?? '',
-            'busqueda' => $_GET['busqueda'] ?? '',
-            'offset' => isset($_GET['offset']) ? intval($_GET['offset']) : 0,
-            'limit' => isset($_GET['limit']) ? intval($_GET['limit']) : 20
+        $usuario_id = null;
+        if (!($esAdmin && $tienePermisoVerTodas)) {
+            $usuario_id = $_SESSION['user_id']; // O propietario_id, según tu lógica de sesión
+        }
+
+        $paramsDataTable = [
+            'draw' => $draw,
+            'start' => $start,
+            'length' => $length,
+            'search' => ['value' => $searchValue],
+            'order' => $order,
+            'columns' => $columns
         ];
-        if (!($esAdmin && $tienePermiso)) {
-            $filtros['usuario_id'] = $_SESSION['propietario_id'];
-        } else if (isset($_GET['usuario_id'])) {
-            $filtros['usuario_id'] = $_GET['usuario_id'];
-        }
 
-        // Limpieza estricta de filtros para evitar conflicto de parámetros
-        if (!empty($filtros['busqueda'])) {
-            unset($filtros['nombre'], $filtros['especie']);
-            unset($_GET['nombre'], $_GET['especie']);
-        }
+        $data = $this->mascotaModel->getMascotasFiltradas($paramsDataTable, $usuario_id, ($esAdmin && $tienePermisoVerTodas));
 
-        $mascotas = $this->mascotaModel->getMascotasFiltradas($filtros);
-        if ($mascotas === false) {
-            error_log('Error en consulta SQL: getMascotasFiltradas devolvió false');
-            $mascotas = [];
-        }
+        // Asegurarse de que los datos estén en el formato correcto para DataTables
+        // DataTables espera 'draw', 'recordsTotal', 'recordsFiltered', 'data'
         
-        // Obtener usuarios activos para mostrar información del propietario
-        $usuariosModel = $this->loadModel('User');
-        $usuarios = $usuariosModel->getActiveUsers();
-        
-        // Agregar información del propietario a cada mascota
-        foreach ($mascotas as &$mascota) {
-            $propietario = $usuariosModel->getUsuarioById($mascota['propietario_id']);
-            $mascota['propietario'] = $propietario ? $propietario['nombre'] : 'Sin propietario';
-            
-            // Validar si cada mascota tiene dispositivo asociado
-            $dispositivos = $this->dispositivoModel->getDispositivosByMascota($mascota['id']);
-            $mascota['tiene_dispositivo'] = !empty($dispositivos);
-        }
-        unset($mascota);
+        // No es necesario añadir el propietario_nombre aquí si ya se hace en el modelo
+        // No es necesario añadir 'tiene_dispositivo' aquí si ya se hace en el modelo
 
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode([
-            'mascotas' => $mascotas,
-            'usuarios' => $usuarios,
-            'permisos' => [
-                'editar_cualquiera' => in_array('editar_cualquier_mascota', $_SESSION['permissions'] ?? []),
-                'editar_propias' => in_array('editar_mascotas', $_SESSION['permissions'] ?? []),
-                'eliminar' => in_array('eliminar_mascotas', $_SESSION['permissions'] ?? []),
-                'propietario_id' => $_SESSION['propietario_id'] ?? null
-            ]
-        ], JSON_UNESCAPED_UNICODE);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -621,6 +602,32 @@ class MascotasController extends Controller {
         } else {
             echo json_encode(['success' => false, 'error' => 'ID no proporcionado']);
         }
+    }
+
+    protected function jsonResponse($data, $status = 200) {
+        header('Content-Type: application/json');
+        http_response_code($status);
+        echo json_encode($data);
+        exit;
+    }
+
+    protected function validateRequest($required = []) {
+        // Si hay datos en $_POST, úsalos
+        $data = $_POST;
+        // Si no hay datos en $_POST, intenta obtenerlos del cuerpo JSON
+        if (empty($data)) {
+            $data = json_decode(file_get_contents('php://input'), true);
+        }
+        if (!$data) {
+            $this->jsonResponse(['error' => 'Datos inválidos'], 400);
+        }
+
+        foreach ($required as $field) {
+            if (!isset($data[$field]) || empty($data[$field])) {
+                $this->jsonResponse(['error' => "El campo {$field} es requerido"], 400);
+            }
+        }
+        return $data;
     }
 }
 ?> 

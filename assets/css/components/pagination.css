@@ -1,0 +1,28 @@
+/* =============================================
+   ESTILOS DE PAGINACIÓN
+   ============================================= */
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-4);
+    padding: var(--spacing-3);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.pagination-info {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.pagination-buttons .btn {
+    min-width: 38px; /* Ajusta según sea necesario para botones de página */
+} 

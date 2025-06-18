@@ -2,7 +2,7 @@
 $subtitulo = isset($subtitulo) ? $subtitulo : 'Genera y descarga reportes detallados del sistema.';
 $titulo = "Reportes";
 ?>
-<p class="subtitle text-md" style="margin-top: 0; margin-bottom: 0;">
+<p class="subtitle text-md">
   <?= htmlspecialchars($subtitulo) ?>
 </p>
 <div class="container">
@@ -12,28 +12,26 @@ $titulo = "Reportes";
         </div>
     </div>
     <!-- Reporte de Mascotas -->
-    <div class="card shadow-lg border-0 rounded-lg mb-4">
-        <div class="card-header">
-            <h3 class="font-weight-light my-4">Reporte de Mascotas</h3>
-        </div>
-        <div class="card-body">
-            <form id="reporteMascotasForm" class="mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fecha_inicio_mascotas">Fecha Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio_mascotas" name="fecha_inicio" 
-                                   value="<?= date('Y-m-d', strtotime('-30 days')) ?>">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="font-weight-light my-4">Reporte de Mascotas</h3>
+                    <form id="reporteMascotasForm" class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fecha_inicio_mascotas">Fecha Inicio</label>
+                                    <input type="date" class="form-control" id="fecha_inicio_mascotas" name="fecha_inicio">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fecha_fin_mascotas">Fecha Fin</label>
+                                    <input type="date" class="form-control" id="fecha_fin_mascotas" name="fecha_fin">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fecha_fin_mascotas">Fecha Fin</label>
-                            <input type="date" class="form-control" id="fecha_fin_mascotas" name="fecha_fin" 
-                                   value="<?= date('Y-m-d') ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="formato_mascotas">Formato</label>
                             <select class="form-control" id="formato_mascotas" name="formato">
@@ -41,40 +39,30 @@ $titulo = "Reportes";
                                 <option value="excel">Excel</option>
                             </select>
                         </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                    </form>
                 </div>
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-file-download"></i> Generar Reporte
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-
-    <!-- Reporte de Dispositivos -->
-    <div class="card shadow-lg border-0 rounded-lg mb-4">
-        <div class="card-header">
-            <h3 class="font-weight-light my-4">Reporte de Dispositivos</h3>
-        </div>
-        <div class="card-body">
-            <form id="reporteDispositivosForm" class="mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fecha_inicio_dispositivos">Fecha Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio_dispositivos" name="fecha_inicio" 
-                                   value="<?= date('Y-m-d', strtotime('-30 days')) ?>">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="font-weight-light my-4">Reporte de Dispositivos</h3>
+                    <form id="reporteDispositivosForm" class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fecha_inicio_dispositivos">Fecha Inicio</label>
+                                    <input type="date" class="form-control" id="fecha_inicio_dispositivos" name="fecha_inicio">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fecha_fin_dispositivos">Fecha Fin</label>
+                                    <input type="date" class="form-control" id="fecha_fin_dispositivos" name="fecha_fin">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fecha_fin_dispositivos">Fecha Fin</label>
-                            <input type="date" class="form-control" id="fecha_fin_dispositivos" name="fecha_fin" 
-                                   value="<?= date('Y-m-d') ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="formato_dispositivos">Formato</label>
                             <select class="form-control" id="formato_dispositivos" name="formato">
@@ -82,55 +70,10 @@ $titulo = "Reportes";
                                 <option value="excel">Excel</option>
                             </select>
                         </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                    </form>
                 </div>
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-file-download"></i> Generar Reporte
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Reporte de Alertas -->
-    <div class="card shadow-lg border-0 rounded-lg mb-4">
-        <div class="card-header">
-            <h3 class="font-weight-light my-4">Reporte de Alertas</h3>
-        </div>
-        <div class="card-body">
-            <form id="reporteAlertasForm" class="mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fecha_inicio_alertas">Fecha Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio_alertas" name="fecha_inicio" 
-                                   value="<?= date('Y-m-d', strtotime('-30 days')) ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="fecha_fin_alertas">Fecha Fin</label>
-                            <input type="date" class="form-control" id="fecha_fin_alertas" name="fecha_fin" 
-                                   value="<?= date('Y-m-d') ?>">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="formato_alertas">Formato</label>
-                            <select class="form-control" id="formato_alertas" name="formato">
-                                <option value="pdf">PDF</option>
-                                <option value="excel">Excel</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-file-download"></i> Generar Reporte
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -151,14 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData(this);
         const params = new URLSearchParams(formData);
         window.location.href = `<?= BASE_URL ?>reportes/dispositivos?${params.toString()}`;
-    });
-
-    // Reporte de Alertas
-    document.getElementById('reporteAlertasForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const params = new URLSearchParams(formData);
-        window.location.href = `<?= BASE_URL ?>reportes/alertas?${params.toString()}`;
     });
 
     // Validar fechas

@@ -51,18 +51,17 @@
                         <div class="mb-3">
                             <label for="imagen" class="form-label">Foto de la Mascota</label>
                             <?php if ($mascota['imagen']): ?>
-                            <div class="mb-2">
+                            <div class="mb-2 text-center">
                                 <img src="<?= BASE_URL ?>uploads/mascotas/<?= $mascota['imagen'] ?>" 
                                      alt="<?= $mascota['nombre'] ?>" 
-                                     class="img-thumbnail" 
-                                     style="max-height: 200px;">
+                                     class="img-thumbnail profile-image-thumbnail">
                             </div>
                             <?php endif; ?>
                             <input class="form-control" type="file" id="imagen" name="imagen" accept="image/*">
                             <small class="text-muted">Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB</small>
                         </div>
                         <div class="form-floating mb-3">
-                            <textarea class="form-control" id="descripcion" name="descripcion" style="height: 100px"><?= $mascota['descripcion'] ?></textarea>
+                            <textarea class="form-control form-control--textarea-lg" id="descripcion" name="descripcion"><?= $mascota['descripcion'] ?></textarea>
                             <label for="descripcion">Descripción</label>
                         </div>
                         <?php if (in_array('gestionar_mascotas', $_SESSION['permisos'] ?? [])): ?>
@@ -85,7 +84,7 @@
                         <?php endif; ?>
                         <div class="mt-4 mb-0">
                             <div class="d-grid">
-                                <button class="btn btn-primary btn-block" type="submit">Actualizar Mascota</button>
+                                <button class="btn btn--primary w-100" type="submit">Actualizar Mascota</button>
                             </div>
                         </div>
                     </form>

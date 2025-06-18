@@ -1,0 +1,25 @@
+/* =============================================
+   ESTILOS DE MODALES
+   ============================================= */
+
+.modal-footer--sticky {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--color-white);
+    z-index: var(--z-index-modal-footer);
+    box-shadow: var(--shadow-md-up);
+    padding: var(--spacing-3) var(--spacing-4);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-2);
+}
+
+.modal-header .modal-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Asegura que el contenido del modal no se superponga con el footer sticky */
+.modal-body {
+    padding-bottom: var(--spacing-5);
+} 

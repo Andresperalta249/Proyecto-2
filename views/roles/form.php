@@ -5,36 +5,24 @@ $esEdicion = !empty($rol);
 
 // Agrupar permisos por tipo de gestión
 $grupos = [
-    'Gestión de Mascotas' => [],
-    'Gestión de Roles' => [],
-    'Gestión de Dispositivos' => [],
     'Gestión de Usuarios' => [],
-    'Gestión de Configuración' => [],
-    'Gestión de Reportes' => [],
-    'Gestión de Alertas' => [],
-    'Dashboard' => [],
-    'Otros' => []
+    'Gestión de Mascotas' => [],
+    'Gestión de Dispositivos' => [],
+    'Gestión de Notificaciones' => [],
+    'Reportes' => []
 ];
 foreach ($permisos as $permiso) {
     $nombre = $permiso['nombre'];
-    if (strpos($nombre, 'mascota') !== false) {
+    if (strpos($nombre, 'usuario') !== false) {
+        $grupos['Gestión de Usuarios'][] = $permiso;
+    } elseif (strpos($nombre, 'mascota') !== false) {
         $grupos['Gestión de Mascotas'][] = $permiso;
-    } elseif (strpos($nombre, 'rol') !== false) {
-        $grupos['Gestión de Roles'][] = $permiso;
     } elseif (strpos($nombre, 'dispositivo') !== false) {
         $grupos['Gestión de Dispositivos'][] = $permiso;
-    } elseif (strpos($nombre, 'usuario') !== false) {
-        $grupos['Gestión de Usuarios'][] = $permiso;
-    } elseif (strpos($nombre, 'configuracion') !== false) {
-        $grupos['Gestión de Configuración'][] = $permiso;
+    } elseif (strpos($nombre, 'notificacion') !== false) {
+        $grupos['Gestión de Notificaciones'][] = $permiso;
     } elseif (strpos($nombre, 'reporte') !== false) {
-        $grupos['Gestión de Reportes'][] = $permiso;
-    } elseif (strpos($nombre, 'alerta') !== false) {
-        $grupos['Gestión de Alertas'][] = $permiso;
-    } elseif (strpos($nombre, 'dashboard') !== false) {
-        $grupos['Dashboard'][] = $permiso;
-    } else {
-        $grupos['Otros'][] = $permiso;
+        $grupos['Reportes'][] = $permiso;
     }
 }
 ?>
@@ -98,7 +86,7 @@ foreach ($permisos as $permiso) {
                                             <div class="form-check permiso-item mb-1 small">
                                                 <input class="form-check-input" type="checkbox" name="permisos[]" value="<?= $permiso['id_permiso'] ?>" id="permiso_<?= $permiso['id_permiso'] ?>" <?= in_array($permiso['id_permiso'], $rol['permiso_ids'] ?? []) ? 'checked' : '' ?>>
                                                 <label class="form-check-label d-flex align-items-center gap-1" for="permiso_<?= $permiso['id_permiso'] ?>" data-bs-toggle="tooltip" data-bs-placement="top" title="<?= htmlspecialchars($permiso['descripcion']) ?>">
-                                                    <i class="fas fa-circle text-primary" style="font-size:0.7em;"></i>
+                                                    <i class="fas fa-circle text-primary text-icon-sm"></i>
                                                     <span class="text-sm"><?= htmlspecialchars($permiso['nombre']) ?></span>
                                                 </label>
                                             </div>
@@ -115,9 +103,9 @@ foreach ($permisos as $permiso) {
     </form>
 </div>
 
-<div class="modal-footer border-0 bg-white sticky-bottom d-flex justify-content-end gap-2 py-3" style="z-index:1056;">
-    <button type="button" class="btn btn-light border" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i> Cancelar</button>
-    <button type="button" class="btn btn-success" id="btnGuardarRol" onclick="guardarRol()"><i class="fas fa-save me-1"></i> Guardar</button>
+<div class="modal-footer modal-footer--sticky">
+    <button type="button" class="btn btn--secondary" data-bs-dismiss="modal"><i class="fas fa-times me-1"></i> Cancelar</button>
+    <button type="button" class="btn btn--success" id="btnGuardarRol" onclick="guardarRol()"><i class="fas fa-save me-1"></i> Guardar</button>
 </div>
 
 <script>
@@ -234,29 +222,4 @@ function guardarRol() {
         });
     });
 }
-</script>
-
-<style>
-.modal-header .modal-title { font-size: 1.45rem; }
-.accordion-button { background: #f8fafc; font-size: 1.08rem; padding: 0.7rem 1rem; }
-.accordion-button:not(.collapsed) { background: #eaf1fb; color: #2563eb; }
-.accordion-item { border: none; border-radius: 0.5rem !important; overflow: hidden; margin-bottom: 0.2rem; }
-.accordion-body { background: #fafdff; padding: 0.7rem 0.5rem; }
-#listaPermisos .form-check-label, .permiso-item .form-check-label { cursor: pointer; transition: all 0.2s; font-size: 0.97em; }
-#listaPermisos .form-check-label:hover, .permiso-item .form-check-label:hover { color: #2563eb; }
-.permiso-item { font-size: 0.97em; }
-.sticky-bottom { position: sticky; bottom: 0; background: #fff; z-index: 1056; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-.btn-success { background: #22c55e; border-color: #22c55e; padding: 0.5rem 1.2rem; font-size: 1em; }
-.btn-success:hover { background: #16a34a; border-color: #16a34a; }
-.btn-light { background: #f3f4f6; color: #222; border-color: #e5e7eb; padding: 0.5rem 1.2rem; font-size: 1em; }
-.btn-light:hover { background: #e5e7eb; color: #111; }
-.tooltip { font-size: 0.9em; }
-@media (max-width: 600px) {
-    .modal-header .modal-title { font-size: 1.1rem; }
-    .modal-body { padding: 0.7rem 0.2rem 0.2rem 0.2rem !important; }
-    .accordion-body { padding: 0.7rem 0.2rem !important; }
-    .modal-footer { flex-direction: column; gap: 0.7rem; }
-    .btn { width: 100%; font-size: 1em; }
-    .permiso-item { font-size: 0.97em; }
-}
-</style> 
+</script> 

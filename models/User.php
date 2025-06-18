@@ -291,4 +291,59 @@ class User extends Model {
         $result = $this->query($sql);
         return $result[0]['total'] ?? 0;
     }
+
+    public function getUsuariosDatatables($start, $length, $searchValue, $orderColumnName, $orderDir) {
+        $sql = "SELECT u.id_usuario as id, u.nombre, u.email, r.nombre as rol, u.estado 
+                FROM usuarios u 
+                LEFT JOIN roles r ON u.rol_id = r.id_rol";
+        $sqlCount = "SELECT COUNT(*) FROM usuarios u LEFT JOIN roles r ON u.rol_id = r.id_rol";
+        $sqlFilteredCount = "SELECT COUNT(*) FROM usuarios u LEFT JOIN roles r ON u.rol_id = r.id_rol";
+
+        $params = [];
+        $where = [];
+
+        if (!empty($searchValue)) {
+            $where[] = "(u.nombre LIKE :search1 OR u.email LIKE :search2 OR r.nombre LIKE :search3 OR u.estado LIKE :search4)";
+            $params[':search1'] = '%' . $searchValue . '%';
+            $params[':search2'] = '%' . $searchValue . '%';
+            $params[':search3'] = '%' . $searchValue . '%';
+            $params[':search4'] = '%' . $searchValue . '%';
+        }
+
+        if (!empty($where)) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+            $sqlFilteredCount .= " WHERE " . implode(" AND ", $where);
+        }
+
+        // Total de registros sin filtrar
+        $totalRecords = $this->query($sqlCount, [])[0]['COUNT(*)'];
+
+        // Total de registros filtrados
+        $filteredRecords = $this->query($sqlFilteredCount, $params)[0]['COUNT(*)'];
+
+        $sql .= " ORDER BY " . $orderColumnName . " " . $orderDir;
+        $sql .= " LIMIT :length OFFSET :start";
+
+        try {
+            $stmt = $this->db->getConnection()->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value);
+            }
+            $stmt->bindValue(':length', (int)$length, PDO::PARAM_INT);
+            $stmt->bindValue(':start', (int)$start, PDO::PARAM_INT);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Error SQL: ' . $e->getMessage());
+            error_log('SQL: ' . $sql);
+            error_log('Params: ' . print_r($params, true));
+            throw $e;
+        }
+
+        return [
+            'data' => $data,
+            'total' => $totalRecords,
+            'filtered_total' => $filteredRecords
+        ];
+    }
 } 

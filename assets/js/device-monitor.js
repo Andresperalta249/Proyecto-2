@@ -195,23 +195,37 @@ async function cargarDatosIniciales() {
             throw new Error('ID de dispositivo no definido');
         }
 
-        const response = await fetch(`${window.BASE_URL}monitor/getUltimosDatos/${window.dispositivoId}`);
+        const response = await fetch(`${window.BASE_URL}monitor/getDatos/${window.dispositivoId}`);
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        const datos = await response.json();
-        if (!datos || !datos.ubicacion || !datos.sensores) {
-            throw new Error('Datos inválidos recibidos del servidor');
+        const json = await response.json();
+        console.log('Respuesta del servidor:', json);
+
+        if (!json || typeof json !== 'object') {
+            throw new Error('Formato de respuesta inválido');
         }
 
-        actualizarSensores(datos.sensores);
-        actualizarTabla(datos.sensores);
-        actualizarUbicacion(datos.ubicacion);
+        if (!json.success) {
+            throw new Error(json.error || 'Error al obtener los datos');
+        }
+
+        if (!json.datos || !Array.isArray(json.datos)) {
+            throw new Error('Formato de datos inválido');
+        }
+
+        // Actualizar la interfaz con los datos recibidos
+        actualizarSensores(json.datos);
+        actualizarTabla(json.datos);
+        
+        if (json.ubicacion) {
+            actualizarUbicacion(json.ubicacion);
+        }
 
     } catch (error) {
         console.error('Error al cargar datos iniciales:', error);
-        mostrarError('Error al cargar los datos del dispositivo');
+        mostrarError(error.message || 'Error al cargar los datos del dispositivo');
     }
 }
 
@@ -324,77 +338,63 @@ window.addEventListener('beforeunload', function() {
     }
 });
 
-// Restaurar función para actualizar las gráficas y tarjetas de estado
+// Actualización de sensores
 function actualizarSensores(datos) {
-    if (!datos || !Array.isArray(datos)) {
+    if (!Array.isArray(datos) || datos.length === 0) {
+        console.warn('No hay datos de sensores para actualizar');
         return;
     }
-    // Actualizar tarjetas de estado
+
+    // Obtener el último dato
     const ultimoDato = datos[datos.length - 1];
-    if (ultimoDato) {
-        const tempCard = document.querySelector('#cardTemperatura .status-value');
-        if (tempCard) tempCard.textContent = (ultimoDato.temperatura !== undefined && ultimoDato.temperatura !== null) ? `${ultimoDato.temperatura}°C` : '--°C';
-        const ritmo = (ultimoDato.ritmo_cardiaco !== undefined && ultimoDato.ritmo_cardiaco !== null)
-            ? ultimoDato.ritmo_cardiaco
-            : (ultimoDato.bpm !== undefined && ultimoDato.bpm !== null ? ultimoDato.bpm : undefined);
-        const ritmoCard = document.querySelector('#cardRitmoCardiaco .status-value');
-        if (ritmoCard) ritmoCard.textContent = (ritmo !== undefined) ? `${ritmo} BPM` : '-- BPM';
-        const batCard = document.querySelector('#cardBateria .status-value');
-        if (batCard) batCard.textContent = (ultimoDato.bateria !== undefined && ultimoDato.bateria !== null) ? `${ultimoDato.bateria}%` : '--%';
+
+    // Actualizar tarjetas de estado
+    if (ultimoDato.temperatura !== undefined) {
+        document.querySelector('#cardTemperatura .status-value').textContent = `${ultimoDato.temperatura}°C`;
     }
+    if (ultimoDato.ritmo_cardiaco !== undefined || ultimoDato.bpm !== undefined) {
+        const bpm = ultimoDato.ritmo_cardiaco || ultimoDato.bpm;
+        document.querySelector('#cardRitmoCardiaco .status-value').textContent = `${bpm} BPM`;
+    }
+    if (ultimoDato.bateria !== undefined) {
+        document.querySelector('#cardBateria .status-value').textContent = `${ultimoDato.bateria}%`;
+    }
+
     // Actualizar gráficas
     Object.keys(graficas).forEach(tipo => {
-        let key = tipo === 'ritmoCardiaco' ? 'ritmo_cardiaco' : tipo;
-        // Filtrar solo datos válidos y aceptar 'bpm' para ritmoCardiaco
-        const datosGrafica = datos
-            .map(dato => {
-                const valor = Number(key === 'ritmo_cardiaco'
-                    ? (dato.ritmo_cardiaco !== undefined && dato.ritmo_cardiaco !== null ? dato.ritmo_cardiaco : dato.bpm)
-                    : dato[key]);
-                const fechaValida = dato.fecha ? new Date(dato.fecha.replace(' ', 'T')) : null;
-                if (typeof valor === 'number' && !isNaN(valor) && fechaValida instanceof Date && !isNaN(fechaValida)) {
-                    return { x: fechaValida, y: valor };
-                }
-                return null;
-            })
-            .filter(d => d !== null);
-        const datosLimitados = datosGrafica.slice(-60);
-        graficas[tipo].data.datasets[0].data = datosLimitados;
-        graficas[tipo].update('none');
+        const grafica = graficas[tipo];
+        if (!grafica) return;
+
+        const datosGrafica = datos.map(dato => ({
+            x: new Date(dato.fecha),
+            y: dato[tipo] || dato[tipo === 'ritmoCardiaco' ? 'ritmo_cardiaco' : tipo]
+        })).filter(punto => punto.y !== undefined);
+
+        grafica.data.datasets[0].data = datosGrafica;
+        grafica.update();
     });
 }
 
-// Restaurar función para actualizar el marcador en el mapa
+// Actualización de ubicación
 function actualizarUbicacion(ubicacion) {
     if (!ubicacion || !ubicacion.latitud || !ubicacion.longitud) {
+        console.warn('Datos de ubicación inválidos:', ubicacion);
         return;
     }
+
     const lat = parseFloat(ubicacion.latitud);
     const lng = parseFloat(ubicacion.longitud);
 
-    // Usar el icono por defecto de Leaflet
-    const customIcon = undefined;
+    if (isNaN(lat) || isNaN(lng)) {
+        console.warn('Coordenadas inválidas:', ubicacion);
+        return;
+    }
 
     if (marcador) {
         marcador.setLatLng([lat, lng]);
-        // No cambiar el icono, se mantiene el default
     } else {
         marcador = L.marker([lat, lng]).addTo(mapa);
     }
-    // Ajustar el zoom automáticamente a 18
-    mapa.setView([lat, lng], 18);
 
-    // Círculo de margen de error (50 metros)
-    if (circuloError) {
-        circuloError.setLatLng([lat, lng]);
-        circuloError.setRadius(50);
-    } else {
-        circuloError = L.circle([lat, lng], {
-            color: '#2563eb',
-            fillColor: '#2563eb',
-            fillOpacity: 0.15,
-            radius: 50
-        }).addTo(mapa);
-        console.log('Círculo de margen de error creado en:', lat, lng);
-    }
+    mapa.setView([lat, lng], 15);
 } 

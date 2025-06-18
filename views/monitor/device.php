@@ -20,7 +20,7 @@ $configuraciones = isset($configuraciones) ? $configuraciones : [];
 
 <div class="device-monitor">
     <!-- Mensaje de error -->
-    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+    <div id="error-message" class="alert alert-danger d-none"></div>
 
     <!-- Mapa Interactivo -->
     <div class="map-container">
@@ -167,35 +167,44 @@ $configuraciones = isset($configuraciones) ? $configuraciones : [];
 </script>
 
 <!-- Dependencias principales -->
-<script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-<!-- Nuestros módulos -->
-<script type="module" src="<?= BASE_URL ?>assets/js/date-utils.js"></script>
-<script type="module" src="<?= BASE_URL ?>assets/js/device-monitor.js"></script>
+<!-- Estilos -->
+<link rel="stylesheet" href="<?= BASE_URL ?>assets/css/device-monitor.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
 
-<!-- Configuración global -->
+<!-- Configuración global de Chart.js -->
 <script>
-    // Esperar a que Chart.js esté disponible
-    window.addEventListener('load', function() {
-        if (typeof Chart !== 'undefined') {
-            // Configuración de Chart.js
-            Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.color = '#6c757d';
-            
-            // Verificar ID de dispositivo
-            if (!window.dispositivoId) {
-                document.getElementById('error-message').textContent = 'Error: ID de dispositivo no definido';
-                document.getElementById('error-message').style.display = 'block';
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof Chart !== 'undefined') {
+        Chart.defaults.font.family = "'Poppins', sans-serif";
+        Chart.defaults.color = '#6c757d';
+        Chart.defaults.scale.grid.color = 'rgba(0, 0, 0, 0.05)';
+        Chart.defaults.scale.ticks.color = '#6c757d';
+        
+        // Asegurarse de que el adaptador de fechas se registre correctamente
+        if (typeof ChartjsAdapterDateFns !== 'undefined') {
+            Chart.register(ChartjsAdapterDateFns);
+            console.log('Adaptador de fechas de Chart.js registrado.');
         } else {
-            console.error('Chart.js no está disponible');
+            console.error('ChartjsAdapterDateFns no está definido. Asegúrate de que el script se cargue correctamente.');
         }
-    });
+    }
+
+    if (!window.dispositivoId) {
+        console.error('ID de dispositivo no definido');
+        document.getElementById('errorContainer').innerHTML = `
+            <div class="alert alert-danger">
+                Error: ID de dispositivo no definido
+            </div>
+        `;
+    }
+});
 </script>
 
-<!-- Estilos -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-<link rel="stylesheet" href="<?= BASE_URL ?>assets/css/device-monitor.css" /> 
+<!-- Scripts locales -->
+<script src="<?= BASE_URL ?>assets/js/date-utils.js"></script>
+<script src="<?= BASE_URL ?>assets/js/device-monitor.js"></script>

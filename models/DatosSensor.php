@@ -158,4 +158,104 @@ class DatosSensor extends Model {
             return null;
         }
     }
+
+    /**
+     * Obtiene los datos recientes de un dispositivo en un rango de horas
+     */
+    public function getDatosPorDispositivo($dispositivoId, $horas = 24) {
+        try {
+            $sql = "SELECT 
+                        fecha,
+                        temperatura,
+                        bpm as ritmo_cardiaco,
+                        bateria,
+                        latitude as latitud,
+                        longitude as longitud
+                    FROM {$this->table}
+                    WHERE dispositivo_id = :dispositivo_id
+                    AND fecha >= DATE_SUB(NOW(), INTERVAL :horas HOUR)
+                    ORDER BY fecha ASC";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                ':dispositivo_id' => $dispositivoId,
+                ':horas' => $horas
+            ]);
+            
+            $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            error_log("Datos obtenidos para dispositivo {$dispositivoId}: " . print_r($datos, true));
+            return $datos;
+        } catch (Exception $e) {
+            error_log("Error en getDatosPorDispositivo: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Búsqueda avanzada y paginada de registros históricos para el reporte moderno
+     */
+    public function buscarRegistrosAvanzado($usuario_id = null, $mascota_id = null, $mac = null, $page = 1, $perPage = 20) {
+        $offset = ($page - 1) * $perPage;
+        $params = [];
+        $where = [];
+        $join = '';
+
+        if ($usuario_id) {
+            $join .= ' INNER JOIN dispositivos d ON d.id = datos_sensores.dispositivo_id';
+            $where[] = 'd.usuario_id = :usuario_id';
+            $params[':usuario_id'] = $usuario_id;
+        } else {
+            $join .= ' INNER JOIN dispositivos d ON d.id = datos_sensores.dispositivo_id';
+        }
+        if ($mascota_id) {
+            $where[] = 'd.mascota_id = :mascota_id';
+            $params[':mascota_id'] = $mascota_id;
+        }
+        if ($mac) {
+            $where[] = 'd.mac LIKE :mac';
+            $params[':mac'] = '%' . $mac . '%';
+        }
+        $whereSQL = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+        $sql = "SELECT datos_sensores.*, d.mac, d.mascota_id
+                FROM datos_sensores
+                $join
+                $whereSQL
+                ORDER BY datos_sensores.fecha DESC
+                LIMIT :offset, :perPage";
+        $stmt = $this->db->getConnection()->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->bindValue(':perPage', (int)$perPage, PDO::PARAM_INT);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Total para paginación
+        $sqlCount = "SELECT COUNT(*) as total FROM datos_sensores $join $whereSQL";
+        $stmtCount = $this->db->getConnection()->prepare($sqlCount);
+        foreach ($params as $k => $v) {
+            $stmtCount->bindValue($k, $v);
+        }
+        $stmtCount->execute();
+        $total = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+        // Formatear datos para la tabla
+        $result = [];
+        foreach ($data as $r) {
+            $result[] = [
+                'fecha_hora' => $r['fecha'],
+                'temperatura' => $r['temperatura'],
+                'ritmo_cardiaco' => $r['bpm'],
+                'ubicacion' => ($r['latitude'] && $r['longitude']) ? ($r['latitude'] . ', ' . $r['longitude']) : '',
+                'bateria' => $r['bateria'],
+                'latitud' => $r['latitude'],
+                'longitud' => $r['longitude'],
+            ];
+        }
+        return [
+            'data' => $result,
+            'total' => (int)$total,
+            'page' => (int)$page,
+            'perPage' => (int)$perPage
+        ];
+    }
 } 

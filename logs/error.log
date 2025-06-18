@@ -1,5 +1,5 @@
-[10-Jun-2025 03:50:33 Europe/Berlin] Aplicación iniciando - 2025-06-10 03:50:33
-[09-Jun-2025 19:50:33 America/Mexico_City] Ruta solicitada: /alertas
-[09-Jun-2025 19:50:33 America/Mexico_City] Controlador: alertas, Acción: index
-[09-Jun-2025 19:50:33 America/Mexico_City] Conexión a la base de datos establecida correctamente
-[2025-06-09 19:50:33] Layout: content=LLENO, ruta=/proyecto-2/alertas, usuario=AUTENTICADO
+[18-Jun-2025 05:28:42 Europe/Berlin] Aplicación iniciando - 2025-06-18 05:28:42
+[17-Jun-2025 21:28:42 America/Mexico_City] Ruta solicitada: /reporte/monitoreo
+[17-Jun-2025 21:28:42 America/Mexico_City] Controlador: reporte, Acción: monitoreo
+[17-Jun-2025 21:28:42 America/Mexico_City] Conexión a la base de datos establecida correctamente
+[2025-06-17 21:28:42] Layout: content="LLENO", ruta="/proyecto-2/reporte/monitoreo", usuario="AUTENTICADO

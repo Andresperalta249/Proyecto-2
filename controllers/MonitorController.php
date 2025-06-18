@@ -3,14 +3,12 @@ class MonitorController extends Controller {
     private $dispositivoModel;
     private $mascotaModel;
     private $datosSensorModel;
-    private $configuracionAlertaModel;
 
     public function __construct() {
         parent::__construct();
-        $this->dispositivoModel = new DispositivoModel();
+        $this->dispositivoModel = new Dispositivo();
         $this->mascotaModel = new Mascota();
         $this->datosSensorModel = new DatosSensor();
-        $this->configuracionAlertaModel = new ConfiguracionAlerta();
     }
 
     public function indexAction() {
@@ -30,11 +28,15 @@ class MonitorController extends Controller {
         }
         error_log("Dispositivos obtenidos: " . print_r($dispositivos, true));
         
-        $this->view->setTitle('Monitor de Dispositivos');
-        $this->view->setData('dispositivos', $dispositivos);
-        $this->view->setData('menuActivo', 'monitor');
-        error_log("=== FIN indexAction - Renderizando vista ===");
-        $this->view->render('monitor/index');
+        $content = $this->render('monitor/index', [
+            'dispositivos' => $dispositivos,
+            'subtitulo' => 'Monitorea en tiempo real los dispositivos y mascotas asociados.'
+        ]);
+        
+        $GLOBALS['content'] = $content;
+        $GLOBALS['title'] = 'Monitor de Dispositivos';
+        $GLOBALS['menuActivo'] = 'monitor';
+        require_once 'views/layouts/main.php';
     }
 
     public function deviceAction($id = null) {
@@ -54,8 +56,7 @@ class MonitorController extends Controller {
             exit;
         }
 
-        $dispositivoModel = new DispositivoModel();
-        $dispositivo = $dispositivoModel->getDispositivoById($id);
+        $dispositivo = $this->dispositivoModel->getDispositivoById($id);
         
         error_log("Dispositivo encontrado: " . print_r($dispositivo, true));
         
@@ -83,16 +84,24 @@ class MonitorController extends Controller {
     }
 
     public function getDatosAction($id = null) {
+        header('Content-Type: application/json');
+        
         if (!$id) {
             http_response_code(400);
-            echo json_encode(['error' => 'ID de dispositivo no proporcionado']);
+            echo json_encode([
+                'success' => false,
+                'error' => 'ID de dispositivo no proporcionado'
+            ]);
             return;
         }
 
         // Verificar sesión y permisos
         if (!isset($_SESSION['user_id'])) {
             http_response_code(401);
-            echo json_encode(['error' => 'No autorizado']);
+            echo json_encode([
+                'success' => false,
+                'error' => 'No autorizado'
+            ]);
             return;
         }
 
@@ -100,7 +109,10 @@ class MonitorController extends Controller {
         $dispositivo = $this->dispositivoModel->getDispositivoById($id);
         if (!$dispositivo || $dispositivo['usuario_id'] != $_SESSION['user_id']) {
             http_response_code(403);
-            echo json_encode(['error' => 'Acceso denegado']);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Acceso denegado'
+            ]);
             return;
         }
 
@@ -108,6 +120,9 @@ class MonitorController extends Controller {
             $horas = isset($_GET['horas']) ? (int)$_GET['horas'] : 24;
             $datos = $this->datosSensorModel->getDatosPorDispositivo($id, $horas);
             $ubicacion = $this->dispositivoModel->getUltimaUbicacion($id);
+            
+            error_log("Datos obtenidos para dispositivo {$id}: " . print_r($datos, true));
+            error_log("Ubicación obtenida para dispositivo {$id}: " . print_r($ubicacion, true));
             
             echo json_encode([
                 'success' => true,
@@ -117,7 +132,10 @@ class MonitorController extends Controller {
         } catch (Exception $e) {
             error_log("Error en getDatosAction: " . $e->getMessage());
             http_response_code(500);
-            echo json_encode(['error' => 'Error al obtener los datos']);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Error al obtener los datos: ' . $e->getMessage()
+            ]);
         }
     }
 
@@ -303,8 +321,8 @@ class MonitorController extends Controller {
     }
 
     protected function jsonResponse($data, $status = 200) {
-        http_response_code($status);
         header('Content-Type: application/json');
+        http_response_code($status);
         echo json_encode($data);
         exit;
     }

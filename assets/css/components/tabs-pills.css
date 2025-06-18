@@ -1,0 +1,86 @@
+/* =============================================
+   ESTILOS DE PESTAÑAS Y PÍLDORAS
+   ============================================= */
+
+/* Pestañas (Tabs) */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.tab-item {
+    margin-bottom: -1px; /* Para que el borde inferior se superponga */
+}
+
+.tab-link {
+    display: block;
+    padding: var(--spacing-2) var(--spacing-3);
+    color: var(--color-gray-600);
+    text-decoration: none;
+    background-color: var(--color-white);
+    border: 1px solid transparent;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    transition: var(--transition-base);
+    cursor: pointer;
+}
+
+.tab-link:hover:not(.active) {
+    color: var(--color-primary);
+    border-color: var(--color-gray-200) var(--color-gray-200) var(--color-gray-300);
+}
+
+.tab-link.active {
+    color: var(--color-primary);
+    background-color: var(--color-white);
+    border-color: var(--color-gray-200) var(--color-gray-200) var(--color-white);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Píldoras (Pills) */
+.pills {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--spacing-4);
+    gap: var(--spacing-2);
+}
+
+.pill-item {
+    /* No necesita estilos específicos si el botón ya los tiene */
+}
+
+.pill-link {
+    display: block;
+    padding: var(--spacing-1) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-700);
+    background-color: var(--color-gray-100);
+    border-radius: var(--border-radius-pill);
+    text-decoration: none;
+    transition: var(--transition-base);
+    cursor: pointer;
+}
+
+.pill-link:hover:not(.active) {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-900);
+}
+
+.pill-link.active {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Estilos para el grid del formulario dentro de las pestañas */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-4);
+} 

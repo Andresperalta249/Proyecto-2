@@ -37,9 +37,9 @@ RewriteRule ^roles/form/?$ index.php?controller=roles&action=form [L]
 # Reglas para el monitor
 RewriteRule ^monitor/?$ index.php?controller=monitor&action=indexAction [QSA,L]
 RewriteRule ^monitor/device/([0-9]+)/?$ index.php?controller=monitor&action=deviceAction&id=$1 [QSA,L]
-RewriteRule ^api/datos_sensores/([0-9]+)/?$ index.php?controller=monitor&action=getDatosAction&id=$1 [QSA,L]
-RewriteRule ^api/ruta/([0-9]+)/?$ index.php?controller=monitor&action=getRutaAction&id=$1 [QSA,L]
-RewriteRule ^api/grafica/([0-9]+)/?$ index.php?controller=monitor&action=getGraficaAction&id=$1 [QSA,L]
+RewriteRule ^monitor/getDatos/([0-9]+)/?$ index.php?controller=monitor&action=getDatosAction&id=$1 [QSA,L]
+RewriteRule ^monitor/getRuta/([0-9]+)/?$ index.php?controller=monitor&action=getRutaAction&id=$1 [QSA,L]
+RewriteRule ^monitor/getGrafica/([0-9]+)/?$ index.php?controller=monitor&action=getGraficaAction&id=$1 [QSA,L]
 
 # Habilitar compresión GZIP
 <IfModule mod_deflate.c>

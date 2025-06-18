@@ -2,13 +2,11 @@
 require_once 'core/Controller.php';
 require_once 'models/Dispositivo.php';
 require_once 'models/Mascota.php';
-require_once 'models/Alerta.php';
 require_once 'models/User.php';
 
 class DashboardController extends Controller {
     private $dispositivoModel;
     private $mascotaModel;
-    private $alertaModel;
 
     public function __construct() {
         parent::__construct();
@@ -21,7 +19,6 @@ class DashboardController extends Controller {
 
         $this->dispositivoModel = new Dispositivo();
         $this->mascotaModel = new Mascota();
-        $this->alertaModel = new Alerta();
     }
 
     public function indexAction() {
@@ -34,10 +31,7 @@ class DashboardController extends Controller {
                     'total' => $totalDispositivos
                 ],
                 'totalMascotas' => $this->mascotaModel->getTotalRegistradas(),
-                'totalAlertas' => [
-                    'activas' => $this->alertaModel->getTotalActivas(),
-                    'resueltas' => $this->alertaModel->getTotalResueltas()
-                ],
+                'totalUsuarios' => (new User())->getTotalUsuariosNormales(),
                 'distribucionEspecies' => $this->mascotaModel->getDistribucionEspecies()
             ];
             $content = $this->render('dashboard/index', $data);
@@ -52,85 +46,49 @@ class DashboardController extends Controller {
     }
 
     public function getKPIDataAction() {
-        error_log('Entrando a getKPIDataAction');
         try {
             $userModel = new User();
-            
-            // Validar que los modelos estén disponibles
-            if (!$this->dispositivoModel || !$this->mascotaModel || !$this->alertaModel) {
+            if (!$this->dispositivoModel || !$this->mascotaModel) {
                 throw new Exception('Error de inicialización de modelos');
             }
-
-            // Obtener datos con validación
             $usuarios_registrados = $userModel->getTotalUsuariosNormales();
             if ($usuarios_registrados === false) {
                 throw new Exception('Error al obtener total de usuarios');
             }
-
             $dispositivos_conectados = $this->dispositivoModel->getTotalConectados();
             if ($dispositivos_conectados === false) {
                 throw new Exception('Error al obtener dispositivos conectados');
             }
-
             $dispositivos_total = $this->dispositivoModel->getTotalDispositivos();
             if ($dispositivos_total === false) {
                 throw new Exception('Error al obtener total de dispositivos');
             }
-
             $mascotas_total = $this->mascotaModel->getTotalRegistradas();
             if ($mascotas_total === false) {
                 throw new Exception('Error al obtener total de mascotas');
             }
-
-            $alertas_activas = $this->alertaModel->getTotalActivas();
-            if ($alertas_activas === false) {
-                throw new Exception('Error al obtener alertas activas');
-            }
-
-            $alertas_resueltas = $this->alertaModel->getTotalResueltas();
-            if ($alertas_resueltas === false) {
-                throw new Exception('Error al obtener alertas resueltas');
-            }
-
             $especies = $this->mascotaModel->getDistribucionEspecies();
             if ($especies === false) {
                 throw new Exception('Error al obtener distribución de especies');
             }
-
             $response = [
                 'dispositivos' => [
                     'conectados' => (int)$dispositivos_conectados,
                     'total' => (int)$dispositivos_total
                 ],
                 'mascotas' => (int)$mascotas_total,
-                'alertas' => [
-                    'activas' => (int)$alertas_activas,
-                    'resueltas' => (int)$alertas_resueltas
+                'totalMascotas' => (int)$mascotas_total,
+                'totalDispositivos' => [
+                    'conectados' => (int)$dispositivos_conectados,
+                    'total' => (int)$dispositivos_total
                 ],
-                'especies' => $especies,
-                'usuarios_registrados' => (int)$usuarios_registrados
+                'totalUsuarios' => (int)$usuarios_registrados,
+                'especies' => $especies
             ];
-
             $this->sendJsonResponse($response);
         } catch (Exception $e) {
             error_log("Error en DashboardController::getKPIDataAction: " . $e->getMessage());
             $this->sendJsonError('Error al obtener datos KPI: ' . $e->getMessage());
-        }
-    }
-
-    public function getAlertasPorDiaAction() {
-        try {
-            $dias = isset($_GET['dias']) ? (int)$_GET['dias'] : 7;
-            $dias = max(1, min($dias, 30)); // Limitar entre 1 y 30 días
-            
-            $alertas = $this->alertaModel->getAlertasPorDia($dias);
-            if ($alertas === false) {
-                throw new Exception('Error al obtener alertas por día');
-            }
-            $this->sendJsonResponse($alertas);
-        } catch (Exception $e) {
-            error_log("Error en DashboardController::getAlertasPorDiaAction: " . $e->getMessage());
-            $this->sendJsonError('Error al obtener alertas por día: ' . $e->getMessage());
         }
     }
 
@@ -144,22 +102,6 @@ class DashboardController extends Controller {
         } catch (Exception $e) {
             error_log("Error en DashboardController::getDistribucionEspeciesAction: " . $e->getMessage());
             $this->sendJsonError('Error al obtener distribución de especies: ' . $e->getMessage());
-        }
-    }
-
-    public function getActividadRecienteAction() {
-        try {
-            $limite = isset($_GET['limite']) ? (int)$_GET['limite'] : 10;
-            $limite = max(1, min($limite, 50)); // Limitar entre 1 y 50 registros
-            
-            $actividad = $this->alertaModel->getActividadReciente($limite);
-            if ($actividad === false) {
-                throw new Exception('Error al obtener actividad reciente');
-            }
-            $this->sendJsonResponse($actividad);
-        } catch (Exception $e) {
-            error_log("Error en DashboardController::getActividadRecienteAction: " . $e->getMessage());
-            $this->sendJsonError('Error al obtener actividad reciente: ' . $e->getMessage());
         }
     }
 
@@ -239,45 +181,25 @@ class DashboardController extends Controller {
                         ];
                     }
                 }
-
-                // Agregar datos de prueba para visualización
-                if (empty($registros)) {
-                    foreach ($fechas as $fecha) {
-                        $registros[] = [
-                            'fecha' => $fecha,
-                            'usuarios' => 1,
-                            'mascotas' => 1
-                        ];
-                    }
-                }
                 
                 $this->sendJsonResponse($registros);
-            } catch (PDOException $e) {
-                error_log("Error SQL en getHistorialUsuariosAction: " . $e->getMessage());
-                throw new Exception("Error en la base de datos: " . $e->getMessage());
+            } catch (Exception $e) {
+                throw new Exception("Error en la consulta de historial: " . $e->getMessage());
             }
         } catch (Exception $e) {
-            error_log("Error en getHistorialUsuariosAction: " . $e->getMessage());
-            $this->sendJsonError('Error al obtener historial de usuarios y mascotas: ' . $e->getMessage());
+            error_log("Error en DashboardController::getHistorialUsuariosAction: " . $e->getMessage());
+            $this->sendJsonError('Error al obtener historial de usuarios: ' . $e->getMessage());
         }
     }
 
     private function sendJsonResponse($data) {
         header('Content-Type: application/json');
-        echo json_encode([
-            'success' => true,
-            'data' => $data
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+        echo json_encode($data);
     }
 
     private function sendJsonError($message, $code = 500) {
-        header('Content-Type: application/json');
         http_response_code($code);
-        echo json_encode([
-            'success' => false,
-            'error' => $message
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $message]);
     }
 } 

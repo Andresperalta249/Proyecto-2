@@ -1,0 +1,78 @@
+/* Estilos para el Botón de Acción Flotante (FAB) */
+.fab-btn {
+    position: fixed;
+    bottom: 2rem; /* Distancia desde la parte inferior */
+    right: 2rem; /* Distancia desde la parte derecha */
+    background-color: var(--color-primary); /* Color principal, similar a otros botones */
+    color: var(--color-white); /* Texto blanco */
+    width: 60px; /* Ancho para hacerlo circular */
+    height: 60px; /* Altura para hacerlo circular */
+    border-radius: 50%; /* Hacerlo completamente circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem; /* Tamaño del icono */
+    box-shadow: var(--shadow-lg); /* Sombra para darle elevación */
+    transition: width 0.3s cubic-bezier(.4,0,.2,1), background 0.2s, box-shadow 0.2s, transform 0.2s;
+    z-index: 1000; /* Asegurar que esté por encima de otros elementos */
+    cursor: pointer;
+    border: none; /* Eliminar borde por defecto */
+    overflow: hidden;
+    padding: 0 1.2rem 0 1.2rem;
+}
+
+.fab-btn .fab-text {
+    display: inline-block;
+    opacity: 0;
+    max-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 0.5rem;
+    transition: opacity 0.2s, max-width 0.3s cubic-bezier(.4,0,.2,1);
+    font-size: var(--font-size-normal);
+}
+
+.fab-btn:hover, .fab-btn:focus {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+    width: 180px;
+    border-radius: 2rem;
+    justify-content: flex-start;
+}
+
+.fab-btn:hover .fab-text, .fab-btn:focus .fab-text {
+    opacity: 1;
+    max-width: 120px;
+}
+
+/* Adaptación para pantallas más pequeñas (si se necesita un diseño más compacto o con texto) */
+@media (max-width: 768px) {
+    .fab-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        bottom: 1rem;
+        right: 1rem;
+        border-radius: 50%;
+        padding: 0;
+        justify-content: center;
+    }
+    .fab-btn .fab-text {
+        display: block;
+        opacity: 1;
+        max-width: 100vw;
+        margin-left: 0;
+        margin-top: 0.2rem;
+        font-size: 0.95rem;
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translateX(-50%);
+        background: rgba(25, 118, 210, 0.95);
+        color: #fff;
+        padding: 0.2rem 0.7rem;
+        border-radius: 1rem;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+    }
+} 

@@ -3,9 +3,9 @@
     <button class="btn btn-link nav-link dropdown-toggle" type="button" id="notificacionesDropdown" 
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-bell"></i>
-        <span id="notificacionesBadge" class="badge badge-danger badge-pill"></span>
+        <span id="notificacionesBadge" class="badge badge-danger badge-pill d-none"></span>
     </button>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificacionesDropdown" style="width: 300px;">
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu--notifications" aria-labelledby="notificacionesDropdown">
         <h6 class="dropdown-header">Notificaciones</h6>
         <div id="notificacionesLista" class="notificaciones-lista">
             <div class="text-center py-3">
@@ -20,43 +20,6 @@
         </a>
     </div>
 </div>
-
-<style>
-.notificaciones-lista {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.notificacion-item {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-}
-
-.notificacion-item:hover {
-    background-color: #f8f9fa;
-}
-
-.notificacion-item.no-leida {
-    background-color: #e3f2fd;
-}
-
-.notificacion-item .notificacion-titulo {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.notificacion-item .notificacion-mensaje {
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 5px;
-}
-
-.notificacion-item .notificacion-fecha {
-    font-size: 0.8em;
-    color: #999;
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -82,9 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function actualizarBadge(noLeidas) {
         if (noLeidas > 0) {
             notificacionesBadge.textContent = noLeidas;
-            notificacionesBadge.style.display = 'inline';
+            notificacionesBadge.classList.remove('d-none');
+            notificacionesBadge.classList.add('d-inline');
         } else {
-            notificacionesBadge.style.display = 'none';
+            notificacionesBadge.classList.remove('d-inline');
+            notificacionesBadge.classList.add('d-none');
         }
     }
 
@@ -102,15 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
         notificacionesLista.innerHTML = notificaciones
             .slice(0, 5)
             .map(notificacion => `
-                <div class="notificacion-item ${notificacion.leida ? '' : 'no-leida'}" 
+                <div class="notification-item ${notificacion.leida ? '' : 'notification-item--unread'}" 
                      data-id="${notificacion.id}">
-                    <div class="notificacion-titulo">
+                    <div class="notification-item__title">
                         ${notificacion.titulo}
                     </div>
-                    <div class="notificacion-mensaje">
+                    <div class="notification-item__message">
                         ${notificacion.mensaje}
                     </div>
-                    <div class="notificacion-fecha">
+                    <div class="notification-item__date">
                         ${formatearFecha(notificacion.fecha_creacion)}
                     </div>
                 </div>
@@ -118,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .join('');
 
         // Agregar eventos a las notificaciones
-        document.querySelectorAll('.notificacion-item').forEach(item => {
+        document.querySelectorAll('.notification-item').forEach(item => {
             item.addEventListener('click', function() {
                 const id = this.dataset.id;
                 marcarComoLeida(id);
@@ -144,9 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const notificacion = notificaciones.find(n => n.id === id);
                 if (notificacion) {
                     notificacion.leida = true;
-                    const item = document.querySelector(`.notificacion-item[data-id="${id}"]`);
+                    const item = document.querySelector(`.notification-item[data-id="${id}"]`);
                     if (item) {
-                        item.classList.remove('no-leida');
+                        item.classList.remove('notification-item--unread');
                     }
                     actualizarBadge(parseInt(notificacionesBadge.textContent || '0') - 1);
                 }

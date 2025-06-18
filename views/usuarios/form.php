@@ -117,6 +117,6 @@ $titulo = $esEditar ? 'Editar Usuario' : 'Nuevo Usuario';
 </div>
 
 <div class="modal-footer border-0">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-    <button type="submit" form="formUsuario" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn-accion btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    <button type="submit" form="formUsuario" class="btn-accion btn-primary">Guardar</button>
 </div> 

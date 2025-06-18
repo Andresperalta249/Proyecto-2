@@ -1,16 +1,16 @@
 <!-- Restablecer Contraseña Moderno PetMonitoring IoT -->
-<div class="container d-flex align-items-center justify-content-center min-vh-100" style="background: #f6f8fc;">
-  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; width: 100%;">
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card shadow-lg border-0 rounded-4 p-4 auth-card">
     <div class="text-center mb-4">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo mascota" style="width: 80px;">
-      <h2 class="mt-3 mb-1" style="font-weight: 700; color: #0D47A1;">Restablecer Contraseña</h2>
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo mascota" class="auth-logo">
+      <h2 class="mt-3 mb-1 auth-title">Restablecer Contraseña</h2>
       <p class="text-muted mb-0">Ingresa tu nueva contraseña</p>
     </div>
     <form id="resetPasswordForm" method="POST" autocomplete="off" novalidate>
       <div class="form-floating mb-3 position-relative">
         <input type="password" class="form-control" id="password" name="password" placeholder="Nueva contraseña" required minlength="8">
         <label for="password"><i class="fas fa-lock me-2"></i>Nueva contraseña</label>
-        <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor:pointer;" id="togglePassword1">
+        <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password-icon" id="togglePassword1">
           <i class="fas fa-eye"></i>
         </span>
         <div class="invalid-feedback" id="passwordError">La contraseña no cumple los requisitos</div>
@@ -18,7 +18,7 @@
       <div class="form-floating mb-3 position-relative">
         <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirmar contraseña" required>
         <label for="confirm_password"><i class="fas fa-lock me-2"></i>Confirmar contraseña</label>
-        <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor:pointer;" id="togglePassword2">
+        <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password-icon" id="togglePassword2">
           <i class="fas fa-eye"></i>
         </span>
         <div class="invalid-feedback" id="confirmPasswordError">Las contraseñas no coinciden</div>
@@ -30,7 +30,7 @@
         <li id="chk-num" class="text-danger">Al menos un número</li>
         <li id="chk-especial" class="text-danger">Al menos un carácter especial</li>
       </ul>
-      <button type="submit" class="btn btn-primary w-100 mb-2" style="font-weight:600;">Restablecer contraseña</button>
+      <button type="submit" class="btn btn-primary w-100 mb-2 font-weight-semibold">Restablecer contraseña</button>
       <div class="d-flex justify-content-between">
         <a href="<?= APP_URL ?>/auth/login" class="small">Volver al login</a>
       </div>
@@ -112,21 +112,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (!valid) {
       passwordInput.classList.add('is-invalid');
-      passwordError.style.display = 'block';
     } else {
       passwordInput.classList.remove('is-invalid');
-      passwordError.style.display = 'none';
     }
     return valid;
   }
   function validarConfirmPassword() {
     if (confirmPassword.value !== passwordInput.value || !confirmPassword.value) {
       confirmPassword.classList.add('is-invalid');
-      confirmPasswordError.style.display = 'block';
       return false;
     }
     confirmPassword.classList.remove('is-invalid');
-    confirmPasswordError.style.display = 'none';
     return true;
   }
   function validarFormulario() {
@@ -149,13 +145,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-</script>
-<style>
-body { background: #f6f8fc !important; }
-.card { border-radius: 1.5rem !important; transition: none !important; }
-.card:hover, .card:focus, .card:active { box-shadow: 0 2px 12px rgba(13,71,161,0.07) !important; transform: none !important; }
-.form-control:focus { border-color: #0D47A1; box-shadow: 0 0 0 0.2rem rgba(13,71,161,.15); }
-.btn-primary { background: #0D47A1; border: none; }
-.btn-primary:hover { background: #1565C0; }
-#togglePassword1 i, #togglePassword2 i { color: #888; }
-</style> 
+</script> 

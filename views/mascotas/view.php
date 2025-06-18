@@ -10,8 +10,7 @@
                     <?php if ($mascota['imagen']): ?>
                         <img src="<?= BASE_URL ?>uploads/mascotas/<?= $mascota['imagen'] ?>" 
                              alt="<?= $mascota['nombre'] ?>" 
-                             class="img-fluid rounded-circle mb-3" 
-                             style="max-height: 200px;">
+                             class="img-fluid rounded-circle mb-3 profile-image-md">
                     <?php else: ?>
                         <i class="fas fa-paw fa-5x text-muted mb-3"></i>
                     <?php endif; ?>
@@ -23,12 +22,12 @@
                         <p><strong>Edad:</strong> <?= calcularEdad($mascota['fecha_nacimiento']) ?></p>
                     </div>
                     
-                    <div class="mt-4">
-                        <a href="<?= BASE_URL ?>mascotas/edit/<?= $mascota['id_mascota'] ?>" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Editar
+                    <div class="mt-4 d-flex justify-content-center gap-2">
+                        <a href="<?= BASE_URL ?>mascotas/edit/<?= $mascota['id_mascota'] ?>" class="btn btn--primary">
+                            <i class="fas fa-edit me-1"></i> Editar
                         </a>
-                        <button onclick="deleteMascota(<?= $mascota['id_mascota'] ?>)" class="btn btn-danger">
-                            <i class="fas fa-trash"></i> Eliminar
+                        <button onclick="deleteMascota(<?= $mascota['id_mascota'] ?>)" class="btn btn--danger">
+                            <i class="fas fa-trash me-1"></i> Eliminar
                         </button>
                     </div>
                 </div>
@@ -40,8 +39,8 @@
             <div class="card shadow-lg border-0 rounded-lg mt-5">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="font-weight-light my-4">Dispositivos Asociados</h3>
-                    <a href="<?= BASE_URL ?>dispositivos/create/<?= $mascota['id_mascota'] ?>" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Asociar Dispositivo
+                    <a href="<?= BASE_URL ?>dispositivos/create/<?= $mascota['id_mascota'] ?>" class="btn btn--primary btn--sm">
+                        <i class="fas fa-plus me-1"></i> Asociar Dispositivo
                     </a>
                 </div>
                 <div class="card-body">
@@ -51,38 +50,40 @@
                             <p>No hay dispositivos asociados a esta mascota.</p>
                         </div>
                     <?php else: ?>
-                        <div class="table-responsive">
-                            <table class="tabla-app">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Tipo</th>
-                                        <th>Estado</th>
-                                        <th>Última Lectura</th>
-                                        <th>Acciones</th>
+                        <div class="table-responsive-container">
+                            <table class="table" id="tablaDispositivos">
+                                <thead class="table__header">
+                                    <tr class="table__row-header">
+                                        <th class="table__cell table__cell--header">Nombre</th>
+                                        <th class="table__cell table__cell--header">Tipo</th>
+                                        <th class="table__cell table__cell--header">Estado</th>
+                                        <th class="table__cell table__cell--header">Última Lectura</th>
+                                        <th class="table__cell table__cell--header">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($dispositivos as $dispositivo): ?>
-                                        <tr>
-                                            <td><?= $dispositivo['nombre'] ?></td>
-                                            <td><?= $dispositivo['tipo'] ?></td>
-                                            <td>
-                                                <span class="badge bg-<?= $dispositivo['estado'] === 'activo' ? 'success' : 'danger' ?>">
+                                        <tr class="table__row">
+                                            <td class="table__cell"><?= $dispositivo['nombre'] ?></td>
+                                            <td class="table__cell"><?= $dispositivo['tipo'] ?></td>
+                                            <td class="table__cell">
+                                                <span class="status-badge status-badge--<?= $dispositivo['estado'] === 'activo' ? 'active' : 'inactive' ?>">
                                                     <?= ucfirst($dispositivo['estado']) ?>
                                                 </span>
                                             </td>
-                                            <td><?= $dispositivo['ultima_lectura'] ? date('d/m/Y H:i', strtotime($dispositivo['ultima_lectura'])) : 'N/A' ?></td>
-                                            <td>
-                                                <a href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" class="btn btn-info btn-sm">
-                                                    <i class="fas fa-chart-line"></i>
-                                                </a>
-                                                <a href="<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id'] ?>" class="btn btn-warning btn-sm">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button onclick="deleteDispositivo(<?= $dispositivo['id'] ?>)" class="btn btn-danger btn-sm">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                            <td class="table__cell"><?= $dispositivo['ultima_lectura'] ? date('d/m/Y H:i', strtotime($dispositivo['ultima_lectura'])) : 'N/A' ?></td>
+                                            <td class="table__cell">
+                                                <div class="d-flex gap-2">
+                                                    <a href="<?= BASE_URL ?>monitor/device/<?= $dispositivo['id'] ?>" class="btn btn--info btn--sm" title="Ver Monitor">
+                                                        <i class="fas fa-chart-line"></i>
+                                                    </a>
+                                                    <a href="<?= BASE_URL ?>dispositivos/edit/<?= $dispositivo['id'] ?>" class="btn btn--warning btn--sm" title="Editar Dispositivo">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button onclick="deleteDispositivo(<?= $dispositivo['id'] ?>)" class="btn btn--danger btn--sm" title="Eliminar Dispositivo">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -97,8 +98,8 @@
             <div class="card shadow-lg border-0 rounded-lg mt-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="font-weight-light my-4">Historial Médico</h3>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addHistorialModal">
-                        <i class="fas fa-plus"></i> Agregar Registro
+                    <button type="button" class="btn btn--primary btn--sm" data-bs-toggle="modal" data-bs-target="#addHistorialModal">
+                        <i class="fas fa-plus me-1"></i> Agregar Registro
                     </button>
                 </div>
                 <div class="card-body">
@@ -115,13 +116,13 @@
                                         <?= date('d/m/Y', strtotime($registro['fecha'])) ?>
                                     </div>
                                     <div class="timeline-content">
-                                        <h5><?= $registro['tipo'] ?></h5>
-                                        <p><?= $registro['descripcion'] ?></p>
+                                        <h5 class="timeline-title"><?= $registro['tipo'] ?></h5>
+                                        <p class="timeline-description"><?= $registro['descripcion'] ?></p>
                                         <?php if ($registro['documento']): ?>
                                             <a href="<?= BASE_URL ?>uploads/historial/<?= $registro['documento'] ?>" 
-                                               class="btn btn-sm btn-outline-primary" 
+                                               class="btn btn--outline-primary btn--sm" 
                                                target="_blank">
-                                                <i class="fas fa-file-download"></i> Ver Documento
+                                                <i class="fas fa-file-download me-1"></i> Ver Documento
                                             </a>
                                         <?php endif; ?>
                                     </div>
@@ -171,55 +172,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn--secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn--primary">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<style>
-.timeline {
-    position: relative;
-    padding: 20px 0;
-}
-
-.timeline-item {
-    position: relative;
-    padding-left: 50px;
-    margin-bottom: 30px;
-}
-
-.timeline-item:before {
-    content: '';
-    position: absolute;
-    left: 20px;
-    top: 0;
-    bottom: -30px;
-    width: 2px;
-    background: #e9ecef;
-}
-
-.timeline-item:last-child:before {
-    bottom: 0;
-}
-
-.timeline-date {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100px;
-    text-align: right;
-    color: #6c757d;
-}
-
-.timeline-content {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 4px;
-}
-</style>
 
 <script>
 function deleteMascota(id) {

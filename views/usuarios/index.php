@@ -1,269 +1,309 @@
 <?php
-// DEPURACIÓN: Esto es una prueba de contenido visible desde la vista de usuarios
+$title = "Gestión de Usuarios";
+$description = "Administración de usuarios y sus roles en el sistema.";
 ?>
-<?php $subtitulo = isset($subtitulo) ? $subtitulo : 'Gestiona, busca y administra los usuarios del sistema.'; ?>
-<p class="subtitle text-md" style="margin-top: 0; margin-bottom: 0;">
-  <?= htmlspecialchars($subtitulo) ?>
-</p>
 
-<div class="table-container">
-    <div class="search-filters">
-        <input type="text" id="buscar" class="search-input" placeholder="Buscar por nombre o email...">
-        <select id="rol" class="filter-select">
-            <option value="">Todos los roles</option>
-            <?php foreach ($roles as $rol): ?>
-                <option value="<?= $rol['id_rol'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <select id="estado" class="filter-select">
-            <option value="">Todos los estados</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-        </select>
-    </div>
-    <?php 
-    // Debug: Verificar si hay usuarios
-    if (isset($usuarios)) {
-        echo "<!-- Debug: Número de usuarios: " . count($usuarios) . " -->";
-    } else {
-        echo "<!-- Debug: Variable usuarios no está definida -->";
-    }
-    require __DIR__ . '/tabla.php'; 
-    ?>
-</div>
-
-<div class="pagination-container">
-    <div class="pagination-info">
-        Mostrando <?= count($usuarios) ?> de <?= $totalUsuarios ?> registros
-    </div>
-    <div class="pagination-buttons">
-        <?php if ($pagina > 1): ?>
-            <a href="?pagina=<?= $pagina - 1 ?>" class="pagination-button">Anterior</a>
-        <?php endif; ?>
-        
-        <?php
-        $inicio = max(1, $pagina - 2);
-        $fin = min($totalPaginas, $pagina + 2);
-        
-        for ($i = $inicio; $i <= $fin; $i++):
-        ?>
-            <a href="?pagina=<?= $i ?>" 
-               class="pagination-button <?= $i === $pagina ? 'active' : '' ?>">
-                <?= $i ?>
-            </a>
-        <?php endfor; ?>
-        
-        <?php if ($pagina < $totalPaginas): ?>
-            <a href="?pagina=<?= $pagina + 1 ?>" class="pagination-button">Siguiente</a>
-        <?php endif; ?>
+<div class="container-fluid dashboard-compact">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tablaUsuarios" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Modal para usuario -->
-<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content" id="modalUsuarioBody">
-      <!-- Aquí se cargará el formulario por AJAX -->
+<!-- Modal Usuario -->
+<div class="modal fade" id="modalUsuario" tabindex="-1" role="dialog" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalUsuarioLabel">Nuevo Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formUsuario">
+                <div class="modal-body">
+                    <input type="hidden" id="idUsuario" name="idUsuario">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+                    </div>
+                    <div class="form-group">
+                        <label for="rol">Rol</label>
+                        <select class="form-control" id="rol" name="rol" required>
+                            <option value="">Seleccione un rol</option>
+                            <option value="admin">Administrador</option>
+                            <option value="user">Usuario</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
-<!-- Asegúrate de que jQuery y Bootstrap JS estén cargados antes de este script -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- FAB: Botón flotante de acción principal para la página de usuarios -->
+<button class="fab-btn" id="btnNuevoUsuarioFlotante" data-bs-toggle="modal" data-bs-target="#modalUsuario" aria-label="Nuevo Usuario" title="Nuevo usuario">
+    <span class="fab-icon"><i class="fas fa-plus"></i></span>
+    <span class="fab-text">Nuevo Usuario</span>
+</button>
 
 <script>
-$(function() {
-    // Cambiar de página
-    window.cambiarPagina = function(pagina) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('pagina', pagina);
-        window.location.href = url.toString();
-    }
-
-    // Mostrar modal de usuario
-    window.mostrarModalUsuario = function(id = null) {
-        const url = id ? `usuarios/get?id=${id}` : 'usuarios/get';
-        $('#modalUsuarioBody').load(url, function() {
-            $('#modalUsuario').modal('show');
-        });
-    }
-
-    // Editar usuario
-    window.editarUsuario = function(id) {
-        window.mostrarModalUsuario(id);
-    }
-
-    // Eliminar usuario con advertencia de asociaciones
-    window.eliminarUsuario = function(id) {
-        // Consultar asociaciones antes de eliminar
-        $.get('usuarios/getAsociaciones?id_usuario=' + id, function(response) {
-            if (typeof response === 'string') {
-                try { response = JSON.parse(response); } catch (e) { response = {}; }
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar DataTable
+    const tablaUsuarios = $('#tablaUsuarios').DataTable({
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        dom: 'fltip',
+        responsive: true,
+        ajax: {
+            url: '<?php echo APP_URL; ?>/usuarios/obtenerUsuarios',
+            type: 'POST',
+            dataSrc: function(json) {
+                console.log("Datos recibidos por DataTables:", json);
+                return json.data; // Asegúrate de que tu API devuelve los datos bajo la clave 'data'
+            },
+            error: function(xhr, error, thrown) {
+                console.error("Error en la petición AJAX de DataTables:", xhr, error, thrown);
+                // Puedes mostrar un mensaje de error al usuario si lo deseas
             }
-            let msg = '¿Estás seguro de que deseas eliminar este usuario? Esta acción eliminará el usuario de forma permanente.';
-            if (response.mascotas || response.dispositivos) {
-                msg += '<br><br><b>Advertencia:</b> Este usuario tiene:';
-                if (response.mascotas) {
-                    msg += `<br>- ${response.mascotas} mascota(s) asociada(s)`;
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'nombre' },
+            { data: 'email' },
+            { data: 'rol' },
+            { 
+                data: 'estado',
+                render: function(data, type, row) {
+                    const isChecked = data === 'activo' ? 'checked' : '';
+                    const userId = row.id; // Asumiendo que 'id' está disponible en los datos de la fila
+                    return `
+                        <div class="form-check form-switch">
+                            <input class="form-check-input estado-switch" type="checkbox" role="switch" id="estadoSwitch_${userId}" data-id="${userId}" ${isChecked}>
+                            <label class="form-check-label" for="estadoSwitch_${userId}"></label>
+                        </div>
+                    `;
                 }
-                if (response.dispositivos) {
-                    msg += `<br>- ${response.dispositivos} dispositivo(s) asociado(s)`;
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `
+                        <button class="btn btn-sm btn-info editar-usuario" data-id="${data.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger eliminar-usuario" data-id="${data.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
                 }
-                msg += '<br>Al eliminar el usuario, también se eliminarán todas sus mascotas y dispositivos.';
             }
-            Swal.fire({
-                title: 'Confirmar eliminación',
-                html: msg,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.post('usuarios/eliminar/' + id, function(response) {
-                        if (typeof response === 'string') {
-                            try { response = JSON.parse(response); } catch (e) { response = {}; }
-                        }
-                        if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Eliminado',
-                                text: 'El usuario ha sido eliminado correctamente.'
-                            }).then(() => window.location.reload());
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.error || 'Error al eliminar el usuario.'
-                            });
-                        }
+        ],
+        language: {
+            url: '<?= APP_URL ?>/assets/js/i18n/Spanish.json'
+        }
+    });
+
+    // Manejar el cambio de estado del switch
+    $('#tablaUsuarios tbody').on('change', '.estado-switch', function() {
+        const userId = $(this).data('id');
+        const nuevoEstado = this.checked ? 'activo' : 'inactivo';
+
+        $.ajax({
+            url: `<?php echo APP_URL; ?>/usuarios/toggleEstado`, // Asumiendo que este endpoint existe en tu backend
+            type: 'POST',
+            data: { id: userId, estado: nuevoEstado },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: response.message,
+                        showConfirmButton: false,
+                        timer: 1500
                     });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message
+                    });
+                    $(this).prop('checked', !this.checked); // Revertir el switch si falla
                 }
-            });
+            }.bind(this), // 'bind(this)' para mantener el contexto del switch dentro de success/error
+            error: function(xhr, status, error) {
+                console.error("Error al cambiar el estado:", xhr, status, error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error de comunicación con el servidor.'
+                });
+                $(this).prop('checked', !this.checked); // Revertir el switch en caso de error de red
+            }.bind(this)
         });
-    }
+    });
 
-    // Cambiar estado de usuario con feedback y confirmación SweetAlert2
-    $(document).on('change', '.cambiar-estado-usuario', function() {
-        const id = $(this).data('id');
-        const estado = $(this).prop('checked') ? 'activo' : 'inactivo';
-        const $checkbox = $(this);
-        $.post('usuarios/cambiarEstado/' + id, { id_usuario: id, estado: estado }, function(response) {
-            // Asegurarse de que la respuesta sea un objeto
-            if (typeof response === 'string') {
-                try { response = JSON.parse(response); } catch (e) { response = {}; }
-            }
-            console.log(response); // Depuración
-            if (response.success) {
+    // Manejar envío del formulario
+    document.getElementById('formUsuario').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        fetch('<?php echo APP_URL; ?>/usuarios/guardarUsuario', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Estado actualizado',
-                    text: response.message || 'El estado del usuario se actualizó correctamente.'
+                    title: 'Éxito',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-            } else if (response.needsConfirmation) {
-                // Mostrar consecuencias y pedir confirmación
-                let msg = response.message || 'Esta acción afectará elementos asociados.';
-                if (response.data && response.data.mascotas) {
-                    msg += `\n\nMascotas asociadas: ${response.data.mascotas.length}`;
-                }
-                Swal.fire({
-                    icon: 'warning',
-                    title: '¿Estás seguro?',
-                    html: msg.replace(/\n/g, '<br>'),
-                    showCancelButton: true,
-                    confirmButtonText: 'Sí, continuar',
-                    cancelButtonText: 'Cancelar',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Confirmar cambio en cascada
-                        $.post('usuarios/confirmarCambioEstado', { id_usuario: id, estado: estado }, function(resp2) {
-                            if (typeof resp2 === 'string') {
-                                try { resp2 = JSON.parse(resp2); } catch (e) { resp2 = {}; }
-                            }
-                            if (resp2.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Estado actualizado',
-                                    text: resp2.message || 'El estado del usuario y sus asociados se actualizó correctamente.'
-                                });
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: resp2.error || 'Error al cambiar el estado en cascada.'
-                                });
-                                $checkbox.prop('checked', !($checkbox.prop('checked'))); // Revertir cambio
-                            }
-                        });
-                    } else {
-                        $checkbox.prop('checked', !($checkbox.prop('checked'))); // Revertir cambio
-                    }
-                });
+                $('#modalUsuario').modal('hide');
+                tablaUsuarios.ajax.reload();
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: response.error || 'Error al cambiar el estado del usuario.'
+                    text: data.message
                 });
-                $checkbox.prop('checked', !($checkbox.prop('checked'))); // Revertir cambio
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ha ocurrido un error al procesar la solicitud'
+            });
         });
     });
 
-    $('#buscar, #rol, #estado').on('input change', function() {
-        aplicarFiltros();
-    });
-});
-</script>
-
-<?php
-// Bloque JS específico para usuarios
-ob_start();
-?>
-<script>
-    // Función para actualizar la paginación según la altura de la pantalla
-    function actualizarPaginacion() {
-        const alturaPantalla = window.innerHeight;
-        const url = new URL(window.location.href);
-        url.searchParams.set('altura', alturaPantalla);
-        window.location.href = url.toString();
-    }
-    // Solo recargar al cargar la página si no hay parámetro de altura
-    window.addEventListener('load', function() {
-        if (!new URL(window.location.href).searchParams.get('altura')) {
-            actualizarPaginacion();
+    // Editar usuario
+    document.getElementById('tablaUsuarios').addEventListener('click', function(e) {
+        if (e.target.closest('.editar-usuario')) {
+            const id = e.target.closest('.editar-usuario').dataset.id;
+            fetch(`<?php echo APP_URL; ?>/usuarios/obtenerUsuario/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        document.getElementById('idUsuario').value = data.usuario.id;
+                        document.getElementById('nombre').value = data.usuario.nombre;
+                        document.getElementById('email').value = data.usuario.email;
+                        document.getElementById('rol').value = data.usuario.rol;
+                        document.getElementById('password').value = '';
+                        $('#modalUsuario').modal('show');
+                    }
+                });
         }
     });
-    // Si quieres recargar al redimensionar, descomenta la siguiente línea:
-    // window.addEventListener('resize', actualizarPaginacion);
 
-    // Aplicar filtros
-    function aplicarFiltros() {
-        const buscar = document.getElementById('buscar').value;
-        const rol = document.getElementById('rol').value;
-        const estado = document.getElementById('estado').value;
-        const url = new URL(window.location.href);
-        url.searchParams.set('buscar', buscar);
-        url.searchParams.set('rol', rol);
-        url.searchParams.set('estado', estado);
-        url.searchParams.set('pagina', '1');
-        window.location.href = url.toString();
-    }
-</script>
-<?php
-$extra_js = ob_get_clean();
-$GLOBALS['extra_js'] = $extra_js;
-?>
+    // Eliminar usuario
+    document.getElementById('tablaUsuarios').addEventListener('click', function(e) {
+        if (e.target.closest('.eliminar-usuario')) {
+            const id = e.target.closest('.eliminar-usuario').dataset.id;
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`<?php echo APP_URL; ?>/usuarios/eliminarUsuario/${id}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Eliminado!',
+                                text: data.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            tablaUsuarios.ajax.reload();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al eliminar el usuario'
+                        });
+                    });
+                }
+            });
+        }
+    });
 
-<!-- Botón flotante para agregar usuario -->
-<link rel="stylesheet" href="assets/css/boton.css">
-<button class="fab-btn" onclick="mostrarModalUsuario()" aria-label="Agregar usuario">
-    <span class="fab-icon">+</span>
-    <span class="fab-text">Agregar usuario</span>
-</button> 
+    // Resetear formulario y título del modal al abrir
+    $('#modalUsuario').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Botón que activó el modal
+        const isEdit = button.hasClass('editar-usuario');
+        const modalTitle = $(this).find('.modal-title');
+        const form = document.getElementById('formUsuario');
+
+        if (!isEdit) {
+            modalTitle.text('Nuevo Usuario');
+            form.reset();
+            document.getElementById('idUsuario').value = ''; // Asegurar que el ID esté vacío para nuevos usuarios
+            document.getElementById('password').setAttribute('required', 'required'); // Contraseña requerida para nuevo
+        } else {
+            modalTitle.text('Editar Usuario');
+            document.getElementById('password').removeAttribute('required'); // Contraseña opcional al editar
+        }
+    });
+
+    // Forzar búsqueda automática al escribir en el input de búsqueda de DataTables
+    $('#tablaUsuarios_filter input').off().on('input', function() {
+        tablaUsuarios.search(this.value).draw();
+    });
+});
+</script> 

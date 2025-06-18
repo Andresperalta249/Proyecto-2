@@ -2,14 +2,12 @@
 class ApiController extends Controller {
     private $dispositivoModel;
     private $mascotaModel;
-    private $alertaModel;
     private $logModel;
 
     public function __construct() {
         parent::__construct();
         $this->dispositivoModel = $this->loadModel('Dispositivo');
         $this->mascotaModel = $this->loadModel('Mascota');
-        $this->alertaModel = $this->loadModel('Alerta');
         $this->logModel = $this->loadModel('Log');
     }
 
@@ -132,81 +130,6 @@ class ApiController extends Controller {
     private function processReading($dispositivo, $reading) {
         // Guardar lectura en la base de datos
         $this->dispositivoModel->saveReading($dispositivo['id'], $reading);
-
-        // Verificar alertas
-        $this->checkAlerts($dispositivo, $reading);
-    }
-
-    private function checkAlerts($dispositivo, $reading) {
-        $alertas = $this->alertaModel->getAlertasByDispositivo($dispositivo['id']);
-        
-        foreach ($alertas as $alerta) {
-            if ($this->shouldTriggerAlert($alerta, $reading)) {
-                $this->triggerAlert($dispositivo, $alerta, $reading);
-            }
-        }
-    }
-
-    private function shouldTriggerAlert($alerta, $reading) {
-        switch ($alerta['tipo']) {
-            case 'temperatura':
-                return $reading['temperatura'] > $alerta['valor_max'] || 
-                       $reading['temperatura'] < $alerta['valor_min'];
-            
-            case 'humedad':
-                return $reading['humedad'] > $alerta['valor_max'] || 
-                       $reading['humedad'] < $alerta['valor_min'];
-            
-            case 'movimiento':
-                return $reading['movimiento'] > $alerta['valor_max'];
-            
-            default:
-                return false;
-        }
-    }
-
-    private function triggerAlert($dispositivo, $alerta, $reading) {
-        $mensaje = $this->generateAlertMessage($alerta, $reading);
-        
-        $this->alertaModel->create([
-            'dispositivo_id' => $dispositivo['id'],
-            'tipo' => $alerta['tipo'],
-            'mensaje' => $mensaje,
-            'valor' => json_encode($reading),
-            'estado' => 'pendiente'
-        ]);
-
-        // Notificar al usuario
-        $this->notifyUser($dispositivo['usuario_id'], $mensaje);
-    }
-
-    private function generateAlertMessage($alerta, $reading) {
-        $mascota = $this->mascotaModel->findById($alerta['mascota_id']);
-        
-        switch ($alerta['tipo']) {
-            case 'temperatura':
-                return sprintf(
-                    "¡Alerta! La temperatura de %s está fuera del rango normal (%.1f°C)",
-                    $mascota['nombre'],
-                    $reading['temperatura']
-                );
-            
-            case 'humedad':
-                return sprintf(
-                    "¡Alerta! La humedad del ambiente de %s está fuera del rango normal (%.1f%%)",
-                    $mascota['nombre'],
-                    $reading['humedad']
-                );
-            
-            case 'movimiento':
-                return sprintf(
-                    "¡Alerta! Se detectó movimiento inusual en el área de %s",
-                    $mascota['nombre']
-                );
-            
-            default:
-                return "¡Alerta! Se ha detectado una condición anormal";
-        }
     }
 
     private function generateJWT($dispositivo) {

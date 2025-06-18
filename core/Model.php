@@ -4,6 +4,7 @@ class Model {
     protected $db;
     protected $table;
     protected $lastError;
+    protected $primaryKey = 'id';
 
     public function __construct() {
         try {
@@ -27,10 +28,10 @@ class Model {
     }
 
     public function find($id) {
-        $idField = ($this->table === 'mascotas') ? 'id_mascota' : (($this->table === 'dispositivos') ? 'id_dispositivo' : 'id');
+        $idField = $this->primaryKey;
         $sql = "SELECT * FROM {$this->table} WHERE $idField = :$idField";
-        $result = $this->query($sql, [":$idField" => $id])->fetch();
-        return $result ?: null;
+        $result = $this->query($sql, [":$idField" => $id]);
+        return $result ? $result[0] : null;
     }
 
     public function create($data) {
@@ -69,10 +70,10 @@ class Model {
     public function update($id, $data) {
         $setClauses = [];
         foreach ($data as $key => $value) {
-            $setClauses[] = "$key = :$key";
+            $setClauses[] = "`$key` = :$key";
         }
-        $idField = ($this->table === 'mascotas') ? 'id_mascota' : (($this->table === 'dispositivos') ? 'id_dispositivo' : 'id');
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE $idField = :$idField";
+        $idField = $this->primaryKey;
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE `$idField` = :$idField";
         $data[$idField] = $id;
         try {
             $stmt = $this->db->getConnection()->prepare($sql);
@@ -84,8 +85,8 @@ class Model {
     }
 
     public function delete($id) {
-        $idField = ($this->table === 'mascotas') ? 'id_mascota' : (($this->table === 'dispositivos') ? 'id_dispositivo' : 'id');
-        $sql = "DELETE FROM {$this->table} WHERE $idField = :$idField";
+        $idField = $this->primaryKey;
+        $sql = "DELETE FROM {$this->table} WHERE `$idField` = :$idField";
         try {
             $stmt = $this->db->getConnection()->prepare($sql);
             return $stmt->execute([":$idField" => $id]);

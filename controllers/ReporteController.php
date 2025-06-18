@@ -1,5 +1,5 @@
 <?php
-require_once 'vendor/autoload.php';
+// require_once 'vendor/autoload.php';
 use Dompdf\Dompdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -7,14 +7,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class ReporteController extends Controller {
     private $mascotaModel;
     private $dispositivoModel;
-    private $alertaModel;
     private $logModel;
 
     public function __construct() {
         parent::__construct();
         $this->mascotaModel = $this->loadModel('Mascota');
         $this->dispositivoModel = $this->loadModel('Dispositivo');
-        $this->alertaModel = $this->loadModel('Alerta');
         $this->logModel = $this->loadModel('Log');
     }
 
@@ -66,23 +64,15 @@ class ReporteController extends Controller {
         }
     }
 
-    public function alertasAction() {
+    public function monitoreoAction() {
         if (!isset($_SESSION['user_id'])) {
             redirect('auth/login');
         }
-
-        $fechaInicio = $_GET['fecha_inicio'] ?? date('Y-m-d', strtotime('-30 days'));
-        $fechaFin = $_GET['fecha_fin'] ?? date('Y-m-d');
-        $formato = $_GET['formato'] ?? 'pdf';
-
-        $alertas = $this->alertaModel->getAlertasByPeriodo($fechaInicio, $fechaFin);
-        $estadisticas = $this->alertaModel->getEstadisticas($fechaInicio, $fechaFin);
-
-        if ($formato === 'pdf') {
-            $this->generarPDFAlertas($alertas, $estadisticas, $fechaInicio, $fechaFin);
-        } else {
-            $this->generarExcelAlertas($alertas, $estadisticas, $fechaInicio, $fechaFin);
-        }
+        $title = 'Reporte de Monitoreo IoT de Mascotas';
+        $content = $this->render('reportes/monitoreo');
+        $GLOBALS['menuActivo'] = 'reporte';
+        $GLOBALS['content'] = $content;
+        require_once 'views/layouts/main.php';
     }
 
     private function generarPDFMascotas($mascotas, $estadisticas, $fechaInicio, $fechaFin) {
@@ -202,68 +192,82 @@ class ReporteController extends Controller {
         $writer->save('php://output');
     }
 
-    private function generarPDFAlertas($alertas, $estadisticas, $fechaInicio, $fechaFin) {
-        $dompdf = new Dompdf();
-        
-        $html = $this->render('reportes/alertas_pdf', [
-            'alertas' => $alertas,
-            'estadisticas' => $estadisticas,
-            'fechaInicio' => $fechaInicio,
-            'fechaFin' => $fechaFin
-        ], true);
-
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
-        $dompdf->stream('reporte_alertas.pdf', ['Attachment' => true]);
+    // --- ENDPOINTS AJAX PARA REPORTE MODERNO ---
+    public function getPropietariosAction() {
+        header('Content-Type: application/json');
+        $q = $_GET['q'] ?? '';
+        $model = $this->loadModel('User');
+        $propietarios = $model->buscar($q, ['rol_id' => 3]); // 3 = rol usuario normal
+        $result = array_map(function($u) {
+            return [
+                'id' => $u['id_usuario'],
+                'text' => $u['nombre'] . ' (' . $u['email'] . ')'
+            ];
+        }, $propietarios);
+        echo json_encode(['results' => $result]);
+        exit;
     }
 
-    private function generarExcelAlertas($alertas, $estadisticas, $fechaInicio, $fechaFin) {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+    public function getMascotasPorPropietarioAction() {
+        header('Content-Type: application/json');
+        $usuario_id = $_GET['usuario_id'] ?? null;
+        if (!$usuario_id) { echo json_encode(['results'=>[]]); exit; }
+        $model = $this->loadModel('Mascota');
+        $mascotas = $model->getMascotasByUser($usuario_id);
+        $result = array_map(function($m) {
+            return [
+                'id' => $m['id_mascota'],
+                'text' => $m['nombre'] . ' (' . $m['especie'] . ')'
+            ];
+        }, $mascotas);
+        echo json_encode(['results' => $result]);
+        exit;
+    }
 
-        // Configurar encabezados
-        $sheet->setCellValue('A1', 'Reporte de Alertas');
-        $sheet->setCellValue('A2', 'Período: ' . $fechaInicio . ' al ' . $fechaFin);
-        
-        $sheet->setCellValue('A4', 'Fecha');
-        $sheet->setCellValue('B4', 'Tipo');
-        $sheet->setCellValue('C4', 'Mensaje');
-        $sheet->setCellValue('D4', 'Dispositivo');
-        $sheet->setCellValue('E4', 'Mascota');
-        $sheet->setCellValue('F4', 'Estado');
+    public function getMacsAction() {
+        header('Content-Type: application/json');
+        $q = $_GET['q'] ?? '';
+        $model = $this->loadModel('Dispositivo');
+        $macs = $model->buscarMacs($q);
+        $result = array_map(function($d) {
+            return [
+                'id' => $d['mac'],
+                'text' => $d['mac']
+            ];
+        }, $macs);
+        echo json_encode(['results' => $result]);
+        exit;
+    }
 
-        // Llenar datos
-        $row = 5;
-        foreach ($alertas as $alerta) {
-            $sheet->setCellValue('A' . $row, $alerta['fecha']);
-            $sheet->setCellValue('B' . $row, $alerta['tipo']);
-            $sheet->setCellValue('C' . $row, $alerta['mensaje']);
-            $sheet->setCellValue('D' . $row, $alerta['dispositivo_nombre']);
-            $sheet->setCellValue('E' . $row, $alerta['mascota_nombre']);
-            $sheet->setCellValue('F' . $row, $alerta['estado']);
-            $row++;
+    public function getRegistrosAction() {
+        header('Content-Type: application/json');
+        $usuario_id = $_GET['usuario_id'] ?? null;
+        $mascota_id = $_GET['mascota_id'] ?? null;
+        $mac = $_GET['mac'] ?? null;
+        $page = max(1, intval($_GET['page'] ?? 1));
+        $perPage = min(50, intval($_GET['perPage'] ?? 20));
+        $model = $this->loadModel('DatosSensor');
+        $result = $model->buscarRegistrosAvanzado($usuario_id, $mascota_id, $mac, $page, $perPage);
+        echo json_encode($result);
+        exit;
+    }
+
+    public function exportarExcelAction() {
+        $usuario_id = $_GET['usuario_id'] ?? null;
+        $mascota_id = $_GET['mascota_id'] ?? null;
+        $mac = $_GET['mac'] ?? null;
+        $model = $this->loadModel('DatosSensor');
+        $registros = $model->buscarRegistrosAvanzado($usuario_id, $mascota_id, $mac, 1, 10000)['data'];
+        // Aquí se puede usar PhpSpreadsheet para exportar a Excel
+        // Por simplicidad, exporto CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename="reporte_mascotas_iot.csv"');
+        $out = fopen('php://output', 'w');
+        fputcsv($out, ['Fecha y hora','Temperatura','Ritmo cardíaco','Ubicación','Batería']);
+        foreach($registros as $r) {
+            fputcsv($out, [$r['fecha_hora'],$r['temperatura'],$r['ritmo_cardiaco'],$r['ubicacion'],$r['bateria']]);
         }
-
-        // Estadísticas
-        $row += 2;
-        $sheet->setCellValue('A' . $row, 'Estadísticas');
-        $row++;
-        $sheet->setCellValue('A' . $row, 'Total Alertas:');
-        $sheet->setCellValue('B' . $row, $estadisticas['total']);
-        $row++;
-        $sheet->setCellValue('A' . $row, 'Alertas Pendientes:');
-        $sheet->setCellValue('B' . $row, $estadisticas['pendientes']);
-        $row++;
-        $sheet->setCellValue('A' . $row, 'Alertas Resueltas:');
-        $sheet->setCellValue('B' . $row, $estadisticas['resueltas']);
-
-        // Generar archivo
-        $writer = new Xlsx($spreadsheet);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="reporte_alertas.xlsx"');
-        header('Cache-Control: max-age=0');
-        $writer->save('php://output');
+        fclose($out);
+        exit;
     }
 } 

@@ -5,7 +5,7 @@ $loginError = $GLOBALS['loginError'] ?? '';
 $menuActivo = $GLOBALS['menuActivo'] ?? null;
 
 // Log para depuración del layout
-$logMsg = '['.date('Y-m-d H:i:s')."] Layout: content=" . (empty($content) ? 'VACIO' : 'LLENO') . ", ruta=" . ($_SERVER['REQUEST_URI'] ?? '') . ", usuario=" . (isset($_SESSION['user_id']) ? 'AUTENTICADO' : 'NO AUTENTICADO') . "\n";
+$logMsg = '['.date('Y-m-d H:i:s').'] Layout: content="' . (empty($content) ? 'VACIO' : 'LLENO') . '", ruta="' . ($_SERVER['REQUEST_URI'] ?? '') . '", usuario="' . (isset($_SESSION['user_id']) ? 'AUTENTICADO' : 'NO AUTENTICADO') . "\n";
 file_put_contents(__DIR__ . '/../../logs/error.log', $logMsg, FILE_APPEND);
 ?>
 <?php require_once __DIR__ . '/../../includes/functions.php'; ?>
@@ -14,10 +14,13 @@ file_put_contents(__DIR__ . '/../../logs/error.log', $logMsg, FILE_APPEND);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? $title . ' - ' . APP_NAME : APP_NAME ?></title>
+    <title><?php echo $title ?? 'Sistema de Monitoreo'; ?></title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="<?= APP_URL ?>/assets/img/favicon.svg">
+    
+    <!-- Google Fonts - Roboto (o Open Sans si prefieres) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -35,24 +38,55 @@ file_put_contents(__DIR__ . '/../../logs/error.log', $logMsg, FILE_APPEND);
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <!-- Estilos CSS -->
-    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/device-monitor.css">
-    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/typography.css">
-    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/sidebar.css">
-    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/tables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Leaflet CSS para mapas -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css">
     
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/base/variables.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/base/reset.css">
+    
+    <!-- Componentes CSS -->
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/buttons.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/tables.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/forms.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/typography.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/accordion.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/timeline.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/tabs-pills.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/pagination.css">
+    
+    <!-- Layout CSS -->
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/layout/sidebar-modern.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/layout/modals.css">
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/layout/header.css">
+    
+    <!-- FAB CSS -->
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/components/fab.css">
+
+    <!-- Páginas CSS -->
+    <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/pages/dashboard.css">
+    <?php if (isset($page_css)): ?>
+        <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/pages/<?php echo $page_css; ?>.css">
+    <?php endif; ?>
+    
+    <!-- CSS Extra -->
     <?php if (isset($extra_css)): ?>
-        <?= $extra_css ?>
+        <?php foreach ($extra_css as $css): ?>
+            <link rel="stylesheet" href="<?php echo $css; ?>">
+        <?php endforeach; ?>
     <?php endif; ?>
 
-  
+    <!-- Leaflet CSS para mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 <?php
@@ -72,99 +106,87 @@ if (!isset($content)) {
 }
 ?>
     <?php if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])): ?>
-        <!-- Sidebar Moderno -->
-        <nav class="sidebar" id="sidebar">
-            <div class="sidebar-header d-flex align-items-center p-3">
-                <span class="sidebar-logo me-2"><i class="fas fa-dog"></i></span>
-                <span class="sidebar-title">PetMonitoring IoT</span>
-            </div>
-            <div class="sidebar-menu">
-                <div class="sidebar-section">
-                    <a href="<?= APP_URL ?>/dashboard" class="sidebar-item<?= ($menuActivo === 'dashboard' ? ' active' : '') ?>">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </a>
+        <!-- Layout Wrapper para flexbox -->
+        <div class="layout-wrapper">
+            <!-- Sidebar Moderno -->
+            <nav class="sidebar" id="sidebar">
+                <div class="sidebar-header d-flex align-items-center p-3">
+                    <span class="sidebar-logo me-2"><i class="fas fa-dog"></i></span>
+                    <span class="sidebar-title">PetMonitoring IoT</span>
                 </div>
-                <div class="sidebar-section">
-                    <div class="sidebar-section-title px-3 py-2 text-muted small text-uppercase">
-                        <i class="fas fa-folder me-2"></i> Administración
+                <div class="sidebar-menu">
+                    <div class="sidebar-section">
+                        <a href="<?= APP_URL ?>/dashboard" class="sidebar-item<?= ($menuActivo === 'dashboard' ? ' active' : '') ?>">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
                     </div>
-                    <a href="<?= APP_URL ?>/usuarios" class="sidebar-item<?= ($menuActivo === 'usuarios' ? ' active' : '') ?>">
-                        <i class="fas fa-users"></i> Usuarios
-                    </a>
-                    <a href="<?= APP_URL ?>/roles" class="sidebar-item<?= ($menuActivo === 'roles' ? ' active' : '') ?>">
-                        <i class="fas fa-user-tag"></i> Roles y Permisos
-                    </a>
-                </div>
-                <div class="sidebar-section">
-                    <div class="sidebar-section-title px-3 py-2 text-muted small text-uppercase">
-                        <i class="fas fa-broadcast-tower me-2"></i> Monitoreo
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title px-3 py-2 text-muted small text-uppercase">
+                            <i class="fas fa-folder me-2"></i> Administración
+                        </div>
+                        <a href="<?= APP_URL ?>/usuarios" class="sidebar-item<?= ($menuActivo === 'usuarios' ? ' active' : '') ?>">
+                            <i class="fas fa-users"></i> Usuarios
+                        </a>
+                        <a href="<?= APP_URL ?>/roles" class="sidebar-item<?= ($menuActivo === 'roles' ? ' active' : '') ?>">
+                            <i class="fas fa-user-tag"></i> Roles y Permisos
+                        </a>
                     </div>
-                    <a href="<?= APP_URL ?>/monitor" class="sidebar-item<?= ($menuActivo === 'monitor' ? ' active' : '') ?>">
-                        <i class="fas fa-desktop"></i> Monitor
-                    </a>
-                    <a href="<?= APP_URL ?>/mascotas" class="sidebar-item<?= ($menuActivo === 'mascotas' ? ' active' : '') ?>">
-                        <i class="fas fa-paw"></i> Mascotas
-                    </a>
-                    <a href="<?= APP_URL ?>/dispositivos" class="sidebar-item<?= ($menuActivo === 'dispositivos' ? ' active' : '') ?>">
-                        <i class="fas fa-microchip"></i> Dispositivos
-                    </a>
-                    <a href="<?= APP_URL ?>/alertas" class="sidebar-item<?= ($menuActivo === 'alertas' ? ' active' : '') ?>">
-                        <i class="fas fa-bell"></i> Alertas
-                        <span class="badge bg-danger rounded-pill ms-2">3</span>
-                    </a>
-                </div>
-                <div class="sidebar-section">
-                    <div class="sidebar-section-title px-3 py-2 text-muted small text-uppercase">
-                        <i class="fas fa-chart-bar me-2"></i> Análisis
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-title px-3 py-2 text-muted small text-uppercase">
+                            <i class="fas fa-broadcast-tower me-2"></i> Monitoreo
+                        </div>
+                        <a href="<?= APP_URL ?>/monitor" class="sidebar-item<?= ($menuActivo === 'monitor' ? ' active' : '') ?>">
+                            <i class="fas fa-desktop"></i> Monitor
+                        </a>
+                        <a href="<?= APP_URL ?>/mascotas" class="sidebar-item<?= ($menuActivo === 'mascotas' ? ' active' : '') ?>">
+                            <i class="fas fa-paw"></i> Mascotas
+                        </a>
+                        <a href="<?= APP_URL ?>/dispositivos" class="sidebar-item<?= ($menuActivo === 'dispositivos' ? ' active' : '') ?>">
+                            <i class="fas fa-microchip"></i> Dispositivos
+                        </a>
+                        <a href="<?= APP_URL ?>/reporte/monitoreo" class="sidebar-item<?= ($menuActivo === 'reporte' ? ' active' : '') ?>">
+                            <i class="fas fa-chart-line"></i> Reporte IoT
+                        </a>
                     </div>
-                    <a href="<?= APP_URL ?>/reportes" class="sidebar-item<?= ($menuActivo === 'reportes' ? ' active' : '') ?>">
-                        <i class="fas fa-chart-line"></i> Reportes
-                    </a>
                 </div>
-                <div class="sidebar-section">
-                    <div class="sidebar-section-title px-3 py-2 text-muted small text-uppercase">
-                        <i class="fas fa-cog me-2"></i> Configuración
-                    </div>
-                    <a href="<?= APP_URL ?>/configuracion" class="sidebar-item<?= ($menuActivo === 'configuracion' ? ' active' : '') ?>">
-                        <i class="fas fa-cogs"></i> Preferencias
-                    </a>
-                </div>
-            </div>
-            <div class="sidebar-footer">
-                <div class="d-flex align-items-center p-3">
-                    <i class="fas fa-user-circle fs-4 me-2"></i>
-                    <div>
-                        <div class="fw-bold"><?= htmlspecialchars($_SESSION['user']['nombre_real'] ?? $_SESSION['user']['nombre'] ?? 'Usuario') ?></div>
-                        <div class="small text-muted">
-                            <?= htmlspecialchars($_SESSION['rol_nombre'] ?? $rolNombre) ?>
+                <div class="sidebar-footer">
+                    <div class="d-flex align-items-center p-3">
+                        <i class="fas fa-user-circle fs-4 me-2"></i>
+                        <div>
+                            <div class="fw-bold"><?= htmlspecialchars($_SESSION['user']['nombre_real'] ?? $_SESSION['user']['nombre'] ?? 'Usuario') ?></div>
+                            <div class="small text-muted">
+                                <?= htmlspecialchars($_SESSION['rol_nombre'] ?? $rolNombre) ?>
+                            </div>
                         </div>
                     </div>
+                    <a href="<?= APP_URL ?>/auth/logout" class="logout-btn">
+                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+                    </a>
                 </div>
-                <a href="<?= APP_URL ?>/auth/logout" class="logout-btn">
-                    <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
-                </a>
-            </div>
-        </nav>
-        <!-- Overlay para móviles -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-        <!-- Fin Sidebar Moderno -->
-        
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Page Content -->
-            <div class="container-fluid dashboard-compact">
-                <?php if (isset($title) && !(isset($_SERVER['REQUEST_URI']) && preg_match('#/monitor/device/#', $_SERVER['REQUEST_URI']))): ?>
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 mb-0 text-gray-800"><?= $title ?></h1>
-                    <?php if (isset($header_buttons)): ?>
-                        <?= $header_buttons ?>
+            </nav>
+            <!-- Overlay para móviles -->
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <!-- Fin Sidebar Moderno -->
+            
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Page Content -->
+                <div class="container-fluid dashboard-compact">
+                    <?php if (isset($title) && !(isset($_SERVER['REQUEST_URI']) && preg_match('#/monitor/device/#', $_SERVER['REQUEST_URI']))): ?>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div> <!-- Contenedor para título y descripción -->
+                            <h1 class="mb-0 text-gray-800"><?= $title ?></h1>
+                            <?php if (isset($description)): ?>
+                                <p class="module-description text-muted mb-0 mt-1"><?= $description ?></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                     <?php endif; ?>
+                    
+                    <?= $content ?>
                 </div>
-                <?php endif; ?>
-                
-                <?= $content ?>
             </div>
-        </div>
+        </div> <!-- Fin layout-wrapper -->
     <?php else: ?>
         <!-- Auth Content -->
         <?php if (!empty($content)): ?>
@@ -181,6 +203,7 @@ if (!isset($content)) {
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <?php if (isset($extra_js)): ?>
         <?= $extra_js ?>

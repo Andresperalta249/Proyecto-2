@@ -35,6 +35,37 @@ class UsuariosController extends Controller {
         require_once 'views/layouts/main.php';
     }
 
+    public function obtenerUsuariosAction() {
+        // Asegurarse de que la solicitud es AJAX
+        if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
+            echo json_encode(['error' => 'Acceso denegado']);
+            return;
+        }
+
+        // Parámetros de DataTables
+        $draw = $_POST['draw'] ?? 1;
+        $start = $_POST['start'] ?? 0;
+        $length = $_POST['length'] ?? 10;
+        $searchValue = $_POST['search']['value'] ?? '';
+        
+        $orderColumnIndex = $_POST['order'][0]['column'] ?? 0;
+        $orderDir = $_POST['order'][0]['dir'] ?? 'asc';
+        $columns = $_POST['columns'] ?? [];
+        $orderColumnName = $columns[$orderColumnIndex]['data'] ?? 'id';
+
+        // Obtener datos del modelo con filtros, paginación y ordenación
+        $resultado = $this->userModel->getUsuariosDatatables($start, $length, $searchValue, $orderColumnName, $orderDir);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            "draw" => (int)$draw,
+            "recordsTotal" => (int)$resultado['total'],
+            "recordsFiltered" => (int)$resultado['filtered_total'],
+            "data" => $resultado['data']
+        ]);
+        exit;
+    }
+
     public function buscarAction() {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $termino = $_GET['q'] ?? '';

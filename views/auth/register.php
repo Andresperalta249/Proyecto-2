@@ -1,9 +1,9 @@
 <!-- Registro Moderno PetMonitoring IoT -->
-<div class="container d-flex align-items-center justify-content-center min-vh-100" style="background: #f6f8fc;">
-  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 500px; width: 100%;">
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card shadow-lg border-0 rounded-4 p-4 auth-card">
     <div class="text-center mb-4">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo mascota" style="width: 80px;">
-      <h2 class="mt-3 mb-1" style="font-weight: 700; color: #0D47A1;">Crear Cuenta</h2>
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Logo mascota" class="auth-logo">
+      <h2 class="mt-3 mb-1 auth-title">Crear Cuenta</h2>
       <p class="text-muted mb-0">Regístrate para comenzar a usar PetMonitoring IoT</p>
     </div>
     <form id="registerForm" method="POST" autocomplete="off" novalidate>
@@ -13,7 +13,7 @@
         <div class="invalid-feedback" id="nombreError">Nombre inválido (mínimo 3 letras, solo letras y espacios)</div>
       </div>
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="email" name="email" placeholder="Correo electrónico" required>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Correo electrónico" required autocomplete="username">
         <label for="email"><i class="fas fa-envelope me-2"></i>Correo electrónico</label>
         <div class="invalid-feedback" id="emailError">Ingrese un correo válido</div>
       </div>
@@ -46,14 +46,14 @@
           <div class="form-floating mb-3 mb-md-0 position-relative">
             <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirmar contraseña" required>
             <label for="confirm_password"><i class="fas fa-lock me-2"></i>Confirmar contraseña</label>
-            <span class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor:pointer;" id="togglePassword">
+            <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password-icon" id="togglePassword">
               <i class="fas fa-eye"></i>
             </span>
             <div class="invalid-feedback" id="confirmPasswordError">Las contraseñas no coinciden</div>
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary w-100 mb-2" style="font-weight:600;">Crear Cuenta</button>
+      <button type="submit" class="btn btn-primary w-100 mb-2 font-weight-semibold">Crear Cuenta</button>
       <div class="d-flex justify-content-between">
         <a href="<?= APP_URL ?>/auth/login" class="small">¿Ya tienes una cuenta? Inicia sesión</a>
       </div>
@@ -95,11 +95,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const val = nombre.value.trim();
     if (val.length < 3 || /[^A-Za-zÁÉÍÓÚáéíóúÑñ ]/.test(val)) {
       nombre.classList.add('is-invalid');
-      nombreError.style.display = 'block';
       return false;
     }
     nombre.classList.remove('is-invalid');
-    nombreError.style.display = 'none';
     return true;
   }
   function validarEmail() {
@@ -107,33 +105,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!re.test(val)) {
       email.classList.add('is-invalid');
-      emailError.style.display = 'block';
       return false;
     }
     email.classList.remove('is-invalid');
-    emailError.style.display = 'none';
     return true;
   }
   function validarTelefono() {
     const val = telefono.value.trim();
     if (!/^[0-9]{7,15}$/.test(val)) {
       telefono.classList.add('is-invalid');
-      telefonoError.style.display = 'block';
       return false;
     }
     telefono.classList.remove('is-invalid');
-    telefonoError.style.display = 'none';
     return true;
   }
   function validarDireccion() {
     const val = direccion.value.trim();
     if (val.length < 5) {
       direccion.classList.add('is-invalid');
-      direccionError.style.display = 'block';
       return false;
     }
     direccion.classList.remove('is-invalid');
-    direccionError.style.display = 'none';
     return true;
   }
   function validarPassword() {
@@ -181,21 +173,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if (!valid) {
       passwordInput.classList.add('is-invalid');
-      passwordError.style.display = 'block';
     } else {
       passwordInput.classList.remove('is-invalid');
-      passwordError.style.display = 'none';
     }
     return valid;
   }
   function validarConfirmPassword() {
     if (confirmPassword.value !== passwordInput.value || !confirmPassword.value) {
       confirmPassword.classList.add('is-invalid');
-      confirmPasswordError.style.display = 'block';
       return false;
     }
     confirmPassword.classList.remove('is-invalid');
-    confirmPasswordError.style.display = 'none';
     return true;
   }
   function validarFormulario() {
@@ -226,13 +214,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-</script>
-<style>
-body { background: #f6f8fc !important; }
-.card { border-radius: 1.5rem !important; transition: none !important; }
-.card:hover, .card:focus, .card:active { box-shadow: 0 2px 12px rgba(13,71,161,0.07) !important; transform: none !important; }
-.form-control:focus { border-color: #0D47A1; box-shadow: 0 0 0 0.2rem rgba(13,71,161,.15); }
-.btn-primary { background: #0D47A1; border: none; }
-.btn-primary:hover { background: #1565C0; }
-#togglePassword i { color: #888; }
-</style> 
+</script> 

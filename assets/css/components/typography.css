@@ -1,0 +1,221 @@
+/* =============================================
+   ESTILOS DE TIPOGRAFÍA
+   ============================================= */
+
+/* Fuentes */
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-gray-700);
+}
+
+/* Encabezados */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-family-heading);
+    color: var(--color-gray-900);
+    line-height: var(--line-height-base);
+    margin-top: var(--spacing-3);
+    margin-bottom: var(--spacing-1);
+}
+
+h1 {
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-bold);
+}
+
+h2 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+}
+
+h3 {
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-semibold);
+}
+
+h4 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+}
+
+h5 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+}
+
+h6 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Párrafos y texto */
+p {
+    margin-bottom: var(--spacing-3);
+}
+
+.text-sm {
+    font-size: var(--font-size-sm);
+}
+
+.text-md {
+    font-size: var(--font-size-base);
+}
+
+.text-lg {
+    font-size: var(--font-size-lg);
+}
+
+.text-xl {
+    font-size: var(--font-size-xl);
+}
+
+.text-bold {
+    font-weight: var(--font-weight-bold);
+}
+
+.text-semibold {
+    font-weight: var(--font-weight-semibold);
+}
+
+.text-medium {
+    font-weight: var(--font-weight-medium);
+}
+
+.text-light {
+    font-weight: var(--font-weight-light);
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-secondary {
+    color: var(--color-secondary);
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.text-danger {
+    color: var(--color-danger);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-info {
+    color: var(--color-info);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+/* Iconos pequeños */
+.text-icon-sm {
+    font-size: 0.7em;
+}
+
+/* Título del modal */
+.modal-header .modal-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+}
+
+/* Enlaces */
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: var(--transition-base);
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+/* Listas */
+ul,
+ol {
+    margin-bottom: var(--spacing-3);
+    padding-left: var(--spacing-5);
+}
+
+li {
+    margin-bottom: var(--spacing-1);
+}
+
+/* Citas */
+blockquote {
+    margin: 0 0 var(--spacing-4);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-left: 0.25rem solid var(--color-gray-300);
+    color: var(--color-gray-600);
+}
+
+/* Códigos */
+code,
+pre {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+}
+
+code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 87.5%;
+    color: var(--color-danger);
+    background-color: var(--color-gray-100);
+    border-radius: var(--border-radius-sm);
+}
+
+pre {
+    display: block;
+    padding: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-900);
+    background-color: var(--color-gray-100);
+    border-radius: var(--border-radius);
+}
+
+pre code {
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-radius: 0;
+}
+
+/* Pequeño texto */
+small {
+    font-size: 80%;
+}
+
+/* Estilos para el título y descripción del módulo */
+.module-description {
+    font-size: var(--font-size-normal);
+    line-height: var(--line-height-base);
+    margin-top: var(--spacing-1);
+    color: var(--color-gray-600);
+}
+
+.module-description.hidden {
+    display: none !important;
+} 

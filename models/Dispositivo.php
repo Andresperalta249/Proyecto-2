@@ -268,25 +268,6 @@ class Dispositivo extends Model {
         }
     }
 
-    public function getDispositivosConAlertas($usuario_id) {
-        try {
-            $sql = "SELECT d.*, m.nombre as mascota_nombre,
-                        COUNT(a.id) as total_alertas
-                    FROM {$this->table} d
-                    LEFT JOIN mascotas m ON d.mascota_id = m.id_mascota
-                    LEFT JOIN alertas a ON d.id = a.dispositivo_id
-                    WHERE d.usuario_id = :usuario_id
-                    GROUP BY d.id
-                    HAVING total_alertas > 0
-                    ORDER BY total_alertas DESC";
-            $result = $this->query($sql, [':usuario_id' => $usuario_id]);
-            return $result ?: [];
-        } catch (Exception $e) {
-            error_log("Error en getDispositivosConAlertas: " . $e->getMessage());
-            return [];
-        }
-    }
-
     public function getDispositivosPorUltimaConexion($usuario_id, $dias = 7) {
         try {
             $sql = "SELECT 
@@ -314,7 +295,7 @@ class Dispositivo extends Model {
                         u.nombre as usuario_nombre
                     FROM {$this->table} d
                     LEFT JOIN mascotas m ON d.mascota_id = m.id_mascota
-                    LEFT JOIN usuarios u ON d.usuario_id = u.id
+                    LEFT JOIN usuarios u ON d.usuario_id = u.id_usuario
                     ORDER BY d.ultima_conexion DESC";
             $result = $this->query($sql);
             return $result ?: [];
@@ -584,6 +565,15 @@ class Dispositivo extends Model {
             error_log("Error en find: " . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Busca MACs de dispositivos por coincidencia parcial
+     */
+    public function buscarMacs($q = '') {
+        $sql = "SELECT DISTINCT mac FROM {$this->table} WHERE mac LIKE :q ORDER BY mac LIMIT 20";
+        $param = ['q' => '%' . $q . '%'];
+        return $this->query($sql, $param);
     }
 }
 ?> 

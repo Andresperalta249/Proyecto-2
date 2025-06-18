@@ -1,8 +1,0 @@
-# Enviar notificaciones diarias a las 8:00 AM
-0 8 * * * php /ruta/al/proyecto/scripts/enviar_notificaciones_email.php diario >> /ruta/al/proyecto/logs/notificaciones_diarias.log 2>&1
-
-# Enviar notificaciones semanales los lunes a las 9:00 AM
-0 9 * * 1 php /ruta/al/proyecto/scripts/enviar_notificaciones_email.php semanal >> /ruta/al/proyecto/logs/notificaciones_semanales.log 2>&1
- 
-# Limpiar notificaciones antiguas (más de 30 días) todos los días a las 3:00 AM
-0 3 * * * php /ruta/al/proyecto/scripts/limpiar_notificaciones.php >> /ruta/al/proyecto/logs/limpieza_notificaciones.log 2>&1 

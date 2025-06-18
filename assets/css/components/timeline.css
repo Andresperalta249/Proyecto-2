@@ -1,0 +1,105 @@
+/* =============================================
+   ESTILOS DE LÍNEA DE TIEMPO (TIMELINE)
+   ============================================= */
+
+.timeline {
+    position: relative;
+    padding: var(--spacing-5) 0;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    left: var(--spacing-5);
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-gray-200);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: calc(var(--spacing-5) + var(--spacing-4)); /* Ancho de la línea + espaciado */
+    margin-bottom: var(--spacing-6);
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    left: calc(var(--spacing-5) - 6px); /* Ajuste para centrar el círculo en la línea */
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    border: 2px solid var(--color-white);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+    z-index: 1;
+}
+
+.timeline-date {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-2);
+    font-weight: var(--font-weight-medium);
+}
+
+.timeline-content {
+    background-color: var(--color-white);
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+}
+
+.timeline-content h5 {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+    margin-bottom: var(--spacing-2);
+}
+
+.timeline-content p {
+    font-size: var(--font-size-base);
+    color: var(--color-gray-700);
+    line-height: var(--line-height-base);
+    margin-bottom: var(--spacing-3);
+}
+
+.timeline-content .btn {
+    margin-top: var(--spacing-2);
+}
+
+@media (max-width: 768px) {
+    .timeline {
+        padding: var(--spacing-4) 0;
+    }
+
+    .timeline:before {
+        left: var(--spacing-4);
+    }
+
+    .timeline-item {
+        padding-left: calc(var(--spacing-4) + var(--spacing-3));
+    }
+
+    .timeline-item:before {
+        left: calc(var(--spacing-4) - 6px);
+    }
+
+    .timeline-content {
+        padding: var(--spacing-3);
+    }
+
+    .timeline-content h5 {
+        font-size: var(--font-size-sm);
+    }
+
+    .timeline-content p {
+        font-size: var(--font-size-sm);
+    }
+} 

@@ -55,7 +55,7 @@
                     <div class="mb-3">
                         <label for="edit_mac" class="form-label">MAC</label>
                         <input type="text" class="form-control" id="edit_mac" name="mac" pattern="^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$" required>
-                        <div id="edit_macError" class="text-danger" style="display:none;"></div>
+                        <div id="edit_macError" class="text-danger d-none"></div>
                     </div>
                     <div class="mb-3">
                         <label for="edit_estado" class="form-label">Estado</label>

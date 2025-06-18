@@ -205,8 +205,24 @@ class RolesController {
             echo json_encode(['success' => false, 'error' => 'No tienes permiso para ver roles']);
             exit;
         }
+        $draw = isset($_POST['draw']) ? intval($_POST['draw']) : 0;
         $roles = $this->model->getAll();
-        echo json_encode(['success' => true, 'data' => $roles]);
+        // Mapear id_rol a id para DataTables
+        foreach ($roles as &$rol) {
+            $rol['id'] = $rol['id_rol'];
+        }
+        $total = count($roles);
+        echo json_encode([
+            'draw' => $draw,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $total,
+            'data' => $roles
+        ]);
         exit;
+    }
+    
+    public function obtenerRolesAction() {
+        // Alias de listAction para compatibilidad con DataTables
+        $this->listAction();
     }
 } 
