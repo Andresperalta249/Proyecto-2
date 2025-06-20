@@ -56,5 +56,29 @@ class Controller {
         header('Location: ' . BASE_URL . $url);
         exit;
     }
+
+    /**
+     * Sanitiza una entrada de texto para prevenir inyección de código
+     * @param string $input El texto a sanitizar
+     * @return string El texto sanitizado
+     */
+    protected function sanitizeInput($input) {
+        if (is_string($input)) {
+            // Eliminar espacios en blanco al inicio y final
+            $input = trim($input);
+            // Convertir caracteres especiales en entidades HTML
+            $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+            // Eliminar caracteres de control
+            $input = preg_replace('/[\x00-\x1F\x7F]/', '', $input);
+        }
+        return $input;
+    }
+
+    protected function jsonResponse($data, $statusCode = 200) {
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
 }
 ?> 

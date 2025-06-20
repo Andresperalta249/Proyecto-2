@@ -12,75 +12,52 @@ class MonitorController extends Controller {
     }
 
     public function indexAction() {
-        error_log("=== INICIO indexAction ===");
-        error_log("Sesión actual: " . print_r($_SESSION, true));
-        
-        if (!isset($_SESSION['user_id'])) {
-            error_log("Error: No hay sesión de usuario activa");
-            header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+        if (!verificarPermiso('ver_monitor')) {
+            $this->view->render('errors/403');
+            return;
         }
+
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Monitor de Dispositivos');
+        $this->view->setData('subtitulo', 'Selecciona un dispositivo para ver su estado en tiempo real.');
 
         if (function_exists('verificarPermiso') && verificarPermiso('ver_todos_dispositivo')) {
             $dispositivos = $this->dispositivoModel->getTodosDispositivosConMascotas();
         } else {
             $dispositivos = $this->dispositivoModel->getDispositivosWithMascotas($_SESSION['user_id']);
         }
-        error_log("Dispositivos obtenidos: " . print_r($dispositivos, true));
-        
-        $content = $this->render('monitor/index', [
+
+        $this->view->render('monitor/index', [
             'dispositivos' => $dispositivos,
-            'subtitulo' => 'Monitorea en tiempo real los dispositivos y mascotas asociados.'
         ]);
-        
-        $GLOBALS['content'] = $content;
-        $GLOBALS['title'] = 'Monitor de Dispositivos';
-        $GLOBALS['menuActivo'] = 'monitor';
-        require_once 'views/layouts/main.php';
     }
 
     public function deviceAction($id = null) {
-        error_log("=== INICIO deviceAction ===");
-        error_log("ID recibido: " . ($id ?? 'null'));
-        error_log("Sesión actual: " . print_r($_SESSION, true));
-        
-        if (!$id) {
-            error_log("Error: ID de dispositivo no proporcionado");
-            header('Location: ' . BASE_URL . 'monitor');
-            exit;
+        if (!verificarPermiso('ver_monitor_dispositivo')) {
+            $this->view->render('errors/403');
+            return;
         }
 
-        if (!isset($_SESSION['user_id'])) {
-            error_log("Error: No hay sesión de usuario activa");
-            header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+        if (!$id) {
+            $this->view->render('errors/404', ['mensaje' => 'ID de dispositivo no proporcionado.']);
+            return;
         }
 
         $dispositivo = $this->dispositivoModel->getDispositivoById($id);
-        
-        error_log("Dispositivo encontrado: " . print_r($dispositivo, true));
-        
         if (!$dispositivo) {
-            error_log("Error: Dispositivo no encontrado");
-            header('Location: ' . BASE_URL . 'monitor');
-            exit;
+            $this->view->render('errors/404', ['mensaje' => 'Dispositivo no encontrado.']);
+            return;
         }
 
-        if (!(function_exists('verificarPermiso') && verificarPermiso('ver_todos_dispositivo'))) {
-            if ($dispositivo['usuario_id'] != $_SESSION['user_id']) {
-                error_log("Error: Intento de acceso no autorizado");
-                header('Location: ' . BASE_URL . 'monitor');
-                exit;
-            }
+        if (!verificarPermiso('ver_todos_dispositivo') && $dispositivo['usuario_id'] != $_SESSION['user_id']) {
+            $this->view->render('errors/403', ['mensaje' => 'No tienes permiso para ver este dispositivo.']);
+            return;
         }
 
-        $this->view->setTitle('Monitor de Dispositivo');
-        $this->view->setData('dispositivo', $dispositivo);
-        $content = $this->render('monitor/device', ['dispositivo' => $dispositivo]);
-        $GLOBALS['content'] = $content;
-        $GLOBALS['title'] = 'Administrador de monitor';
-        $GLOBALS['menuActivo'] = 'monitor';
-        require_once 'views/layouts/main.php';
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Monitor: ' . htmlspecialchars($dispositivo['nombre']));
+        $this->view->setData('subtitulo', 'Visualizando datos en tiempo real para el dispositivo ' . htmlspecialchars($dispositivo['mac']));
+        $this->view->render('monitor/device', ['dispositivo' => $dispositivo]);
     }
 
     public function getDatosAction($id = null) {

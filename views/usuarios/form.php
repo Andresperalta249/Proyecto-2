@@ -1,122 +1,133 @@
 <?php
-$esEditar = isset($usuario);
+$esEditar = isset($usuario) && !empty($usuario);
 $titulo = $esEditar ? 'Editar Usuario' : 'Nuevo Usuario';
+$urlAccion = $esEditar ? APP_URL . '/usuarios/editar' : APP_URL . '/usuarios/crear';
 ?>
 
-<div class="modal-header border-0">
-    <h5 class="modal-title"><?= $titulo ?></h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-</div>
+<form id="formUsuario" action="<?= $urlAccion ?>" class="needs-validation" novalidate>
+    <?php if ($esEditar): ?>
+        <input type="hidden" name="id_usuario" value="<?= $usuario['id_usuario'] ?>">
+    <?php endif; ?>
 
-<div class="modal-body">
-    <form id="formUsuario" data-accion="<?= $esEditar ? 'editar' : 'crear' ?>" class="needs-validation" novalidate>
-        <?php if ($esEditar): ?>
-            <input type="hidden" name="id_usuario" value="<?= $usuario['id_usuario'] ?>">
-        <?php endif; ?>
+    <div class="modal-header">
+        <h5 class="modal-title"><?= $titulo ?></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    </div>
 
-        <div class="row g-3">
-            <!-- Nombre -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="nombre" name="nombre" 
-                           value="<?= $esEditar ? htmlspecialchars($usuario['nombre']) : '' ?>" 
-                           required autocomplete="name">
+    <div class="modal-body">
+        <?php if ($esEditar): // --- VISTA PARA EDITAR USUARIO (CON PESTAÑAS) --- ?>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="datos-tab" data-bs-toggle="tab" data-bs-target="#datos" type="button" role="tab" aria-controls="datos" aria-selected="true">Datos del Usuario</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-pane" type="button" role="tab" aria-controls="password" aria-selected="false">Cambiar Contraseña</button>
+                </li>
+            </ul>
+            <div class="tab-content pt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="datos" role="tabpanel" aria-labelledby="datos-tab">
+                    <div class="row g-3">
+                        <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control" name="nombre" value="<?= htmlspecialchars($usuario['nombre']) ?>" required>
+                            <label>Nombre</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
+                            <label>Email</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <input type="tel" class="form-control" name="telefono" value="<?= htmlspecialchars($usuario['telefono'] ?? '') ?>">
+                            <label>Teléfono</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <input type="text" class="form-control" name="direccion" value="<?= htmlspecialchars($usuario['direccion'] ?? '') ?>">
+                            <label>Dirección</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <select class="form-select" name="rol_id" required>
+                                <?php foreach ($roles as $rol): ?>
+                                    <option value="<?= $rol['id_rol'] ?>" <?= $usuario['rol_id'] == $rol['id_rol'] ? 'selected' : '' ?>><?= htmlspecialchars($rol['nombre']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <label>Rol</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <select class="form-select" name="estado" required>
+                                <option value="activo" <?= $usuario['estado'] == 'activo' ? 'selected' : '' ?>>Activo</option>
+                                <option value="inactivo" <?= $usuario['estado'] == 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
+                            </select>
+                            <label>Estado</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="password-pane" role="tabpanel" aria-labelledby="password-tab">
+                    <div class="row g-3">
+                        <div class="col-md-6 form-floating">
+                            <input type="password" class="form-control" name="password" autocomplete="new-password">
+                            <label>Nueva Contraseña</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <input type="password" class="form-control" name="confirm_password" autocomplete="new-password">
+                            <label>Confirmar Contraseña</label>
+                        </div>
+                        <div class="col-12"><small class="form-text text-muted">Dejar en blanco para no cambiar la contraseña.</small></div>
+                    </div>
+                </div>
+            </div>
+        <?php else: // --- VISTA PARA CREAR USUARIO (FORMULARIO ÚNICO) --- ?>
+            <div class="row g-3">
+                <div class="col-md-6 form-floating">
+                    <input type="text" class="form-control" id="nombre" name="nombre" required autocomplete="name">
                     <label for="nombre">Nombre</label>
                 </div>
-            </div>
-
-            <!-- Email -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="email" class="form-control" id="email" name="email" 
-                           value="<?= $esEditar ? htmlspecialchars($usuario['email']) : '' ?>" 
-                           <?= $esEditar ? 'readonly' : 'required' ?> autocomplete="email">
+                <div class="col-md-6 form-floating">
+                    <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
                     <label for="email">Email</label>
                 </div>
-            </div>
-
-            <!-- Teléfono -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="tel" class="form-control" id="telefono" name="telefono" 
-                           value="<?= $esEditar ? htmlspecialchars($usuario['telefono']) : '' ?>" autocomplete="tel">
+                <div class="col-md-6 form-floating">
+                    <input type="tel" class="form-control" id="telefono" name="telefono" autocomplete="tel">
                     <label for="telefono">Teléfono</label>
                 </div>
-            </div>
-
-            <!-- Dirección -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="direccion" name="direccion" 
-                           value="<?= $esEditar ? htmlspecialchars($usuario['direccion']) : '' ?>" autocomplete="street-address">
+                 <div class="col-md-6 form-floating">
+                    <input type="text" class="form-control" id="direccion" name="direccion" autocomplete="street-address">
                     <label for="direccion">Dirección</label>
                 </div>
-            </div>
-
-            <!-- Rol -->
-            <div class="col-md-6">
-                <div class="form-floating">
+                <div class="col-md-6 form-floating">
                     <select class="form-select" id="rol_id" name="rol_id" required>
-                        <option value="">Seleccione un rol</option>
-                        <?php 
-                        // Obtener el rol actual del usuario en sesión
-                        $rolUsuarioActual = $_SESSION['user_role'] ?? 0;
-                        $esSuperAdmin = $rolUsuarioActual == 1; // 1 = superadmin
-                        
-                        foreach ($roles as $rol): 
-                            // Solo superadmin puede asignar roles de superadmin y admin
-                            $puedeAsignar = true;
-                            if (($rol['id_rol'] == 1 || $rol['id_rol'] == 2) && !$esSuperAdmin) {
-                                $puedeAsignar = false;
-                            }
-                            if ($puedeAsignar):
-                        ?>
-                            <option value="<?= $rol['id_rol'] ?>" 
-                                <?= $esEditar && $usuario['rol_id'] == $rol['id_rol'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($rol['nombre']) ?>
-                            </option>
-                        <?php endif; ?>
+                        <option value="" disabled selected>Seleccione un rol</option>
+                        <?php foreach ($roles as $rol): ?>
+                            <option value="<?= $rol['id_rol'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
                         <?php endforeach; ?>
                     </select>
                     <label for="rol_id">Rol</label>
                 </div>
-            </div>
-
-            <!-- Estado -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <select class="form-select" id="estado" name="estado">
-                        <option value="activo" <?= $esEditar && $usuario['estado'] == 'activo' ? 'selected' : '' ?>>Activo</option>
-                        <option value="inactivo" <?= $esEditar && $usuario['estado'] == 'inactivo' ? 'selected' : '' ?>>Inactivo</option>
+                <div class="col-md-6 form-floating">
+                    <select class="form-select" id="estado" name="estado" required>
+                        <option value="activo" selected>Activo</option>
+                        <option value="inactivo">Inactivo</option>
                     </select>
                     <label for="estado">Estado</label>
                 </div>
-            </div>
-
-            <!-- Contraseña -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="password" name="password" 
-                           <?= $esEditar ? '' : 'required' ?> autocomplete="new-password">
-                    <label for="password">
-                        Contraseña<?= $esEditar ? ' (dejar vacío para no cambiar)' : '' ?>
-                    </label>
+                <hr class="my-3">
+                <div class="col-md-6 form-floating">
+                    <input type="password" class="form-control" id="password" name="password" required autocomplete="new-password">
+                    <label for="password">Contraseña</label>
                 </div>
-            </div>
-
-            <!-- Confirmar Contraseña -->
-            <div class="col-md-6">
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
-                           <?= $esEditar ? '' : 'required' ?> autocomplete="new-password">
+                <div class="col-md-6 form-floating">
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required autocomplete="new-password">
                     <label for="confirm_password">Confirmar Contraseña</label>
                 </div>
+                <div class="col-12">
+                    <small class="form-text text-muted">
+                        La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula y un número.
+                    </small>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        <?php endif; ?>
+    </div>
 
-<div class="modal-footer border-0">
-    <button type="button" class="btn-accion btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-    <button type="submit" form="formUsuario" class="btn-accion btn-primary">Guardar</button>
-</div> 
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form> 

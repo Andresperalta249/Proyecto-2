@@ -194,18 +194,18 @@ class DatosSensor extends Model {
     /**
      * Búsqueda avanzada y paginada de registros históricos para el reporte moderno
      */
-    public function buscarRegistrosAvanzado($usuario_id = null, $mascota_id = null, $mac = null, $page = 1, $perPage = 20) {
+    public function buscarRegistrosAvanzado($usuario_id = null, $mascota_id = null, $mac = null, $page = 1, $perPage = 20, $fecha_inicio = null, $fecha_fin = null) {
         $offset = ($page - 1) * $perPage;
         $params = [];
         $where = [];
         $join = '';
 
+        $join .= ' INNER JOIN dispositivos d ON d.id_dispositivo = datos_sensores.dispositivo_id';
+        $join .= ' INNER JOIN mascotas m ON d.mascota_id = m.id_mascota';
+        $join .= ' INNER JOIN usuarios u ON m.usuario_id = u.id_usuario';
         if ($usuario_id) {
-            $join .= ' INNER JOIN dispositivos d ON d.id = datos_sensores.dispositivo_id';
             $where[] = 'd.usuario_id = :usuario_id';
             $params[':usuario_id'] = $usuario_id;
-        } else {
-            $join .= ' INNER JOIN dispositivos d ON d.id = datos_sensores.dispositivo_id';
         }
         if ($mascota_id) {
             $where[] = 'd.mascota_id = :mascota_id';
@@ -215,13 +215,20 @@ class DatosSensor extends Model {
             $where[] = 'd.mac LIKE :mac';
             $params[':mac'] = '%' . $mac . '%';
         }
+        if ($fecha_inicio && $fecha_fin) {
+            $where[] = 'datos_sensores.fecha BETWEEN :fecha_inicio AND :fecha_fin';
+            $params[':fecha_inicio'] = $fecha_inicio . ' 00:00:00';
+            $params[':fecha_fin'] = $fecha_fin . ' 23:59:59';
+        }
         $whereSQL = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
-        $sql = "SELECT datos_sensores.*, d.mac, d.mascota_id
+        $sql = "SELECT datos_sensores.*, d.mac, d.mascota_id, m.nombre AS mascota_nombre, u.nombre AS dueno_nombre
                 FROM datos_sensores
                 $join
                 $whereSQL
                 ORDER BY datos_sensores.fecha DESC
                 LIMIT :offset, :perPage";
+        error_log('[DEBUG] SQL: ' . $sql);
+        error_log('[DEBUG] PARAMS: ' . json_encode($params));
         $stmt = $this->db->getConnection()->prepare($sql);
         foreach ($params as $k => $v) {
             $stmt->bindValue($k, $v);
@@ -230,6 +237,7 @@ class DatosSensor extends Model {
         $stmt->bindValue(':perPage', (int)$perPage, PDO::PARAM_INT);
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        error_log('[DEBUG] DATA: ' . json_encode($data));
         // Total para paginación
         $sqlCount = "SELECT COUNT(*) as total FROM datos_sensores $join $whereSQL";
         $stmtCount = $this->db->getConnection()->prepare($sqlCount);
@@ -241,6 +249,7 @@ class DatosSensor extends Model {
         // Formatear datos para la tabla
         $result = [];
         foreach ($data as $r) {
+            error_log('[DEBUG] MAC EN REGISTRO: ' . json_encode($r['mac']));
             $result[] = [
                 'fecha_hora' => $r['fecha'],
                 'temperatura' => $r['temperatura'],
@@ -249,13 +258,41 @@ class DatosSensor extends Model {
                 'bateria' => $r['bateria'],
                 'latitud' => $r['latitude'],
                 'longitud' => $r['longitude'],
+                'mascota_nombre' => $r['mascota_nombre'],
+                'dueno_nombre' => $r['dueno_nombre'],
+                'mac' => $r['mac'],
             ];
         }
+        error_log('[DEBUG] RESULT: ' . json_encode($result));
         return [
             'data' => $result,
             'total' => (int)$total,
             'page' => (int)$page,
             'perPage' => (int)$perPage
         ];
+    }
+
+    /**
+     * Devuelve la última ubicación de cada mascota con nombre, dueño y MAC
+     */
+    public function obtenerUltimasUbicacionesMascotas() {
+        $sql = "SELECT m.id_mascota, m.nombre AS mascota_nombre, u.nombre AS dueno_nombre, d.mac,
+                        ds.latitude, ds.longitude, ds.fecha
+                FROM mascotas m
+                INNER JOIN usuarios u ON m.usuario_id = u.id_usuario
+                INNER JOIN dispositivos d ON d.mascota_id = m.id_mascota
+                INNER JOIN (
+                    SELECT dispositivo_id, MAX(fecha) AS max_fecha
+                    FROM datos_sensores
+                    WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+                    GROUP BY dispositivo_id
+                ) ult ON ult.dispositivo_id = d.id_dispositivo
+                INNER JOIN datos_sensores ds ON ds.dispositivo_id = d.id_dispositivo AND ds.fecha = ult.max_fecha
+                WHERE ds.latitude IS NOT NULL AND ds.longitude IS NOT NULL
+                ORDER BY ds.fecha DESC";
+        $stmt = $this->db->getConnection()->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
 } 

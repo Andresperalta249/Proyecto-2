@@ -208,6 +208,27 @@
     border-bottom-right-radius: 0;
 }
 
+/* =============================================
+   BOTONES DE ACCIÓN EN TABLAS (MEJORADOS)
+   ============================================= */
+.table .btn-sm {
+    transition: all 0.2s ease-in-out;
+}
+
+.table .btn-sm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table .btn-sm i {
+    vertical-align: middle; /* Centra íconos verticalmente */
+}
+
+/* Ajustes para el dropdown en tablas */
+.table .dropdown-toggle::after {
+    display: none; /* Ocultar la flecha por defecto del dropdown */
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .btn--fab {

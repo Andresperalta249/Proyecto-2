@@ -1,25 +1,24 @@
 <?php
 class RolesController {
     private $model;
+    private $view;
     
     public function __construct() {
         $this->model = new Rol();
+        $this->view = new View();
     }
     
     public function indexAction() {
         // Verificar permisos
         if (!verificarPermiso('roles_ver')) {
-            header('Location: ' . APP_URL . '/error/403');
-            exit;
+            $this->view->render('errors/403');
+            return;
         }
         
-        $title = 'Administrador de roles';
-        ob_start();
-        require 'views/roles/index.php';
-        $GLOBALS['content'] = ob_get_clean();
-        $GLOBALS['title'] = $title;
-        $GLOBALS['menuActivo'] = 'roles';
-        require_once 'views/layouts/main.php';
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Gestión de Roles');
+        $this->view->setData('subtitulo', 'Administración de roles y permisos en el sistema.');
+        $this->view->render('roles/index');
     }
     
     public function getAction() {

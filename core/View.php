@@ -16,27 +16,32 @@ class View {
         $this->layout = $layout;
     }
 
-    public function render($view) {
-        // Extraer los datos para que estén disponibles en la vista
-        extract($this->data);
+    public function render($view, $data = [], $return = false) {
+        // Combinar datos globales con datos específicos de la vista
+        $allData = array_merge($this->data, $data);
+        extract($allData);
 
-        // Iniciar el buffer de salida
         ob_start();
-
-        // Cargar la vista
+        
         $viewPath = 'views/' . $view . '.php';
         if (file_exists($viewPath)) {
             require $viewPath;
         } else {
+            ob_end_clean();
             throw new Exception("Vista no encontrada: {$viewPath}");
         }
-
-        // Obtener el contenido del buffer
+        
         $content = ob_get_clean();
 
-        // Cargar el layout
+        if ($return) {
+            return $content;
+        }
+
+        // Cargar el layout (solo si no se retorna el contenido)
         $layoutPath = 'views/layouts/' . $this->layout . '.php';
         if (file_exists($layoutPath)) {
+            // Pasar el contenido a la variable $content para el layout
+            $GLOBALS['content'] = $content;
             require $layoutPath;
         } else {
             throw new Exception("Layout no encontrado: {$layoutPath}");
@@ -44,8 +49,7 @@ class View {
     }
 
     public function partial($view, $data = []) {
-        // Extraer los datos adicionales
-        extract($data);
+        extract(array_merge($this->data, $data));
 
         // Cargar la vista parcial
         $viewPath = 'views/partials/' . $view . '.php';

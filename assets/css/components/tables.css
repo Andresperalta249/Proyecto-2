@@ -3,7 +3,6 @@
    ============================================= */
 
 .table, .table-bordered, .table-striped, .table-responsive {
-    font-size: var(--font-size-small);
     border-collapse: collapse;
     margin: 0;
     width: 100%;
@@ -231,7 +230,7 @@
 .dataTables_wrapper .dataTables_paginate {
     margin-top: var(--spacing-2);
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     gap: var(--spacing-1);
 }
@@ -391,4 +390,144 @@ table.dataTable thead .sorting_desc:after {
 .table-striped tbody tr:hover {
     background-color: var(--color-gray-200);
     transition: var(--transition-base);
+}
+
+/* Moderno y elegante para históricos */
+.table-modern th, .table-modern td {
+  white-space: nowrap;
+  padding: 1rem 1.5rem;
+  font-size: 1.08rem;
+  vertical-align: middle;
+  color: #222;
+  background: transparent;
+}
+.table-modern thead th {
+  background: #f7fafd;
+  font-weight: 700;
+  border-bottom: 2px solid #e3e6f0;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.table-modern tbody tr {
+  transition: background 0.2s;
+}
+.table-modern tbody tr:hover {
+  background: #eaf1fb;
+}
+.table-modern td {
+  border-bottom: 1px solid #e9ecef;
+}
+.table-modern {
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  background: #fff;
+}
+.elegant-table-modern {
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  background: #fff;
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  margin-bottom: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bs-gray-400) var(--bs-light);
+}
+.modern-table-card {
+  border: none;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  border-radius: 18px;
+}
+.modern-map {
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+  background: #fff;
+}
+
+@media (max-width: 991px) {
+  .table-modern th, .table-modern td {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+}
+@media (max-width: 600px) {
+  .table-modern th, .table-modern td {
+    font-size: 0.75rem;
+  }
+  .elegant-table-modern {
+    font-size: 0.8rem;
+  }
+  .modern-table-card, .modern-map {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+  }
+}
+
+/* =============================================
+   ESTILOS GENÉRICOS DE DATATABLES
+   ============================================= */
+
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ccc !important;
+}
+
+#tablaUsuarios th:first-child,
+#tablaUsuarios td:first-child {
+    text-align: center;
+}
+
+/* --- Estilos para el switch de estado (Diseño tipo iOS) --- */
+.form-check.form-switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.form-check-input.estado-switch {
+    height: 24px;
+    width: 44px;
+    border-radius: 24px;
+    background-color: #ccc;
+    background-image: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Círculo interior (thumb) */
+.form-check-input.estado-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-check-input.estado-switch:checked {
+    background-color: #28a745; /* Un verde más estándar de Bootstrap success */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-check-input.estado-switch:focus {
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.5);
+    outline: none;
+}
+
+/* Mover el círculo al estar activo */
+.form-check-input.estado-switch:checked::after {
+    transform: translateX(20px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 } 

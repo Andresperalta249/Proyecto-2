@@ -1,10 +1,10 @@
 <?php
 // Eliminar encabezados y subtítulos, incluyendo el include del header_titulo.php
-$subtitulo = isset($subtitulo) ? $subtitulo : 'Gestiona, busca y administra los dispositivos IoT del sistema.';
+// $subtitulo = isset($subtitulo) ? $subtitulo : 'Gestiona, busca y administra los dispositivos IoT del sistema.';
+$titulo = "Gestión de Dispositivos";
+$subtitulo = "Administración de dispositivos IoT para monitoreo de mascotas.";
 ?>
-<p class="subtitle text-md" style="margin-top: 0; margin-bottom: 0;">
-  <?= htmlspecialchars($subtitulo) ?>
-</p>
+
 <!-- FAB: Botón flotante de acción principal para la página de dispositivos -->
 <?php if (verificarPermiso('crear_dispositivos')): ?>
 <button class="fab-btn" id="btnNuevoDispositivoFlotante" data-bs-toggle="modal" data-bs-target="#modalDispositivo" title="Gestionar Dispositivo">
@@ -15,80 +15,39 @@ $subtitulo = isset($subtitulo) ? $subtitulo : 'Gestiona, busca y administra los 
 
 <!-- Page Content -->
 <div class="container-fluid px-0">
-    <!-- Barra de búsqueda y filtros -->
-    <div class="card mb-4 w-100 mx-auto">
-        <div class="card-body d-flex flex-column align-items-center">
-            <div class="table-container">
-                <table class="table" id="tablaDispositivos">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>MAC</th>
-                            <th>Dueño</th>
-                            <th>Disponible</th>
-                            <th>Estado</th>
-                            <th>Batería</th>
-                            <th>Mascota</th>
-                            <th>Última Lectura</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyDispositivos">
-                        <?php foreach ($dispositivos as $dispositivo): ?>
-                        <tr class="fila-dispositivo" data-id="<?= $dispositivo['id'] ?>">
-                            <td class="id-azul text-center" data-label="ID"><?= $dispositivo['id'] ?></td>
-                            <td class="nombre-dispositivo" data-label="Nombre" title="<?= htmlspecialchars($dispositivo['nombre']) ?>">
-                                <?= htmlspecialchars($dispositivo['nombre']) ?>
-                            </td>
-                            <td data-label="MAC"><?= htmlspecialchars($dispositivo['mac']) ?></td>
-                            <td data-label="Dueño"><?= htmlspecialchars($dispositivo['usuario_nombre'] ?? $dispositivo['propietario_nombre'] ?? '-') ?></td>
-                            <td class="text-center" data-label="Disponible">
-                                <?php if (empty($dispositivo['mascota_nombre'])): ?>
-                                    <span class="status-badge badge-success">Disponible</span>
-                                <?php else: ?>
-                                    <span class="status-badge badge-warning">Asignado</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="text-center" data-label="Estado"><?= htmlspecialchars($dispositivo['estado'] ?? '-') ?></td>
-                            <td class="text-center" data-label="Batería">
-                                <?php
-                                $bateria = isset($dispositivo['bateria']) ? (int)$dispositivo['bateria'] : null;
-                                if ($bateria === null || $bateria === '') {
-                                    echo '-';
-                                } else {
-                                    echo '<span class="fw-medium">' . $bateria . '%</span>';
-                                }
-                                ?>
-                            </td>
-                            <td data-label="Mascota"><?= htmlspecialchars($dispositivo['mascota_nombre'] ?? '-') ?></td>
-                            <td data-label="Última Lectura"><?= htmlspecialchars($dispositivo['ultima_lectura'] ?? '-') ?></td>
-                            <td data-label="Acciones">
-                                <div class="action-buttons">
-                                    <button class="btn-accion btn-info me-1 btnEditarDispositivo" data-id="<?= $dispositivo['id'] ?>" title="Editar" data-bs-toggle="tooltip">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn-accion btn-danger me-1 btnEliminarDispositivo" data-id="<?= $dispositivo['id'] ?>" title="Eliminar" data-bs-toggle="tooltip">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                    <?php if ($dispositivo['estado'] === 'activo' && !empty($dispositivo['mascota_nombre'])): ?>
-                                        <button class="btn-accion btn-success btnMonitorDispositivo" data-id="<?= $dispositivo['id'] ?>" title="Monitor" data-bs-toggle="tooltip">
-                                            <i class="fas fa-desktop"></i>
-                                        </button>
-                                    <?php else: ?>
-                                        <button class="btn-accion btn-secondary" disabled title="Sin dispositivo asociado o inactivo" data-bs-toggle="tooltip">
-                                            <i class="fas fa-desktop"></i>
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4 w-100 mx-auto">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tablaDispositivos" class="table table-bordered table-striped" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Mascota</th>
+                                    <th>Estado</th>
+                                    <th>Batería</th>
+                                    <th>Última Actividad</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Contenedor para la configuración que necesita el JS -->
+<div id="dispositivos-config" 
+     data-app-url="<?= APP_URL ?>"
+     data-permiso-editar="<?= verificarPermiso('editar_dispositivos') ? 'true' : 'false' ?>"
+     data-permiso-eliminar="<?= verificarPermiso('eliminar_dispositivos') ? 'true' : 'false' ?>">
 </div>
 
 <!-- Aquí irá el modal unificado Gestionar Dispositivo -->
@@ -157,6 +116,52 @@ $subtitulo = isset($subtitulo) ? $subtitulo : 'Gestiona, busca y administra los 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    function getDynamicPageLength() {
+        const tableWrapper = document.querySelector('.table-container');
+        if (!tableWrapper) return 10;
+
+        const topOffset = tableWrapper.getBoundingClientRect().top;
+        const headerHeight = 56;
+        const footerHeight = 50;
+        const safetyMargin = 20;
+
+        const availableHeight = window.innerHeight - topOffset - headerHeight - footerHeight - safetyMargin;
+        const avgRowHeight = 48;
+        const numRows = Math.floor(availableHeight / avgRowHeight);
+        
+        return Math.max(5, numRows);
+    }
+    
+    let tablaDispositivos;
+
+    function inicializarDataTable() {
+        tablaDispositivos = $('#tablaDispositivos').DataTable({
+            "processing": true,
+            "serverSide": false, // Cambiado a false ya que los datos se cargan en el HTML
+            "responsive": true,
+            "lengthChange": false,
+            "dom": 'fltip',
+            "language": { "url": "<?= APP_URL ?>/assets/js/i18n/Spanish.json" },
+            initComplete: function() {
+                const newPageLength = getDynamicPageLength();
+                this.api().page.len(newPageLength).draw();
+            }
+        });
+    }
+
+    inicializarDataTable();
+
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (tablaDispositivos) {
+                const newPageLength = getDynamicPageLength();
+                tablaDispositivos.page.len(newPageLength).draw();
+            }
+        }, 250);
+    });
+
     // Verificar si jQuery está disponible
     if (typeof jQuery === 'undefined') {
         console.error('jQuery no está disponible');

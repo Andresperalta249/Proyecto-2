@@ -22,8 +22,12 @@ file_put_contents(__DIR__ . '/../../logs/error.log', $logMsg, FILE_APPEND);
     <!-- Google Fonts - Roboto (o Open Sans si prefieres) -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Scripts -->
+    <!-- jQuery y Select2 cargados primero para evitar conflictos -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+    
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -87,6 +91,14 @@ file_put_contents(__DIR__ . '/../../logs/error.log', $logMsg, FILE_APPEND);
 
     <!-- Leaflet CSS para mapas -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JavaScript para mapas -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Daterangepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <!-- Daterangepicker JS y moment.js -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 </head>
 <body>
 <?php
@@ -172,14 +184,12 @@ if (!isset($content)) {
             <div class="main-content">
                 <!-- Page Content -->
                 <div class="container-fluid dashboard-compact">
-                    <?php if (isset($title) && !(isset($_SERVER['REQUEST_URI']) && preg_match('#/monitor/device/#', $_SERVER['REQUEST_URI']))): ?>
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div> <!-- Contenedor para título y descripción -->
-                            <h1 class="mb-0 text-gray-800"><?= $title ?></h1>
-                            <?php if (isset($description)): ?>
-                                <p class="module-description text-muted mb-0 mt-1"><?= $description ?></p>
-                            <?php endif; ?>
-                        </div>
+                    <?php if (isset($titulo) && !(isset($_SERVER['REQUEST_URI']) && preg_match('#/monitor/device/#', $_SERVER['REQUEST_URI']))): ?>
+                    <div class="mb-4">
+                        <h1 class="fw-bold mb-0 title-h1"><?= htmlspecialchars($titulo) ?></h1>
+                        <?php if (isset($subtitulo)): ?>
+                            <div class="text-secondary small text-sm mb-1"><?= htmlspecialchars($subtitulo) ?></div>
+                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
                     
@@ -195,7 +205,6 @@ if (!isset($content)) {
     <?php endif; ?>
     
     <!-- Scripts principales al final para asegurar disponibilidad -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -311,5 +320,14 @@ if (!isset($content)) {
         };
     </script>
     <script src="<?= APP_URL ?>/assets/js/roles.js"></script>
+
+    <!-- Modal Genérico para Contenido Dinámico -->
+    <div class="modal fade" id="modal-generico" tabindex="-1" aria-labelledby="modal-generico-label" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <!-- El contenido se cargará aquí -->
+        </div>
+      </div>
+    </div>
 </body>
 </html> 

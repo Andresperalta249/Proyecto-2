@@ -61,6 +61,22 @@ function verificarPermiso($permiso_codigo) {
     if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 1) {
         return true;
     }
-    // Usar el array de permisos en sesión
-    return in_array($permiso_codigo, $_SESSION['permissions'] ?? []);
+    
+    // Verificar permisos en la base de datos usando el nombre del permiso
+    try {
+        $db = Database::getInstance();
+        $sql = "SELECT COUNT(*) as tiene_permiso 
+                FROM usuarios u 
+                JOIN roles r ON u.rol_id = r.id_rol 
+                JOIN roles_permisos rp ON r.id_rol = rp.rol_id 
+                JOIN permisos p ON rp.permiso_id = p.id_permiso 
+                WHERE u.id_usuario = ? AND p.nombre = ? AND p.estado = 'activo'";
+        $stmt = $db->getConnection()->prepare($sql);
+        $stmt->execute([$_SESSION['user_id'], $permiso_codigo]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row && $row['tiene_permiso'] > 0;
+    } catch (Exception $e) {
+        error_log("Error al verificar permiso: " . $e->getMessage());
+        return false;
+    }
 } 

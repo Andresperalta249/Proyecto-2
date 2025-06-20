@@ -20,45 +20,31 @@ class MascotasController extends Controller {
     }
 
     public function indexAction() {
-        try {
-            $propietario_id = $_SESSION['user_id'];
-            $puedeVerTodos = verificarPermiso('ver_todos_mascotas');
-            
-            // Cargar usuarios para el select de propietarios
-            $usuariosModel = $this->loadModel('User');
-            $usuarios = $usuariosModel->getActiveUsers();
-            
-            if ($puedeVerTodos) {
-                $mascotas = $this->mascotaModel->getMascotasConDispositivo();
-            } else {
-                $mascotas = $this->mascotaModel->getMascotasConDispositivo(); // Para todos, ya que el método filtra por usuario si es necesario
-            }
-            error_log('Mascotas obtenidas: ' . print_r($mascotas, true));
-            
-            $title = 'Gestión de Mascotas';
-            $description = 'Administración de mascotas y sus datos en el sistema.';
-            $content = $this->render('mascotas/index', [
-                'mascotas' => $mascotas,
-                'usuarios' => $usuarios,
-                'title' => $title,
-                'description' => $description
-            ]);
-            $GLOBALS['content'] = $content;
-            $GLOBALS['title'] = $title;
-            $GLOBALS['description'] = $description;
-            $GLOBALS['menuActivo'] = 'mascotas';
-            require_once 'views/layouts/main.php';
-        } catch (Exception $e) {
-            $title = 'Error';
-            $content = $this->render('mascotas/index', [
-                'error' => $e->getMessage(),
-                'usuarios' => []
-            ]);
-            $GLOBALS['content'] = $content;
-            $GLOBALS['title'] = $title;
-            $GLOBALS['menuActivo'] = 'mascotas';
-            require_once 'views/layouts/main.php';
+        if (!verificarPermiso('ver_mascotas')) {
+            $this->view->render('errors/403');
+            return;
         }
+
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Gestión de Mascotas');
+        $this->view->setData('subtitulo', 'Administra y consulta la información de las mascotas.');
+        
+        $propietario_id = $_SESSION['user_id'];
+        $puedeVerTodos = verificarPermiso('ver_todos_mascotas');
+        
+        $usuariosModel = $this->loadModel('User');
+        $usuarios = $usuariosModel->getActiveUsers();
+        
+        if ($puedeVerTodos) {
+            $mascotas = $this->mascotaModel->getMascotasConDispositivo();
+        } else {
+            $mascotas = $this->mascotaModel->getMascotasConDispositivo();
+        }
+        
+        $this->view->render('mascotas/index', [
+            'mascotas' => $mascotas,
+            'usuarios' => $usuarios
+        ]);
     }
 
     public function createAction() {

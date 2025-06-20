@@ -141,7 +141,7 @@
             </div>
         </div>
     </div>
-    <script src="https://kit.fontawesome.com/2b8e1e2e8b.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
     <script>
     const BASE_URL = window.location.pathname.split('/dashboard')[0] + '/dashboard/';
     let especiesChart, usuariosChart;

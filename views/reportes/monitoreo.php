@@ -1,71 +1,68 @@
 <?php
 // Vista: Reporte moderno de monitoreo IoT de mascotas
 ?>
-<div class="container-fluid py-4" style="background:#f8f9fc;min-height:100vh;">
-  <div class="card shadow-sm mb-4 rounded-4">
-    <div class="card-body">
-      <form id="buscador-avanzado" class="row g-3 align-items-end">
-        <div class="col-md-4">
+<div class="container-fluid py-4 bg-light min-vh-100">
+  <!-- Panel de filtros -->
+  <div class="card shadow-sm mb-3 rounded-4 border-0">
+    <div class="card-body pb-2">
+      <form id="buscador-avanzado" class="row g-2 align-items-end flex-wrap">
+        <div class="col-12 col-md-3">
           <label for="propietario" class="form-label">Dueño</label>
           <select id="propietario" class="form-select" data-placeholder="Buscar dueño..."></select>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-3">
           <label for="mascota" class="form-label">Mascota</label>
           <select id="mascota" class="form-select" data-placeholder="Selecciona mascota..." disabled></select>
         </div>
-        <div class="col-md-3">
-          <label for="mac" class="form-label">MAC del dispositivo</label>
-          <input id="mac" class="form-control" placeholder="Buscar MAC...">
+        <div class="col-12 col-md-2">
+          <label for="mac" class="form-label">MAC</label>
+          <select id="mac" class="form-select" data-placeholder="Buscar MAC..."></select>
         </div>
-        <div class="col-md-1 d-grid">
-          <button type="button" id="mostrar-todo" class="btn btn-outline-secondary">Mostrar todas</button>
+        <div class="col-12 col-md-3">
+          <label for="rango-fechas" class="form-label">Rango de fechas</label>
+          <input type="text" id="rango-fechas" class="form-control" placeholder="Selecciona rango" autocomplete="off">
+        </div>
+        <div class="col-6 col-md-1 d-grid">
+          <button type="button" id="mostrar-todo" class="btn btn-outline-primary">Mostrar todas</button>
+        </div>
+        <div class="col-6 col-md-12 d-flex justify-content-md-end justify-content-start mt-2 mt-md-0">
+          <button id="exportar-excel" class="btn btn-success ms-md-auto"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div class="row g-3">
-    <div class="col-lg-6 col-12">
-      <div class="card shadow-sm rounded-4 h-100">
-        <div class="card-body p-2">
-          <div id="map" class="w-100" style="height:350px; min-height:250px; border-radius:12px;"></div>
-        </div>
+  <!-- Mapa principal compacto -->
+  <div id="map" style="height:200px; min-height:120px; border-radius:18px; box-shadow:0 4px 16px rgba(44,62,80,0.10); margin-bottom: 1.5rem;"></div>
+
+  <!-- Tabla de registros -->
+  <div class="card shadow-sm rounded-4 border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive" style="max-height: calc(100vh - 320px); overflow-y: auto;">
+        <table id="tabla-registros" class="table table-bordered table-striped table-hover align-middle mb-0">
+          <thead class="table-light sticky-top">
+            <tr>
+              <th>Fecha y hora</th>
+              <th>Mascota</th>
+              <th>Dueño</th>
+              <th>MAC</th>
+              <th>Temperatura</th>
+              <th>Ritmo cardíaco</th>
+              <th>Ubicación</th>
+              <th>Batería</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Registros AJAX -->
+          </tbody>
+        </table>
       </div>
-    </div>
-    <div class="col-lg-6 col-12">
-      <div class="card shadow-sm rounded-4 h-100 d-flex flex-column">
-        <div class="card-body pb-0">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="fw-semibold fs-5">Histórico de sensores</span>
-            <button id="exportar-excel" class="btn btn-success btn-sm"><i class="fa fa-file-excel"></i> Exportar a Excel</button>
-          </div>
-          <div class="table-responsive" style="max-height:320px;overflow-y:auto;">
-            <table id="tabla-registros" class="table table-hover align-middle mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th>Fecha y hora</th>
-                  <th>Temperatura</th>
-                  <th>Ritmo cardíaco</th>
-                  <th>Ubicación</th>
-                  <th>Batería</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Registros AJAX -->
-              </tbody>
-            </table>
-          </div>
-          <div id="paginador" class="mt-2"></div>
-        </div>
-      </div>
+      <div id="paginador" class="mt-2"></div>
     </div>
   </div>
 </div>
 
-<!-- JS para interacción (a implementar en assets/js/reportes.js) -->
 <script src="<?= APP_URL ?>/assets/js/config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="<?= APP_URL ?>/assets/js/reportes.js"></script>
 <script>
 // Aquí irá la lógica JS para cargar propietarios, mascotas, MACs, mapa y tabla

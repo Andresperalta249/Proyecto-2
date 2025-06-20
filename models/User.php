@@ -272,7 +272,7 @@ class User extends Model {
     }
 
     public function getTotalUsuariosNormales() {
-        $sql = "SELECT COUNT(*) as total FROM usuarios WHERE rol_id = 3 AND estado = 'activo'";
+        $sql = "SELECT COUNT(*) as total FROM usuarios WHERE estado = 'activo'";
         $result = $this->query($sql);
         return $result[0]['total'] ?? 0;
     }

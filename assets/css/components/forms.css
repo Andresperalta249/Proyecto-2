@@ -155,8 +155,9 @@
 }
 
 /* =============================================
-   ESTILOS DE INTERRUPTOR DE ESTADO (SWITCH)
+   ESTILOS DE INTERRUPTOR DE ESTADO (SWITCH) - COMENTADO PARA EVITAR CONFLICTOS
    ============================================= */
+/*
 .status-switch {
     position: relative;
     display: inline-block;
@@ -206,7 +207,6 @@
     transform: translateX(16px);
 }
 
-/* Round sliders */
 .switch-slider.round {
     border-radius: 22px;
 }
@@ -214,3 +214,4 @@
 .switch-slider.round:before {
     border-radius: 50%;
 } 
+*/ 

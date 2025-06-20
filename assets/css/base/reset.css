@@ -19,7 +19,6 @@ html {
 body {
     height: 100%; /* Body ocupa el 100% del HTML (100vh) */
     width: 100%; /* Cambiado de 100vw a 100% para evitar scroll horizontal */
-    display: flex; /* Convierte el body en un contenedor flex para el sidebar y el contenido principal */
     /* overflow-x: hidden; Controla el scrollbar horizontal del navegador de forma global */
     /* overflow-y: hidden; Controla el scrollbar vertical del navegador de forma global */
     margin: 0;

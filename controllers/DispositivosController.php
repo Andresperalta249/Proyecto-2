@@ -12,59 +12,32 @@ class DispositivosController extends Controller {
     }
 
     public function indexAction() {
-        if (!isset($_SESSION['user_id'])) {
-            redirect('auth/login');
+        if (!verificarPermiso('ver_dispositivos')) {
+            $this->view->render('errors/403');
+            return;
         }
+
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Gestión de Dispositivos');
+        $this->view->setData('subtitulo', 'Administra y consulta los dispositivos IoT.');
+
         $user_id = $_SESSION['user_id'];
         $puedeVerTodos = verificarPermiso('ver_todos_dispositivo');
-        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
+        
         if ($puedeVerTodos) {
-            $dispositivos = $this->dispositivoModel->getDispositivosPaginados($offset, $perPage);
-            $totalDispositivos = $this->dispositivoModel->getTotalDispositivos();
+            $dispositivos = $this->dispositivoModel->getDispositivosPaginados(0, 1000); // Cargar todos por ahora
         } else {
-            // Para usuarios normales, solo sus dispositivos
-            $sql = "SELECT d.*, m.nombre as mascota_nombre, u.nombre as propietario_nombre
-                    FROM dispositivos d
-                    LEFT JOIN mascotas m ON d.mascota_id = m.id
-                    LEFT JOIN usuarios u ON d.propietario_id = u.id
-                    WHERE d.propietario_id = :user_id
-                    ORDER BY d.ultima_conexion DESC
-                    LIMIT :offset, :limit";
-            $stmt = Database::getInstance()->getConnection()->prepare($sql);
-            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-            $stmt->bindValue(':limit', (int)$perPage, PDO::PARAM_INT);
-            $stmt->execute();
-            $dispositivos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $totalDispositivos = $this->dispositivoModel->getTotalDispositivos();
+            // Lógica para usuarios normales (si es diferente)
+            $dispositivos = $this->dispositivoModel->getDispositivosByPropietario($user_id);
         }
-        // Optimización: obtener todas las últimas lecturas en una sola consulta
-        $ids = array_column($dispositivos, 'id_dispositivo');
-        $ultimasLecturas = $this->dispositivoModel->getUltimasLecturasPorDispositivos($ids);
-        foreach ($dispositivos as &$dispositivo) {
-            $dispositivo['ultima_lectura'] = $ultimasLecturas[$dispositivo['id_dispositivo']] ?? null;
-        }
-        unset($dispositivo);
-        // Filtrar solo usuarios con rol 'Usuario'
+
         $userModel = $this->loadModel('User');
-        $usuarios = array_filter($userModel->getAll(), function($u) {
-            return isset($u['rol_nombre']) && strtolower($u['rol_nombre']) === 'usuario';
-        });
-        $mascotas = $this->mascotaModel->findAll();
-        $title = 'Administrador de dispositivos';
-        $content = $this->render('dispositivos/index', [
+        $usuarios = $userModel->getActiveUsers();
+        
+        $this->view->render('dispositivos/index', [
             'dispositivos' => $dispositivos,
-            'usuarios' => $usuarios,
-            'mascotas' => $mascotas,
-            'totalDispositivos' => $totalDispositivos,
-            'perPage' => $perPage
+            'usuarios' => $usuarios
         ]);
-        $GLOBALS['content'] = $content;
-        $GLOBALS['title'] = $title;
-        $GLOBALS['menuActivo'] = 'dispositivos';
-        require_once 'views/layouts/main.php';
     }
 
     public function createAction() {

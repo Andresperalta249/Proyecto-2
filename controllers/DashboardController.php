@@ -22,26 +22,24 @@ class DashboardController extends Controller {
     }
 
     public function indexAction() {
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Dashboard');
+        $this->view->setData('subtitulo', 'Resumen general del sistema.');
+
         try {
-            $totalConectados = $this->dispositivoModel->getTotalConectados();
-            $totalDispositivos = $this->dispositivoModel->getTotalDispositivos();
             $data = [
                 'totalDispositivos' => [
-                    'conectados' => $totalConectados,
-                    'total' => $totalDispositivos
+                    'conectados' => $this->dispositivoModel->getTotalConectados(),
+                    'total' => $this->dispositivoModel->getTotalDispositivos()
                 ],
                 'totalMascotas' => $this->mascotaModel->getTotalRegistradas(),
                 'totalUsuarios' => (new User())->getTotalUsuariosNormales(),
                 'distribucionEspecies' => $this->mascotaModel->getDistribucionEspecies()
             ];
-            $content = $this->render('dashboard/index', $data);
-            $GLOBALS['content'] = $content;
-            $GLOBALS['title'] = 'Dashboard';
-            $GLOBALS['menuActivo'] = 'dashboard';
-            require_once 'views/layouts/main.php';
+            $this->view->render('dashboard/index', $data);
         } catch (Exception $e) {
             error_log("Error en DashboardController::indexAction: " . $e->getMessage());
-            echo '<h1>Error 500</h1><p>Error al cargar el dashboard.</p>';
+            $this->view->render('errors/500', ['error' => $e->getMessage()]);
         }
     }
 
@@ -51,26 +49,42 @@ class DashboardController extends Controller {
             if (!$this->dispositivoModel || !$this->mascotaModel) {
                 throw new Exception('Error de inicialización de modelos');
             }
+            
+            // Log de depuración
+            error_log("=== DEBUG DASHBOARD KPI ===");
+            
             $usuarios_registrados = $userModel->getTotalUsuariosNormales();
+            error_log("Usuarios registrados: " . $usuarios_registrados);
             if ($usuarios_registrados === false) {
                 throw new Exception('Error al obtener total de usuarios');
             }
+            
             $dispositivos_conectados = $this->dispositivoModel->getTotalConectados();
+            error_log("Dispositivos conectados: " . $dispositivos_conectados);
             if ($dispositivos_conectados === false) {
                 throw new Exception('Error al obtener dispositivos conectados');
             }
+            
             $dispositivos_total = $this->dispositivoModel->getTotalDispositivos();
+            error_log("Total dispositivos: " . $dispositivos_total);
             if ($dispositivos_total === false) {
                 throw new Exception('Error al obtener total de dispositivos');
             }
+            
             $mascotas_total = $this->mascotaModel->getTotalRegistradas();
+            error_log("Total mascotas: " . $mascotas_total);
             if ($mascotas_total === false) {
                 throw new Exception('Error al obtener total de mascotas');
             }
+            
             $especies = $this->mascotaModel->getDistribucionEspecies();
+            error_log("Especies: " . print_r($especies, true));
             if ($especies === false) {
                 throw new Exception('Error al obtener distribución de especies');
             }
+            
+            error_log("=== FIN DEBUG DASHBOARD KPI ===");
+            
             $response = [
                 'dispositivos' => [
                     'conectados' => (int)$dispositivos_conectados,
@@ -194,7 +208,7 @@ class DashboardController extends Controller {
 
     private function sendJsonResponse($data) {
         header('Content-Type: application/json');
-        echo json_encode($data);
+        echo json_encode(['success' => true, 'data' => $data]);
     }
 
     private function sendJsonError($message, $code = 500) {

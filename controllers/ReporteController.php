@@ -1,8 +1,8 @@
 <?php
 // require_once 'vendor/autoload.php';
-use Dompdf\Dompdf;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// use Dompdf\Dompdf;
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ReporteController extends Controller {
     private $mascotaModel;
@@ -65,17 +65,20 @@ class ReporteController extends Controller {
     }
 
     public function monitoreoAction() {
-        if (!isset($_SESSION['user_id'])) {
-            redirect('auth/login');
+        if (!verificarPermiso('ver_reportes')) {
+            $this->view->render('errors/403');
+            return;
         }
-        $title = 'Reporte de Monitoreo IoT de Mascotas';
-        $content = $this->render('reportes/monitoreo');
-        $GLOBALS['menuActivo'] = 'reporte';
-        $GLOBALS['content'] = $content;
-        require_once 'views/layouts/main.php';
+
+        $this->view->setLayout('main');
+        $this->view->setData('titulo', 'Reporte de Monitoreo IoT');
+        $this->view->setData('subtitulo', 'Consulta y filtra el histórico de sensores de todas las mascotas.');
+        $this->view->render('reportes/monitoreo');
     }
 
     private function generarPDFMascotas($mascotas, $estadisticas, $fechaInicio, $fechaFin) {
+        // Comentado temporalmente - requiere librería Dompdf
+        /*
         $dompdf = new Dompdf();
         
         $html = $this->render('reportes/mascotas_pdf', [
@@ -90,9 +93,13 @@ class ReporteController extends Controller {
         $dompdf->render();
 
         $dompdf->stream('reporte_mascotas.pdf', ['Attachment' => true]);
+        */
+        echo "Funcionalidad de PDF temporalmente deshabilitada";
     }
 
     private function generarExcelMascotas($mascotas, $estadisticas, $fechaInicio, $fechaFin) {
+        // Comentado temporalmente - requiere librería PhpSpreadsheet
+        /*
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -138,9 +145,13 @@ class ReporteController extends Controller {
         header('Content-Disposition: attachment;filename="reporte_mascotas.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
+        */
+        echo "Funcionalidad de Excel temporalmente deshabilitada";
     }
 
     private function generarPDFDispositivos($dispositivos, $lecturas, $fechaInicio, $fechaFin) {
+        // Comentado temporalmente - requiere librería Dompdf
+        /*
         $dompdf = new Dompdf();
         
         $html = $this->render('reportes/dispositivos_pdf', [
@@ -155,9 +166,13 @@ class ReporteController extends Controller {
         $dompdf->render();
 
         $dompdf->stream('reporte_dispositivos.pdf', ['Attachment' => true]);
+        */
+        echo "Funcionalidad de PDF temporalmente deshabilitada";
     }
 
     private function generarExcelDispositivos($dispositivos, $lecturas, $fechaInicio, $fechaFin) {
+        // Comentado temporalmente - requiere librería PhpSpreadsheet
+        /*
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -190,6 +205,8 @@ class ReporteController extends Controller {
         header('Content-Disposition: attachment;filename="reporte_dispositivos.xlsx"');
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
+        */
+        echo "Funcionalidad de Excel temporalmente deshabilitada";
     }
 
     // --- ENDPOINTS AJAX PARA REPORTE MODERNO ---
@@ -246,8 +263,10 @@ class ReporteController extends Controller {
         $mac = $_GET['mac'] ?? null;
         $page = max(1, intval($_GET['page'] ?? 1));
         $perPage = min(50, intval($_GET['perPage'] ?? 20));
+        $fecha_inicio = $_GET['fecha_inicio'] ?? null;
+        $fecha_fin = $_GET['fecha_fin'] ?? null;
         $model = $this->loadModel('DatosSensor');
-        $result = $model->buscarRegistrosAvanzado($usuario_id, $mascota_id, $mac, $page, $perPage);
+        $result = $model->buscarRegistrosAvanzado($usuario_id, $mascota_id, $mac, $page, $perPage, $fecha_inicio, $fecha_fin);
         echo json_encode($result);
         exit;
     }
@@ -268,6 +287,14 @@ class ReporteController extends Controller {
             fputcsv($out, [$r['fecha_hora'],$r['temperatura'],$r['ritmo_cardiaco'],$r['ubicacion'],$r['bateria']]);
         }
         fclose($out);
+        exit;
+    }
+
+    public function getUltimasUbicacionesAction() {
+        header('Content-Type: application/json');
+        $model = $this->loadModel('DatosSensor');
+        $result = $model->obtenerUltimasUbicacionesMascotas();
+        echo json_encode($result);
         exit;
     }
 } 
